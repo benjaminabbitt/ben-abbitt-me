@@ -13,6 +13,12 @@ This is observable in real-time in the Israeli political system, where leaders w
 
 **The core design question:** Can representative institutions be structured to filter domain-specific rationality suppression from constituency input without undermining democratic legitimacy?
 
+### The honest answer
+
+No single institutional mechanism solves the democratic trap. The problem is fundamental: democracy assumes that citizens' preferences are legitimate inputs to collective decision-making, but sacred-value cognition produces preferences that are systematically distorted in domains involving intergroup conflict. The most promising approach is a *combination* of mechanisms operating at different timescales: deliberative mini-publics for immediate deadlocks, consensus-oriented institutional design for medium-term filtering, and cross-cutting cleavage engineering for generational change. These are mitigations, not solutions. As long as exclusionary identity exists and can sacralize contested issues, the democratic trap persists.
+
+The remainder of this document examines why existing mechanisms are insufficient and evaluates four proposed structural interventions.
+
 ---
 
 ## Existing Institutional Mechanisms (and Why They're Insufficient)
@@ -89,15 +95,11 @@ The key finding from deliberative democracy research: deliberation can perform "
 
 ## Assessment
 
-No single institutional mechanism solves the democratic trap. The problem is fundamental: democracy assumes that citizens' preferences are legitimate inputs to collective decision-making, but sacred-value cognition produces preferences that are systematically distorted in domains involving intergroup conflict.
-
-The most promising approach is probably a *combination* of mechanisms:
+The interventions above reduce the democratic trap's severity but cannot eliminate it without either constraining democratic accountability (which creates its own legitimacy crisis) or eliminating exclusionary identity (which requires the very cognitive shift that sacred-value reasoning prevents). The recommended combination:
 
 1. **Short-term:** Deliberative mini-publics on specific sacred-value issues, modeled on the Irish Citizens' Assembly, to break legislative deadlocks.
 2. **Medium-term:** Consensus-oriented institutional design (proportional representation, coalition governments, committee structures that require cross-party agreement) to prevent sacred-value majorities from dominating policy.
-3. **Long-term:** Cross-cutting cleavage engineering through integrated education, national service, and urban planning to reduce the salience of religious identity relative to other identities.
-
-The honest conclusion: these are mitigations, not solutions. As long as exclusionary identity exists and can sacralize contested issues, the democratic trap persists. The interventions reduce its severity but cannot eliminate it without either constraining democratic accountability (which creates its own legitimacy crisis) or eliminating exclusionary identity (which requires the very cognitive shift that sacred-value reasoning prevents).
+3. **Long-term:** Cross-cutting cleavage engineering through integrated education, national service, and urban planning to reduce the salience of any single identity relative to others.
 
 ---
 

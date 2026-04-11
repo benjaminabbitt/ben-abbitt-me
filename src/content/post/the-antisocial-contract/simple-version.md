@@ -179,8 +179,4 @@ Understanding this is the first step toward not being tricked by it.
 
 ---
 
-*This is a simplified version of "The Antisocial Contract." The full version has all the scientific sources and more detail.*
-
----
-
 *This is a simplified version of "[The Antisocial Contract](/posts/the-antisocial-contract/)." The full version has all the scientific sources and more detail.*

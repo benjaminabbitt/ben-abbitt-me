@@ -9,7 +9,22 @@ If exclusivism is a structural feature of certain religions rather than a corrup
 
 Specifically: religions whose scriptures contain explicit proselytizing mandates, truth-claim absolutism, and prescriptive out-group characterization should be more frequently associated with ideologically expansionist violence than religions whose scriptures lack these features.
 
-This is a testable hypothesis. This document proposes a framework for testing it.
+This is a testable hypothesis. This document proposes a framework for testing it, and offers a preliminary assessment against historical evidence.
+
+### Preliminary finding
+
+The pattern is consistent with the hypothesis. Proselytizing mandate and truth-claim absolutism are the strongest predictors of ideologically expansionist violence. Sacred-geography density adds an accelerant but is insufficient alone.
+
+| Religion | Proselytizing mandate | Truth absolutism | Out-group framing | Sacred geography | Predicted violence | Observed violence |
+|---|---|---|---|---|---|---|
+| Christianity | Strong | Strong | Deficiency | Moderate | High | Very high |
+| Islam | Strong | Strong | Deficiency | High | High | Very high |
+| Judaism | Prohibitive | Strong (ethnic) | Neutral | High (confined) | Low-moderate | Low-moderate |
+| Buddhism | Absent | Pluralistic | Inclusive | Low | Low | Low |
+| Hinduism | Absent | Pluralistic | Neutral | Moderate | Low | Low (rising under Hindutva) |
+| Indigenous | Absent | Non-absolutist | Absent | Low | Very low | Very low (victim) |
+
+The detailed variable definitions, per-religion evidence, critical weaknesses, and proposed formalization follow.
 
 ---
 
@@ -114,16 +129,7 @@ Historical association with ideologically expansionist violence: **very low.** T
 
 ## Pattern Summary
 
-| Religion | Proselytizing mandate | Truth absolutism | Out-group framing | Sacred geography | Predicted violence | Observed violence |
-|---|---|---|---|---|---|---|
-| Christianity | Strong | Strong | Deficiency | Moderate | High | Very high |
-| Islam | Strong | Strong | Deficiency | High | High | Very high |
-| Judaism | Prohibitive | Strong (ethnic) | Neutral | High (confined) | Low-moderate | Low-moderate |
-| Buddhism | Absent | Pluralistic | Inclusive | Low | Low | Low |
-| Hinduism | Absent | Pluralistic | Neutral | Moderate | Low | Low (rising under Hindutva) |
-| Indigenous | Absent | Non-absolutist | Absent | Low | Very low | Very low (victim) |
-
-The pattern is consistent with the hypothesis: proselytizing mandate and truth-claim absolutism are the strongest predictors. Sacred-geography density adds an accelerant but is insufficient alone (Judaism has high sacred-geography density but low proselytizing mandate, producing confined territorial conflict rather than expansionist violence). Out-group framing matters but correlates heavily with truth-claim absolutism and may not be independently predictive.
+The per-religion assessments above are summarized in the table at the top of this document. The key finding: proselytizing mandate and truth-claim absolutism are the strongest predictors. Sacred-geography density adds an accelerant but is insufficient alone — Judaism has high sacred-geography density but a prohibitive proselytizing tradition, producing confined territorial conflict rather than expansionist violence. Out-group framing matters but correlates heavily with truth-claim absolutism and may not be independently predictive.
 
 ---
 
