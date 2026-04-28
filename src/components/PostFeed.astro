@@ -1,0 +1,64 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
+import { countWords, readMinutes } from "@/theme/lib/readTime";
+
+interface Props {
+	entries: CollectionEntry<"posts">[];
+	showExcerpt?: boolean | undefined;
+}
+const { entries, showExcerpt = false } = Astro.props;
+
+function fmtWords(n: number) {
+	return n.toLocaleString();
+}
+---
+
+<MarginaliaLayout defaultText="Hover a post to read the margin note.">
+	<div class="flex flex-col">
+		<div
+			class="grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
+		>
+			<span>date</span><span>title</span><span>words · read</span>
+		</div>
+		{
+			entries.map((p) => {
+				const words = countWords(p.body ?? "");
+				const date = p.data.publishDate.toISOString().slice(0, 10);
+				const minutes = readMinutes(words);
+				const excerpt = p.data.excerpt ?? p.data.description;
+				return (
+					<a
+						href={`/posts/${p.id}/`}
+						class="group grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3.5 -mx-2.5 border-b border-rule items-baseline transition-colors duration-100 hover:bg-bg-alt"
+						data-marginalia={p.data.marginalia ?? ""}
+					>
+						<span class="font-mono text-[11.5px] text-fg-dim">{date}</span>
+						<span class="flex flex-col gap-1 min-w-0">
+							<span class="font-serif font-medium text-[19px] tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent">
+								{p.data.title}
+							</span>
+							{p.data.tags.length > 0 && (
+								<span class="flex gap-2 flex-wrap">
+									{p.data.tags.map((t) => (
+										<span class="font-mono text-[10.5px] text-fg-faint">
+											#{t}
+										</span>
+									))}
+								</span>
+							)}
+							{showExcerpt && excerpt && (
+								<span class="font-serif-body text-[14.5px] text-fg-dim mt-1">
+									{excerpt}
+								</span>
+							)}
+						</span>
+						<span class="font-mono text-[10.5px] text-fg-faint whitespace-nowrap">
+							{fmtWords(words)} words · {minutes} min
+						</span>
+					</a>
+				);
+			})
+		}
+	</div>
+</MarginaliaLayout>

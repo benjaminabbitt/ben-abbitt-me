@@ -1,0 +1,26 @@
+---
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import PostFeed from "@/components/PostFeed.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection(
+	"posts",
+	({ data }) => !data.draft && !data.unlisted,
+);
+const sorted = all.sort(
+	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+---
+
+<PageLayout current="posts" title="Posts — Append Only">
+	<header class="mb-12">
+		<h1
+			class="font-serif font-medium text-[52px] leading-none tracking-[-0.02em] mb-3"
+		>
+			Posts
+		</h1>
+		<p class="text-fg-dim text-[16px]">Everything I've written, most recent first.</p>
+	</header>
+
+	<PostFeed entries={sorted} showExcerpt />
+</PageLayout>

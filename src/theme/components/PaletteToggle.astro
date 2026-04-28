@@ -1,0 +1,72 @@
+---
+// Four-swatch palette toggle, persists to localStorage.
+const palettes = [
+	{ id: "cream", label: "cream", bg: "#fdfaf3", ink: "#b5351f" },
+	{ id: "kraft", label: "kraft", bg: "#ede2cc", ink: "#9a2a14" },
+	{ id: "slate", label: "slate", bg: "#1f2024", ink: "#e07856" },
+	{ id: "linen", label: "linen", bg: "#f3efe6", ink: "#a62917" },
+];
+---
+
+<div
+	class="palette no-print fixed bottom-5 right-5 z-40 flex gap-1.5 items-center bg-bg border border-rule rounded-full px-2 py-1.5"
+	role="group"
+	aria-label="Color palette"
+>
+	{
+		palettes.map((p) => (
+			<button
+				type="button"
+				class="swatch w-[18px] h-[18px] rounded-full border border-rule cursor-pointer p-0 relative aria-pressed:outline aria-pressed:outline-[1.5px] aria-pressed:outline-fg aria-pressed:outline-offset-2"
+				data-palette-set={p.id}
+				aria-label={`Switch to ${p.label} palette`}
+				title={p.label}
+				style={`--sw-bg:${p.bg}; --sw-ink:${p.ink}`}
+			/>
+		))
+	}
+</div>
+
+<script is:inline>
+	(function () {
+		const KEY = "ba-palette";
+		const root = document.documentElement;
+		const saved = localStorage.getItem(KEY);
+		if (saved) root.setAttribute("data-palette", saved);
+		else if (!root.getAttribute("data-palette"))
+			root.setAttribute("data-palette", "cream");
+		function setActive(id) {
+			document.querySelectorAll("[data-palette-set]").forEach((el) => {
+				el.setAttribute(
+					"aria-pressed",
+					el.getAttribute("data-palette-set") === id ? "true" : "false",
+				);
+			});
+		}
+		setActive(root.getAttribute("data-palette"));
+		document.addEventListener("click", (e) => {
+			const btn = e.target.closest("[data-palette-set]");
+			if (!btn) return;
+			const id = btn.getAttribute("data-palette-set");
+			root.setAttribute("data-palette", id);
+			localStorage.setItem(KEY, id);
+			setActive(id);
+		});
+	})();
+</script>
+
+<style>
+	/* Per-swatch background + ink dot — tied to inline `style` props, not utility-friendly. */
+	.swatch {
+		background: var(--sw-bg);
+	}
+	.swatch::after {
+		content: "";
+		position: absolute;
+		inset: 4px 4px auto auto;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--sw-ink);
+	}
+</style>

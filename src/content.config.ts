@@ -8,14 +8,16 @@ function removeDupsAndLowerCase(array: string[]) {
 
 const titleSchema = z.string().max(60);
 
-const baseSchema = z.object({
-	title: titleSchema,
-});
-
-const post = defineCollection({
-	loader: glob({ base: "./src/content/post", pattern: "**/*.{md,mdx}" }),
+const posts = defineCollection({
+	loader: glob({
+		base: "./src/content/posts",
+		pattern: "**/*.{md,mdx}",
+		generateId: ({ entry }) =>
+			entry.replace(/\.(md|mdx)$/, "").replace(/\/index$/, ""),
+	}),
 	schema: ({ image }) =>
-		baseSchema.extend({
+		z.object({
+			title: titleSchema,
 			description: z.string(),
 			coverImage: z
 				.object({
@@ -36,25 +38,77 @@ const post = defineCollection({
 				.transform((str) => (str ? new Date(str) : undefined)),
 			pinned: z.boolean().default(false),
 			unlisted: z.boolean().default(false),
+			marginalia: z.string().optional(),
+			excerpt: z.string().optional(),
 		}),
 });
 
-const note = defineCollection({
-	loader: glob({ base: "./src/content/note", pattern: "**/*.{md,mdx}" }),
-	schema: baseSchema.extend({
-		description: z.string().optional(),
-		publishDate: z.iso
-			.datetime({ offset: true }) // Ensures ISO 8601 format with offsets allowed (e.g. "2024-01-01T00:00:00Z" and "2024-01-01T00:00:00+02:00")
-			.transform((val) => new Date(val)),
-	}),
-});
-
-const tag = defineCollection({
-	loader: glob({ base: "./src/content/tag", pattern: "**/*.{md,mdx}" }),
+const projects = defineCollection({
+	loader: glob({ base: "./src/content/projects", pattern: "**/*.json" }),
 	schema: z.object({
-		title: titleSchema.optional(),
-		description: z.string().optional(),
+		id: z.string(),
+		name: z.string(),
+		createdAt: z.string(),
+		status: z.string().optional(),
+		tagline: z.string(),
+		blurb: z.string().optional(),
+		stack: z.array(z.string()).default([]),
+		site: z.string().nullable().optional(),
+		github: z.string().nullable().optional(),
+		extras: z
+			.array(z.object({ label: z.string(), href: z.string() }))
+			.default([]),
+		note: z.string().nullable().optional(),
+		order: z.number().optional(),
 	}),
 });
 
-export const collections = { post, note, tag };
+const resume = defineCollection({
+	loader: glob({ base: "./src/content/resume", pattern: "*.json" }),
+	schema: z.object({
+		intro: z.string(),
+		contact: z.object({
+			email: z.string().optional(),
+			linkedin: z.string().optional(),
+			github: z.string().optional(),
+			location: z.string().optional(),
+		}),
+		interests: z.array(z.string()).default([]),
+		roles: z.array(
+			z.object({
+				id: z.string(),
+				years: z.string(),
+				company: z.string(),
+				title: z.string(),
+				domain: z.string().optional(),
+				bullets: z.array(z.string()).optional(),
+				engagements: z
+					.array(
+						z.object({
+							id: z.string(),
+							title: z.string(),
+							domain: z.string().optional(),
+							bullets: z.array(z.string()),
+						}),
+					)
+					.optional(),
+				note: z.string().optional(),
+			}),
+		),
+		skillGroups: z.array(
+			z.object({ label: z.string(), items: z.array(z.string()) }),
+		),
+		certs: z.array(z.string()),
+		education: z
+			.array(
+				z.object({
+					school: z.string(),
+					degree: z.string(),
+					years: z.string().optional(),
+				}),
+			)
+			.default([]),
+	}),
+});
+
+export const collections = { posts, projects, resume };

@@ -1,0 +1,26 @@
+---
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import ProjectFeed from "@/components/ProjectFeed.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection("projects");
+const sorted = all.sort((a, b) => {
+	if (a.data.order != null && b.data.order != null)
+		return a.data.order - b.data.order;
+	return b.data.createdAt.localeCompare(a.data.createdAt);
+});
+---
+
+<PageLayout current="projects" title="Projects — Append Only">
+	<header class="mb-12 max-w-[620px]">
+		<h1
+			class="font-serif font-medium text-[52px] leading-none tracking-[-0.02em] mb-3"
+		>
+			Projects
+		</h1>
+		<p class="text-fg-dim text-[16px]">
+			What I'm building. Some live, some shelved, all open.
+		</p>
+	</header>
+	<ProjectFeed entries={sorted} />
+</PageLayout>

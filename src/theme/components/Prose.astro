@@ -1,0 +1,94 @@
+---
+// Wraps rendered Markdown/MDX with the site's long-form typography.
+// Use anywhere you slot a <Content /> from a content-collection entry.
+// :global() rules target rendered MDX nodes — Tailwind utilities can't reach them,
+// so prose styles intentionally live in CSS rather than inline classes.
+---
+
+<div class="prose font-serif-body text-[18px] leading-[1.65] text-fg"><slot /></div>
+
+<style>
+	.prose :global(p) { margin: 0 0 1.2em; }
+	.prose :global(h2) {
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: 28px;
+		margin: 2em 0 0.6em;
+		letter-spacing: -0.015em;
+	}
+	.prose :global(h3) {
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: 22px;
+		margin: 1.6em 0 0.5em;
+		letter-spacing: -0.01em;
+	}
+	.prose :global(h4) {
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: 18px;
+		margin: 1.4em 0 0.4em;
+	}
+	.prose :global(a) {
+		color: var(--color-accent);
+		border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+	}
+	.prose :global(a:hover) { border-bottom-color: var(--color-accent); }
+	.prose :global(ul), .prose :global(ol) {
+		margin: 0 0 1.2em;
+		padding-left: 1.4em;
+	}
+	.prose :global(li) { margin: 0.25em 0; }
+	.prose :global(code) {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+		background: var(--color-bg-alt);
+		padding: 2px 5px;
+		border-radius: 3px;
+	}
+	.prose :global(pre) {
+		font-family: var(--font-mono);
+		font-size: 13.5px;
+		background: var(--color-bg-alt);
+		padding: 16px 20px;
+		border-radius: 4px;
+		overflow-x: auto;
+		border: 1px solid var(--color-rule);
+	}
+	.prose :global(pre code) { background: none; padding: 0; }
+	.prose :global(blockquote) {
+		border-left: 2px solid var(--color-accent);
+		padding-left: 20px;
+		color: var(--color-fg-dim);
+		font-style: italic;
+		margin: 1.5em 0;
+	}
+	.prose :global(hr) {
+		border: 0;
+		border-top: 1px solid var(--color-rule);
+		margin: 2em 0;
+	}
+	.prose :global(img) {
+		max-width: 100%;
+		height: auto;
+		border-radius: 4px;
+	}
+	.prose :global(table) {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 1.5em 0;
+		font-size: 15px;
+	}
+	.prose :global(th), .prose :global(td) {
+		text-align: left;
+		padding: 8px 12px;
+		border-bottom: 1px solid var(--color-rule);
+	}
+	.prose :global(th) {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--color-fg-faint);
+	}
+</style>

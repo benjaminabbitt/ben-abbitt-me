@@ -1,0 +1,36 @@
+---
+interface Props {
+	defaultText?: string | undefined;
+}
+const { defaultText = "Hover a row to read the margin note." } = Astro.props;
+---
+
+<section
+	class="grid grid-cols-1 wide:grid-cols-[1fr_280px] gap-10 wide:gap-16 items-start print:block"
+>
+	<slot />
+	<aside
+		class="self-start mt-2 pt-5 border-t border-dashed border-rule wide:mt-0 wide:pt-1.5 wide:pb-1.5 wide:pl-5 wide:border-t-0 wide:border-l wide:border-solid wide:sticky wide:top-20 print:hidden"
+	>
+		<div
+			data-marginalia-text
+			class="font-serif italic text-[15.5px] text-accent leading-[1.5] min-h-20"
+		>
+			{defaultText}
+		</div>
+	</aside>
+</section>
+
+<script is:inline>
+	(function () {
+		const panel = document.querySelector("[data-marginalia-text]");
+		if (!panel) return;
+		const initial = panel.textContent;
+		document.querySelectorAll("[data-marginalia]").forEach((row) => {
+			row.addEventListener("mouseenter", () => {
+				const note = row.getAttribute("data-marginalia");
+				panel.textContent = note && note.length ? note : initial;
+			});
+		});
+	})();
+</script>

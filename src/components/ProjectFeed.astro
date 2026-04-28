@@ -1,0 +1,87 @@
+---
+import type { CollectionEntry } from "astro:content";
+import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
+
+interface Props {
+	entries: CollectionEntry<"projects">[];
+}
+const { entries } = Astro.props;
+---
+
+<MarginaliaLayout defaultText="Hover a project to read the margin note.">
+	<div class="flex flex-col">
+		<div
+			class="grid grid-cols-[90px_1fr_auto] gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
+		>
+			<span>since</span><span>name · tagline</span><span>links</span>
+		</div>
+		{
+			entries.map((entry) => {
+				const p = entry.data;
+				return (
+					<div
+						class="grid grid-cols-[90px_1fr_auto] gap-[18px] px-2.5 py-[18px] -mx-2.5 border-b border-rule items-baseline"
+						data-marginalia={p.note ?? ""}
+					>
+						<span class="font-mono text-[11.5px] text-fg-dim">
+							{p.createdAt.slice(0, 7)}
+						</span>
+						<div class="flex flex-col gap-1.5 min-w-0">
+							<span class="font-serif font-medium text-[22px] tracking-[-0.015em] text-fg">
+								{p.name}
+								{p.status && (
+									<span class="font-mono text-[11px] text-fg-faint ml-1.5 font-normal">
+										· {p.status}
+									</span>
+								)}
+							</span>
+							<span class="font-serif italic text-[15px] text-fg-dim">
+								{p.tagline}
+							</span>
+							{p.blurb && (
+								<p class="font-serif-body text-[14.5px] text-fg-dim mt-1 max-w-[58ch]">
+									{p.blurb}
+								</p>
+							)}
+							{p.stack.length > 0 && (
+								<span class="flex gap-2 flex-wrap mt-1">
+									{p.stack.map((s) => (
+										<span class="font-mono text-[10.5px] text-fg-faint border border-rule rounded-full px-2 py-0.5">
+											{s}
+										</span>
+									))}
+								</span>
+							)}
+						</div>
+						<div class="flex flex-col gap-1 text-right whitespace-nowrap">
+							{p.site && (
+								<a
+									class="font-mono text-[11.5px] text-fg-dim hover:text-accent"
+									href={p.site}
+								>
+									site ↗
+								</a>
+							)}
+							{p.github && (
+								<a
+									class="font-mono text-[11.5px] text-fg-dim hover:text-accent"
+									href={p.github}
+								>
+									github ↗
+								</a>
+							)}
+							{p.extras.map((e) => (
+								<a
+									class="font-mono text-[11.5px] text-fg-dim hover:text-accent"
+									href={e.href}
+								>
+									{e.label} ↗
+								</a>
+							))}
+						</div>
+					</div>
+				);
+			})
+		}
+	</div>
+</MarginaliaLayout>

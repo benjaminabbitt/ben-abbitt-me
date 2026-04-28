@@ -1,0 +1,113 @@
+---
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import ResumeFeed from "@/components/ResumeFeed.astro";
+import PrintButton from "@/theme/components/PrintButton.astro";
+import { getEntry } from "astro:content";
+
+const entry = await getEntry("resume", "resume");
+if (!entry) throw new Error("resume entry not found");
+const data = entry.data;
+---
+
+<PageLayout current="resume" title="Resume — Ben Abbitt">
+	<header class="mb-12">
+		<div class="flex justify-between items-start gap-6">
+			<div>
+				<h1
+					class="font-serif font-medium text-[52px] leading-none tracking-[-0.02em] mb-4"
+				>
+					Ben Abbitt
+				</h1>
+				<p class="text-fg-dim text-[17px] max-w-[620px]">{data.intro}</p>
+			</div>
+			<PrintButton />
+		</div>
+
+		<div
+			class="flex gap-4 flex-wrap mt-5 font-mono text-[12px] text-fg-dim"
+		>
+			{
+				data.contact.email && (
+					<a
+						href={`mailto:${data.contact.email}`}
+						class="text-fg-dim border-b border-rule pb-0.5 hover:text-accent hover:border-accent"
+					>
+						{data.contact.email}
+					</a>
+				)
+			}
+			{
+				data.contact.linkedin && (
+					<a
+						href={data.contact.linkedin}
+						class="text-fg-dim border-b border-rule pb-0.5 hover:text-accent hover:border-accent"
+					>
+						LinkedIn ↗
+					</a>
+				)
+			}
+			{
+				data.contact.github && (
+					<a
+						href={data.contact.github}
+						class="text-fg-dim border-b border-rule pb-0.5 hover:text-accent hover:border-accent"
+					>
+						GitHub ↗
+					</a>
+				)
+			}
+			{data.contact.location && <span class="text-fg-faint">{data.contact.location}</span>}
+		</div>
+	</header>
+
+	<ResumeFeed roles={data.roles} />
+
+	<section class="mt-18">
+		<h2
+			class="font-mono font-normal text-[11px] text-fg-faint tracking-[0.12em] uppercase mt-10 mb-4 pt-4 border-t border-rule"
+		>
+			Skills
+		</h2>
+		<dl
+			class="grid grid-cols-[140px_1fr] gap-x-6 gap-y-2 font-serif-body text-[14.5px]"
+		>
+			{
+				data.skillGroups.map((g) => (
+					<>
+						<dt class="text-fg-dim font-mono text-[12px]">{g.label}</dt>
+						<dd class="m-0 text-fg">{g.items.join(" · ")}</dd>
+					</>
+				))
+			}
+		</dl>
+
+		<h2
+			class="font-mono font-normal text-[11px] text-fg-faint tracking-[0.12em] uppercase mt-10 mb-4 pt-4 border-t border-rule"
+		>
+			Certifications
+		</h2>
+		<ul
+			class="font-serif-body text-[14.5px] text-fg pl-[18px] list-disc space-y-1"
+		>
+			{data.certs.map((c) => <li>{c}</li>)}
+		</ul>
+
+		{
+			data.education.length > 0 && (
+				<>
+					<h2 class="font-mono font-normal text-[11px] text-fg-faint tracking-[0.12em] uppercase mt-10 mb-4 pt-4 border-t border-rule">
+						Education
+					</h2>
+					<ul class="font-serif-body text-[14.5px] text-fg pl-[18px] list-disc space-y-1">
+						{data.education.map((e) => (
+							<li>
+								<strong>{e.school}</strong> · {e.degree}
+								{e.years && <span class="text-fg-dim"> · {e.years}</span>}
+							</li>
+						))}
+					</ul>
+				</>
+			)
+		}
+	</section>
+</PageLayout>

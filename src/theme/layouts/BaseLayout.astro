@@ -1,0 +1,33 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string | undefined;
+	description?: string | undefined;
+}
+const { title = 'Append Only — Ben Abbitt', description = 'Software architecture, AI wrangling, lessons learned.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-palette="cream">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script is:inline>
+      // Apply saved palette before first paint to avoid flash.
+      (function () {
+        try {
+          const saved = localStorage.getItem('ba-palette');
+          if (saved) document.documentElement.setAttribute('data-palette', saved);
+        } catch (_) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

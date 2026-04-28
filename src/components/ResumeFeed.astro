@@ -1,0 +1,92 @@
+---
+import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
+
+interface Engagement {
+	id: string;
+	title: string;
+	domain?: string | undefined;
+	bullets: string[];
+}
+interface Role {
+	id: string;
+	years: string;
+	company: string;
+	title: string;
+	domain?: string | undefined;
+	bullets?: string[] | undefined;
+	engagements?: Engagement[] | undefined;
+	note?: string | undefined;
+}
+interface Props {
+	roles: Role[];
+}
+const { roles } = Astro.props;
+---
+
+<MarginaliaLayout defaultText="Hover a role to read the margin note.">
+	<div class="flex flex-col">
+		{
+			roles.map((r) => (
+				<>
+					<div
+						class="grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-4 -mx-2.5 border-b border-rule items-baseline print:break-inside-avoid"
+						data-marginalia={r.note ?? ""}
+					>
+						<span class="font-mono text-[11.5px] text-fg-dim">{r.years}</span>
+						<div class="flex flex-col gap-1 min-w-0">
+							<div class="font-serif font-medium text-[18.5px] tracking-[-0.01em] text-fg">
+								{r.title}
+								{r.company && (
+									<span class="font-mono text-[12px] text-fg-dim ml-2.5 font-normal">
+										· {r.company}
+									</span>
+								)}
+							</div>
+							{r.bullets && (
+								<ul class="font-serif-body text-[14px] text-fg-dim mt-1.5 pl-[18px] leading-[1.5] list-disc">
+									{r.bullets.map((b) => (
+										<li>{b}</li>
+									))}
+								</ul>
+							)}
+							{r.engagements && (
+								<div class="font-serif-body italic text-[13.5px] text-fg-dim mt-1">
+									notable engagements ↓
+								</div>
+							)}
+						</div>
+						<span class="font-mono text-[10.5px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
+							{r.domain}
+						</span>
+					</div>
+					{r.engagements?.map((e, i) => (
+						<div
+							class:list={[
+								"grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3 -mx-2.5 items-baseline border-b print:break-inside-avoid",
+								i === r.engagements!.length - 1
+									? "border-solid border-rule"
+									: "border-dashed border-rule",
+							]}
+							data-marginalia={r.note ?? ""}
+						>
+							<span class="font-mono text-[10px] text-fg-faint pl-[18px]">↳</span>
+							<div class="flex flex-col gap-1 min-w-0">
+								<div class="font-serif italic font-medium text-[15.5px] text-fg">
+									{e.title}
+								</div>
+								<ul class="font-serif-body text-[13.5px] text-fg-dim mt-1 pl-[18px] leading-[1.5] list-disc">
+									{e.bullets.map((b) => (
+										<li>{b}</li>
+									))}
+								</ul>
+							</div>
+							<span class="font-mono text-[10px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
+								{e.domain}
+							</span>
+						</div>
+					))}
+				</>
+			))
+		}
+	</div>
+</MarginaliaLayout>

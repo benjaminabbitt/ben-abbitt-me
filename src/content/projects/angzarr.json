@@ -1,0 +1,17 @@
+{
+  "id": "angzarr",
+  "name": "angzarr",
+  "createdAt": "2025-03-01",
+  "status": "active",
+  "tagline": "CQRS + event-sourcing framework, multi-language.",
+  "blurb": "Define your data model in protobuf, write business logic in any gRPC language. The framework handles event persistence, optimistic concurrency, sagas, snapshots.",
+  "stack": ["Rust", "Go", "Java", "Python", "gRPC"],
+  "site": "https://angzarr.io",
+  "github": "https://github.com/angzarr-io/angzarr",
+  "extras": [
+    { "label": "blog", "href": "https://angzarr.io/blog/" },
+    { "label": "github / angzarr-io org", "href": "https://github.com/angzarr-io" }
+  ],
+  "note": "The blog is strictly Angzarr lessons — what I learned building it.",
+  "order": 2
+}

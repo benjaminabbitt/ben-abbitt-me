@@ -23,3 +23,6 @@ pnpm-debug.log*
 *.pem
 .cache
 .astro
+
+# ctxloom ephemeral data (synced bundles, session data, context files)
+.ctxloom/ephemeral/

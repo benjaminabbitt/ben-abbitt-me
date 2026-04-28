@@ -1,0 +1,14 @@
+{
+  "id": "ctxloom",
+  "name": "ctxloom",
+  "createdAt": "2026-01-15",
+  "status": "active",
+  "tagline": "Weave context for AI coding agents.",
+  "blurb": "A CLI + MCP server that assembles reusable context fragments and prompt bundles across Claude Code, Gemini CLI, and friends.",
+  "stack": ["Go", "MCP", "YAML"],
+  "site": "https://ctxloom.dev",
+  "github": "https://github.com/ctxloom/ctxloom",
+  "extras": [],
+  "note": "Most of my AI-tooling posts lately are things I learned building this.",
+  "order": 1
+}

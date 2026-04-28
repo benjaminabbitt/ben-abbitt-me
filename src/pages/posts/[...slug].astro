@@ -1,24 +1,74 @@
 ---
-import { render } from "astro:content";
-import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
-import { getAllPostsIncludingUnlisted } from "@/data/post";
-import PostLayout from "@/layouts/BlogPost.astro";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import Prose from "@/theme/components/Prose.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { countWords, readMinutes } from "@/theme/lib/readTime";
 
-// if you're using an adaptor in SSR mode, getStaticPaths wont work -> https://docs.astro.build/en/guides/routing/#modifying-the-slug-example-for-ssr
-export const getStaticPaths = (async () => {
-	const blogEntries = await getAllPostsIncludingUnlisted();
-	return blogEntries.map((post) => ({
+export async function getStaticPaths() {
+	const all = await getCollection("posts", ({ data }) => !data.draft);
+	return all.map((post) => ({
 		params: { slug: post.id },
 		props: { post },
 	}));
-}) satisfies GetStaticPaths;
+}
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-
+interface Props {
+	post: CollectionEntry<"posts">;
+}
 const { post } = Astro.props;
 const { Content } = await render(post);
+const words = countWords(post.body ?? "");
+const minutes = readMinutes(words);
+const date = post.data.publishDate.toISOString().slice(0, 10);
 ---
 
-<PostLayout post={post}>
-	<Content />
-</PostLayout>
+<PageLayout
+	current="posts"
+	title={`${post.data.title} — Append Only`}
+	description={post.data.description}
+>
+	<article class="max-w-[680px] mx-auto">
+		<header class="mb-10">
+			<div
+				class="font-mono text-[11.5px] text-fg-faint flex gap-2 flex-wrap mb-5"
+			>
+				<span>{date}</span>
+				<span>·</span>
+				<span>{words.toLocaleString()} words · {minutes} min</span>
+				{
+					post.data.tags.length > 0 && (
+						<>
+							<span>·</span>
+							{post.data.tags.map((t) => (
+								<span class="text-fg-dim">#{t}</span>
+							))}
+						</>
+					)
+				}
+			</div>
+			<h1
+				class="font-serif font-medium text-[44px] leading-[1.08] tracking-[-0.02em]"
+			>
+				{post.data.title}
+			</h1>
+			{
+				post.data.marginalia && (
+					<p class="font-serif italic text-[17px] text-accent mt-4 max-w-[42em]">
+						{post.data.marginalia}
+					</p>
+				)
+			}
+			{
+				!post.data.marginalia && post.data.description && (
+					<p class="font-serif-body italic text-[17px] text-fg-dim mt-4 max-w-[42em]">
+						{post.data.description}
+					</p>
+				)
+			}
+		</header>
+
+		<Prose>
+			<Content />
+		</Prose>
+	</article>
+</PageLayout>

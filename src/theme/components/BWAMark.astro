@@ -1,0 +1,36 @@
+---
+// BWA flat-roof monogram, inline SVG.
+// W is two wide peaks; A in the middle with a crossbar;
+// horizontal cap connects the two top vertices to form the B when read sideways.
+// Bottom points are softened via strokeLinejoin="round" so the outer silhouette reads as a B on its side.
+
+interface Props {
+  size?: number | string;
+  stroke?: number;
+  color?: string;
+  title?: string;
+}
+
+const { size = 32, stroke = 8, color = 'currentColor', title = 'BWA' } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 100 100"
+  fill="none"
+  stroke={color}
+  stroke-width={stroke}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role="img"
+  aria-label={title}
+>
+  <title>{title}</title>
+  {/* W — two peaks, 5 points */}
+  <path d="M 18 22 L 32 78 L 50 32 L 68 78 L 82 22" />
+  {/* Flat cap connecting the two top vertices */}
+  <path d="M 18 22 L 82 22" />
+  {/* A crossbar through the middle peak */}
+  <path d="M 40 54 L 60 54" />
+</svg>

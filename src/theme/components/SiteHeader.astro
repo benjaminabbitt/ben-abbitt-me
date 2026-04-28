@@ -1,0 +1,24 @@
+---
+import BWAMark from "./BWAMark.astro";
+import Nav from "./Nav.astro";
+
+type Section = "index" | "posts" | "projects" | "resume";
+interface Props {
+	current?: Section | undefined;
+}
+const { current } = Astro.props;
+---
+
+<header class="flex items-center justify-between pt-7 pb-9 border-b border-rule mb-12">
+	<a
+		href="/"
+		class="inline-flex items-center gap-3 text-fg hover:text-fg"
+		aria-label="Append Only — home"
+	>
+		<span class="inline-flex"><BWAMark size={28} stroke={9} /></span>
+		<span class="font-serif font-medium text-[19px] tracking-[-0.01em]"
+			>Append Only</span
+		>
+	</a>
+	<Nav current={current} />
+</header>
