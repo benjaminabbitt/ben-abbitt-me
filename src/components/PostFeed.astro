@@ -32,6 +32,7 @@ function fmtWords(n: number) {
 					<div
 						class="group relative grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3.5 -mx-2.5 border-b border-rule items-baseline transition-colors duration-100 hover:bg-bg-alt"
 						data-marginalia={p.data.marginalia ?? ""}
+						data-post-id={p.id}
 					>
 						<span class="font-mono text-[11.5px] text-fg-dim">{date}</span>
 						<span class="flex flex-col gap-1 min-w-0">
