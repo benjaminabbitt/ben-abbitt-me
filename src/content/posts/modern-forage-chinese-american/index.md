@@ -84,6 +84,8 @@ The containment is clean even when the dish has a national-sounding name. "Cashe
 
 Recipe sharing within each city's Chinese-American restaurant community is the propagation mechanism. Recipe non-sharing across cities is the containment mechanism.
 
+A second-wave footnote: the Cantonese peanut-butter egg roll spawned a Black-Chicago descendant. Sisters Ernesta "Dinkey" Berry/Lowery and Lekia Lowery put jerk chicken into an egg roll at L&B Soul Kitchen in Bellwood in 2015 and spawned [Tastee Rolls](/posts/modern-forage-great-lakes), which seeded a citywide West Side / South Side jerk-chicken-egg-roll ecosystem with 12-inch jumbo wraps and long flavor-variant menus (jerk, Philly, Italian beef, gyro, the **Obama**). Chicago Tribune's Nick Kindelsperger frames the new wave explicitly as Black restaurateurs *adapting* the Chinese-American form, not extending it. Same wrapper, same city, two different immigrant-adaptation traditions a half-century apart, locked in different neighborhood ecosystems that never overlap.
+
 ---
 
 ## More from the series
