@@ -1,8 +1,9 @@
 ---
-title: "The Antisocial Contract (Simple Version)"
+title: "Antisocial Contract: Simple Version"
 description: "A simplified overview of how us-vs-them thinking works, why it's hard to stop, and what we can do about it."
 publishDate: "10 Apr 2026"
-tags: ["politics", "psychology", "identity"]
+tags: ["antisocial-contract", "politics", "psychology", "identity"]
+marginalia: "The same argument in plainer language, for when the academic version is more friction than the idea is worth."
 ---
 ## The Big Idea
 

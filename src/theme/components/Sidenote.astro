@@ -1,0 +1,61 @@
+---
+// Per-section sidenote layout: narrows the main column to make room for a
+// sticky margin column on wider screens. Stacks on narrow screens.
+---
+
+<div class="sidenote-block">
+	<div class="sidenote-main"><slot /></div>
+	<aside class="sidenote-aside"><slot name="note" /></aside>
+</div>
+
+<style>
+	.sidenote-block {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+		margin: 2em 0;
+	}
+	@media (min-width: 900px) {
+		.sidenote-block {
+			grid-template-columns: minmax(0, 1fr) 220px;
+			gap: 2rem;
+			align-items: start;
+		}
+	}
+	.sidenote-aside {
+		font-family: var(--font-serif);
+		font-style: italic;
+		color: var(--color-accent);
+		font-size: 14.5px;
+		line-height: 1.55;
+		border-left: 1px solid var(--color-rule);
+		padding-left: 1rem;
+	}
+	@media (min-width: 900px) {
+		.sidenote-aside {
+			position: sticky;
+			top: 90px;
+			max-height: calc(100vh - 110px);
+			overflow-y: auto;
+		}
+	}
+	.sidenote-aside :global(p) {
+		margin: 0 0 0.9em;
+	}
+	.sidenote-aside :global(p:last-child) {
+		margin-bottom: 0;
+	}
+	.sidenote-aside :global(strong) {
+		color: var(--color-fg);
+		font-weight: 500;
+		font-style: normal;
+	}
+	.sidenote-aside :global(a) {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+	.sidenote-aside :global(a:hover) {
+		opacity: 0.75;
+	}
+</style>

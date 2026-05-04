@@ -1,0 +1,114 @@
+---
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import PostFeed from "@/components/PostFeed.astro";
+import TagRefine from "@/theme/components/TagRefine.astro";
+import { tagSlug } from "@/theme/lib/tags";
+import { knownTags } from "@/theme/lib/knownTags";
+import { evaluate, parse } from "@/lib/tagfs";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+	const all = await getCollection(
+		"posts",
+		({ data }) => !data.draft && !data.unlisted,
+	);
+	const slugSet = new Set<string>(knownTags);
+	for (const p of all) for (const t of p.data.tags) slugSet.add(tagSlug(t));
+	const slugs = [...slugSet].sort();
+
+	const paths: { params: { query: string | undefined } }[] = [];
+
+	paths.push({ params: { query: undefined } });
+
+	for (const s of slugs) paths.push({ params: { query: s } });
+	for (const s of slugs) paths.push({ params: { query: `${s}/not` } });
+
+	for (let i = 0; i < slugs.length; i++) {
+		for (let j = 0; j < slugs.length; j++) {
+			if (i === j) continue;
+			const a = slugs[i]!;
+			const b = slugs[j]!;
+			paths.push({ params: { query: `${a}/${b}/or` } });
+			paths.push({ params: { query: `${a}/${b}/not` } });
+			const co = all.some((p) => {
+				const ts = p.data.tags.map(tagSlug);
+				return ts.includes(a) && ts.includes(b);
+			});
+			if (co) paths.push({ params: { query: `${a}/${b}` } });
+		}
+	}
+
+	return paths;
+}
+
+const all = await getCollection(
+	"posts",
+	({ data }) => !data.draft && !data.unlisted,
+);
+
+const segments = (Astro.params.query ?? "").split("/").filter(Boolean);
+const tokens = parse(segments);
+const allTagSlugs = new Set<string>(knownTags);
+for (const p of all) for (const t of p.data.tags) allTagSlugs.add(tagSlug(t));
+
+const isEmpty = segments.length === 0;
+let sorted: CollectionEntry<"posts">[];
+let description: string;
+
+if (isEmpty) {
+	sorted = [...all].sort(
+		(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+	);
+	description = "All posts";
+} else {
+	const result = evaluate(tokens, all, (p) => p.data.tags.map(tagSlug));
+	if (!result.ok) throw new Error(`Invalid tag query: ${result.error}`);
+	sorted = [...result.items].sort(
+		(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+	);
+	description = result.description;
+}
+
+const allTags = [...allTagSlugs].sort();
+const currentSegments = segments.join("/");
+const present = new Set(segments.filter((s) => allTagSlugs.has(s)));
+const path = isEmpty ? "/posts/q/" : `/posts/q/${currentSegments}/`;
+---
+
+<PageLayout
+	current="posts"
+	title={`${isEmpty ? "Posts" : description} — Append Only`}
+	description={isEmpty
+		? "Everything I've written, most recent first."
+		: `Posts matching the query ${description}.`}
+>
+	<header class="mb-10">
+		<div
+			class="font-mono text-[11px] text-fg-faint tracking-[0.12em] uppercase mb-2"
+		>
+			{isEmpty ? "Posts" : "Tag query"}
+		</div>
+		<h1
+			class="font-serif font-medium text-[44px] leading-[1.05] tracking-[-0.02em] mb-3"
+		>
+			{description}
+		</h1>
+		<p class="text-fg-dim text-[15px]">
+			{sorted.length}
+			{sorted.length === 1 ? "post" : "posts"}.
+			<span class="text-fg-faint font-mono text-[12px] ml-2">{path}</span>
+		</p>
+	</header>
+
+	<div class="mb-10">
+		<TagRefine segments={segments} allTags={allTags} presentTags={present} />
+	</div>
+
+	{
+		sorted.length > 0 ? (
+			<PostFeed entries={sorted} showExcerpt />
+		) : (
+			<p class="text-fg-dim text-[15px] italic">No posts match this query.</p>
+		)
+	}
+</PageLayout>

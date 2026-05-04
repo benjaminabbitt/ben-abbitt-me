@@ -24,5 +24,14 @@ pnpm-debug.log*
 .cache
 .astro
 
-# ctxloom ephemeral data (synced bundles, session data, context files)
-.ctxloom/ephemeral/
+# ctxloom data (synced bundles, session data, cache, context files)
+.ctxloom/
+
+# local dev tool configs
+.claude/
+.gemini/
+.mcp.json
+.mcp.json.*.bak
+
+# in-progress research drafts (live in the modern_forage repo, not the blog)
+drafts/

@@ -1,6 +1,9 @@
 ---
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import PostFeed from "@/components/PostFeed.astro";
+import TagRefine from "@/theme/components/TagRefine.astro";
+import { tagSlug } from "@/theme/lib/tags";
+import { knownTags } from "@/theme/lib/knownTags";
 import { getCollection } from "astro:content";
 
 const all = await getCollection(
@@ -10,17 +13,31 @@ const all = await getCollection(
 const sorted = all.sort(
 	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
 );
+
+const allTagSlugs = new Set<string>(knownTags);
+for (const p of all) for (const t of p.data.tags) allTagSlugs.add(tagSlug(t));
+const allTags = [...allTagSlugs].sort();
 ---
 
 <PageLayout current="posts" title="Posts — Append Only">
-	<header class="mb-12">
+	<header class="mb-10">
 		<h1
 			class="font-serif font-medium text-[52px] leading-none tracking-[-0.02em] mb-3"
 		>
 			Posts
 		</h1>
-		<p class="text-fg-dim text-[16px]">Everything I've written, most recent first.</p>
+		<p class="text-fg-dim text-[16px]">
+			{sorted.length} posts. Browse below or refine with a tag query.
+		</p>
 	</header>
+
+	<div class="mb-10">
+		<TagRefine
+			segments={[]}
+			allTags={allTags}
+			presentTags={new Set<string>()}
+		/>
+	</div>
 
 	<PostFeed entries={sorted} showExcerpt />
 </PageLayout>

@@ -8,5 +8,12 @@ import { siteConfig } from "./src/site.config";
 export default defineConfig({
 	site: siteConfig.url,
 	integrations: [mdx(), sitemap(), robotsTxt()],
-	vite: { plugins: [tailwind()] },
+	vite: {
+		plugins: [tailwind()],
+		server: {
+			watch: {
+				ignored: ["**/.ctxloom/**", "**/.claude/**", "**/.gemini/**"],
+			},
+		},
+	},
 });

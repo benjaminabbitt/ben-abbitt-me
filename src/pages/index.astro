@@ -1,6 +1,9 @@
 ---
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import PostFeed from "@/components/PostFeed.astro";
+import TagRefine from "@/theme/components/TagRefine.astro";
+import { tagSlug } from "@/theme/lib/tags";
+import { knownTags } from "@/theme/lib/knownTags";
 import { getCollection } from "astro:content";
 
 const all = await getCollection(
@@ -11,25 +14,43 @@ const sorted = all
 	.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
 	.slice(0, 12);
 
+const allTagSlugs = new Set<string>(knownTags);
+for (const p of all) for (const t of p.data.tags) allTagSlugs.add(tagSlug(t));
+const allTags = [...allTagSlugs].sort();
+
 const interests = [
-	"probability & stats",
-	"voting systems",
-	"social dynamics",
-	"game theory",
-	"rocketry",
+	{ display: "probability & stats", slug: "probability-stats" },
+	{ display: "voting", slug: "voting" },
+	{ display: "game theory", slug: "game-theory" },
+	{ display: "rocketry", slug: "rocketry" },
 ];
 ---
 
 <PageLayout current="index" title="Append Only — Ben Abbitt">
-	<section class="mb-16 max-w-[720px]">
+	<section class="mb-12 max-w-[720px]">
 		<h1
 			class="font-serif font-medium text-[48px] sm:text-[72px] leading-none tracking-[-0.025em] mb-5"
 		>
 			Append Only
 		</h1>
 		<p class="text-[18px] leading-[1.55] text-fg-dim max-w-[620px]">
-			Technical learnings, software architecture, AI wrangling, and the tools I
-			keep reaching for. Notes from Ben Abbitt.
+			<a href="/posts/q/technical-learnings/" class="tagline-link"
+				>Technical learnings</a
+			>,
+			<a href="/posts/q/software-architecture/" class="tagline-link"
+				>software architecture</a
+			>,
+			<a href="/posts/q/llm/" class="tagline-link">AI wrangling</a>, and
+			<a href="/posts/q/tools/" class="tagline-link">the tools I keep reaching for</a>.
+			Plus
+			<a href="/posts/q/social-dynamics/" class="tagline-link"
+				>social dynamics</a
+			>,
+			<a href="/posts/q/travel/" class="tagline-link">travel and tourism</a>,
+			<a href="/posts/q/cocktail/" class="tagline-link">cocktails</a>,
+			<a href="/posts/q/food/" class="tagline-link">food</a>, and
+			<a href="/posts/q/culture/" class="tagline-link">culture</a>. Notes from Ben
+			Abbitt.
 		</p>
 		<p class="font-serif-body text-[15px] text-fg-dim mt-4 italic">
 			<span
@@ -39,7 +60,12 @@ const interests = [
 			{
 				interests.map((i, ix) => (
 					<>
-						<em>{i}</em>
+						<a
+							href={`/posts/q/${i.slug}/`}
+							class="hover:text-accent border-b border-rule/60 hover:border-accent"
+						>
+							<em>{i.display}</em>
+						</a>
 						{ix < interests.length - 1 && (
 							<span class="text-fg-faint not-italic"> · </span>
 						)}
@@ -49,6 +75,14 @@ const interests = [
 		</p>
 	</section>
 
+	<div class="mb-10">
+		<TagRefine
+			segments={[]}
+			allTags={allTags}
+			presentTags={new Set<string>()}
+		/>
+	</div>
+
 	<h2
 		class="font-mono font-normal text-[11px] text-fg-faint tracking-[0.12em] uppercase mb-4"
 	>
@@ -56,3 +90,15 @@ const interests = [
 	</h2>
 	<PostFeed entries={sorted} />
 </PageLayout>
+
+<style>
+	.tagline-link {
+		color: inherit;
+		border-bottom: 1px solid color-mix(in oklab, currentColor 25%, transparent);
+		transition: color 0.15s, border-color 0.15s;
+	}
+	.tagline-link:hover {
+		color: var(--color-accent);
+		border-bottom-color: var(--color-accent);
+	}
+</style>

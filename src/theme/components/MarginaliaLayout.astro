@@ -14,7 +14,7 @@ const { defaultText = "Hover a row to read the margin note." } = Astro.props;
 	>
 		<div
 			data-marginalia-text
-			class="font-serif italic text-[15.5px] text-accent leading-[1.5] min-h-20"
+			class="font-serif italic text-[15.5px] text-accent leading-[1.5] min-h-20 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:opacity-80"
 		>
 			{defaultText}
 		</div>
@@ -25,11 +25,11 @@ const { defaultText = "Hover a row to read the margin note." } = Astro.props;
 	(function () {
 		const panel = document.querySelector("[data-marginalia-text]");
 		if (!panel) return;
-		const initial = panel.textContent;
+		const initial = panel.innerHTML;
 		document.querySelectorAll("[data-marginalia]").forEach((row) => {
 			row.addEventListener("mouseenter", () => {
 				const note = row.getAttribute("data-marginalia");
-				panel.textContent = note && note.length ? note : initial;
+				panel.innerHTML = note && note.length ? note : initial;
 			});
 		});
 	})();

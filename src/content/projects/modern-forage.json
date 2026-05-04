@@ -1,0 +1,13 @@
+{
+  "id": "modern-forage",
+  "name": "modern_forage",
+  "createdAt": "2026-05-03",
+  "status": "active",
+  "tagline": "Mapping hyper-local US regional dishes to the places that produced them.",
+  "stack": [],
+  "site": null,
+  "github": "https://github.com/benjaminabbitt/modern_forage",
+  "extras": [],
+  "note": "Each blog entry in the Modern Forage series draws from this research repo.",
+  "order": 0
+}

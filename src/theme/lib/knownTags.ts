@@ -1,0 +1,17 @@
+export const knownTags = [
+	"antisocial-contract",
+	"cocktail",
+	"culture",
+	"food",
+	"game-theory",
+	"llm",
+	"modern-forage",
+	"probability-stats",
+	"rocketry",
+	"social-dynamics",
+	"software-architecture",
+	"technical-learnings",
+	"tools",
+	"travel",
+	"voting",
+] as const;

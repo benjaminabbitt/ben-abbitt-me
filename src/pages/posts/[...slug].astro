@@ -3,6 +3,7 @@ import PageLayout from "@/theme/layouts/PageLayout.astro";
 import Prose from "@/theme/components/Prose.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
+import { tagHref } from "@/theme/lib/tags";
 
 export async function getStaticPaths() {
 	const all = await getCollection("posts", ({ data }) => !data.draft);
@@ -40,7 +41,9 @@ const date = post.data.publishDate.toISOString().slice(0, 10);
 						<>
 							<span>·</span>
 							{post.data.tags.map((t) => (
-								<span class="text-fg-dim">#{t}</span>
+								<a href={tagHref(t)} class="text-fg-dim hover:text-accent">
+									#{t}
+								</a>
 							))}
 						</>
 					)
@@ -53,9 +56,10 @@ const date = post.data.publishDate.toISOString().slice(0, 10);
 			</h1>
 			{
 				post.data.marginalia && (
-					<p class="font-serif italic text-[17px] text-accent mt-4 max-w-[42em]">
-						{post.data.marginalia}
-					</p>
+					<p
+						class="font-serif italic text-[17px] text-accent mt-4 max-w-[42em] [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:opacity-80"
+						set:html={post.data.marginalia}
+					/>
 				)
 			}
 			{
@@ -72,3 +76,19 @@ const date = post.data.publishDate.toISOString().slice(0, 10);
 		</Prose>
 	</article>
 </PageLayout>
+
+<script is:inline>
+	(function () {
+		const article = document.querySelector("article .prose");
+		if (!article) return;
+		for (const h of article.querySelectorAll("h2[id], h3[id], h4[id]")) {
+			if (h.querySelector(".heading-anchor")) continue;
+			const a = document.createElement("a");
+			a.className = "heading-anchor";
+			a.href = "#" + h.id;
+			a.setAttribute("aria-label", "Link to this section");
+			a.innerHTML = '<span class="heading-anchor-glyph">¶</span>';
+			h.appendChild(a);
+		}
+	})();
+</script>

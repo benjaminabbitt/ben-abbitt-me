@@ -1,8 +1,9 @@
 ---
-title: "The Democratic Trap and Structural Solutions"
+title: "Antisocial Contract: The Democratic Trap"
 description: "Can representative institutions be structured to filter sacred-value distortion from constituency input without undermining democratic legitimacy?"
 publishDate: "10 Apr 2026"
-tags: ["politics", "psychology", "identity"]
+tags: ["antisocial-contract", "politics", "psychology", "identity"]
+marginalia: "The institutional half of the problem: democratic accountability faithfully transmits sacralized irrationality, so what kind of design filters it out?"
 ---
 ## The Problem
 
