@@ -10,9 +10,9 @@ unlisted: true
 
 > **Draft.** This pattern post is still being expanded as new entries surface across the survey. The pattern is worth noting; the entries listed below are not final.
 
-The most distinctive finding in the survey is structural, not culinary. The same immigrant wave (Greeks coming to the United States in the early 20th century) dropped the same business template into six different American cities, and the result was six dishes that look unrelated on first glance but turn out to be the same story.
+Birmingham. Jackson MS. Detroit. Flint. Toledo. Providence. Paterson NJ. Six American cities, six different Greek immigrant families, six chili sauces nobody outside the city has ever tasted. The dishes look unrelated until you put them side by side, and then they're obviously the same story.
 
-The template: a Greek immigrant lands in a working-class US city, opens a hot-dog or sandwich counter near a downtown office or factory district, develops a proprietary chili-style sauce drawing on the homeland's saltsa kima or comeback-style mayo, recruits family members from the village, and locks the recipe to the building. Each location's sauce is unique. Each location's containment is total. None of the dishes have escaped.
+The template repeats: a Greek immigrant arrives in a working-class US city, opens a hot-dog or sandwich counter near downtown offices or a factory district, builds a proprietary chili-style sauce out of the homeland's saltsa kima or a comeback-style mayo, recruits family from the village, and locks the recipe to the building. Each city's sauce is unique. Each city's containment is total. None of the dishes have escaped.
 
 ## Birmingham-Style Hot Dogs — Birmingham, AL (1919)
 *Regional context: [The South](/posts/modern-forage-south).*
@@ -58,7 +58,7 @@ A deep-fried hot dog with Greek-spiced chili sauce (cumin, cinnamon, no beans), 
 
 ## The pattern
 
-Each entry above features a Greek immigrant entrepreneur adapting food for a specific local working-class market. The hot dog or sausage format appears repeatedly because it's portable, affordable, and customizable through proprietary sauces. The customization is the defense mechanism. A generic chili dog can be reproduced anywhere. A Birmingham dog or a Coney with the specific Keros-family chili recipe cannot be reproduced once you leave the source restaurant.
+Each entry has a Greek immigrant entrepreneur adapting food for a specific local working-class market. The hot dog and sausage format repeats because it's portable, cheap, and customizable through proprietary sauces. The customization is the defense mechanism. A generic chili dog can be reproduced anywhere. A Birmingham dog or a Coney with the specific Keros-family chili recipe cannot be reproduced once you leave the source restaurant.
 
 Containment in this pattern works through three reinforcing mechanisms:
 
@@ -68,6 +68,8 @@ Containment in this pattern works through three reinforcing mechanisms:
 
 The same template would recur with Chinese-American restaurateurs (next post over), Basque sheepherder boarding houses, and the Cornish pasty miners' corridors. Different ingredients, same containment story.
 
+A noteworthy extension: Greek immigrant Peter Alexander built the same kind of locked-in proprietary-sauce business in Chicago in 1950, but he did it at a 63rd St steakhouse rather than a hot-dog stand. His [Chicago creamy garlic dressing](/posts/modern-forage-grocery-store-regionalism) followed the same template (Greek immigrant, proprietary recipe, family-network spread, regional containment) but landed in the white-tablecloth-adjacent steakhouse and pizzeria circuit instead of the chili-counter one. The pattern travels.
+
 ---
 
 ## More from the series
@@ -76,8 +78,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research, including the methodology tracker and source-by-source validation logs, lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage). Each entry was verified against at least two independent sources using different language; the source citations beneath each dish list those.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check; the citations under each dish list them.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). Several of the Greek-American entries here were either surfaced or confirmed by responses in that thread.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Several Greek-American entries here were either surfaced or confirmed there.
 
-Cross-cutting source: the [Southern Foodways Alliance](https://www.southernfoodways.org) Oral History Initiative archive, which captured the Birmingham hot dog lineage (Gus Koutroulakis, 2004) before it was lost.
+Cross-cutting source: the [Southern Foodways Alliance](https://www.southernfoodways.org) Oral History Initiative captured the Birmingham hot dog lineage (Gus Koutroulakis, 2004) before it was lost.

@@ -8,7 +8,7 @@ excerpt: "Roughly 30 dishes from St. Louis, Springfield IL, the Iron Range, the 
 unlisted: true
 ---
 
-The second stretch of the survey: the wheat belt and the river towns. St. Louis carries the heaviest single-city load in this post (eleven dishes, more than any city outside Chicago). The Dakotas and Nebraska contribute an entire family of German-Russian wheat-belt foodways that exist nowhere else in the United States.
+Chislic in South Dakota: deep-fried mutton cubes with saltines. Runza in Nebraska: a German-Russian cabbage-and-beef pocket. Gooey butter cake in St. Louis. Knoephla soup at every Dakotas Dairy Queen. Chili served alongside frosted cinnamon rolls in Iowa school cafeterias. Roughly thirty dishes from the wheat belt and the river towns, mostly invented by German-Russian and Italian-American immigrants who farmed the prairie or worked the Mississippi-corridor cities. St. Louis alone has eleven, second only to Chicago.
 
 ## The Great Plains
 
@@ -235,8 +235,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research, including the methodology tracker, source-by-source validation logs, and the entries I didn't include here, lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage). Each entry above was verified against at least two independent sources using different language; the source citations beneath each dish list those.
+Methodology, validation logs, and the entries that didn't make this post are in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry here passed a 2+ independent-source check; the citations under each dish list them.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). The "I moved away from X and can't find Y" pattern in that thread was the single best discovery mechanism for this kind of containment, and several of the entries above were either surfaced or confirmed there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals: "I moved away and can't find X." Several of the dishes above came out of it.
 
-Recurring publication sources for the Plains and Heartland: [Flatwater Free Press](https://flatwaterfreepress.org), [STL Post-Dispatch](https://www.stltoday.com), [St. Louis Magazine](https://www.stlmag.com), [AFAR](https://www.afar.com), [KCUR](https://www.kcur.org), [Sandwich Tribunal](https://www.sandwichtribunal.com), [Star Tribune](https://www.startribune.com), [Wikipedia](https://en.wikipedia.org/wiki/Cuisine_of_the_Midwestern_United_States) (Cuisine of the Midwestern United States entry), Atlas Obscura (Gastro Obscura).
+Recurring publication sources for this region: [Flatwater Free Press](https://flatwaterfreepress.org), [STL Post-Dispatch](https://www.stltoday.com), [St. Louis Magazine](https://www.stlmag.com), [AFAR](https://www.afar.com), [KCUR](https://www.kcur.org), [Sandwich Tribunal](https://www.sandwichtribunal.com), [Star Tribune](https://www.startribune.com), [Wikipedia](https://en.wikipedia.org/wiki/Cuisine_of_the_Midwestern_United_States), Atlas Obscura (Gastro Obscura).

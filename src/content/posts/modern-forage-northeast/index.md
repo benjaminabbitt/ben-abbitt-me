@@ -8,7 +8,7 @@ excerpt: "New England, Upstate New York, New Jersey, the PA Dutch country, Balti
 unlisted: true
 ---
 
-The Northeast carries the densest cluster of named-sandwich containment in the country. The cities are close, but the dishes don't cross. Drive ninety minutes between Providence, Worcester, and Springfield, MA and you'll pass three distinct Greek-immigrant family hot-dog traditions, none of which know about each other. The same applies to the Maine red snapper, the Vermont creemee, the Connecticut steamed cheeseburger, and the Rhode Island coffee milk. Containment in this region is a function of dense towns with strong local identity rather than geographic isolation.
+Three different Greek-immigrant family hot-dog traditions sit within ninety minutes of each other in Providence, Worcester, and Springfield, Massachusetts. None of the families know each other. None of the dishes have crossed any of the lines between the three cities. That's the Northeast in microcosm: thirty regional dishes packed into a corridor where every working-class town claims its own sandwich, soda, or condiment, and the next town over has its own. The Maine red snapper hot dog. The Vermont maple creemee. The Connecticut steamed cheeseburger. The Rhode Island coffee milk. The Newark Italian hot dog. None of them have escaped, not because the towns are isolated but because each one's working-class food identity is its own.
 
 ## New England
 
@@ -240,8 +240,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage), including the methodology tracker and source-by-source validation logs.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). Several Northeast entries (the steamed cheeseburger, the North Shore three-way, the Maine red snapper) were either surfaced or confirmed by responses there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The steamed cheeseburger, North Shore three-way, and Maine red snapper all came out of it.
 
-Recurring publication sources for the Northeast and Mid-Atlantic: [Saveur](https://www.saveur.com), [Boston Globe](https://www.bostonglobe.com), [Chowhound](https://www.chowhound.com), Edible Boston, [Wikipedia](https://en.wikipedia.org/wiki/Cuisine_of_New_England) (Cuisine of New England entry), New England Historical Society, and Experience Pennsylvania.
+Recurring publication sources for this region: [Saveur](https://www.saveur.com), [Boston Globe](https://www.bostonglobe.com), [Chowhound](https://www.chowhound.com), Edible Boston, [Wikipedia](https://en.wikipedia.org/wiki/Cuisine_of_New_England), New England Historical Society, and Experience Pennsylvania.

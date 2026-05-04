@@ -8,7 +8,7 @@ excerpt: "South Texas, San Antonio, Austin, Houston, El Paso, Arizona, New Mexic
 unlisted: true
 ---
 
-Texas and the Southwest aren't a single tradition. The Rio Grande Valley produces dishes none of which the rest of Texas knows. El Paso is closer to Albuquerque than to Houston in cuisine. Houston's most distinctive contemporary dish came from Vietnamese refugees. Central Texas was settled by Czechs. The state's containment story is really four or five containment stories stitched together.
+Texas and the Southwest aren't one tradition; they're four or five stitched into the same map. The Rio Grande Valley invented dishes the rest of Texas doesn't know. El Paso is closer to Albuquerque than to Houston in cuisine and observes Mountain Time to prove it. Houston's most distinctive contemporary dish came out of Vietnamese refugee crawfish boils. Central Texas was settled by Czechs, and the bakery scene still shows it. New Mexico runs an official Green Chile Cheeseburger Trail.
 
 ## South Texas / Rio Grande Valley
 
@@ -114,8 +114,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage), including the methodology tracker and source-by-source validation logs.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). The botana platter and the Austin breakfast taco both surfaced strong diaspora-nostalgia signals there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The botana platter and the Austin breakfast taco came out of it.
 
-Recurring publication sources for Texas and the Southwest: [Texas Monthly](https://www.texasmonthly.com), [Saveur](https://www.saveur.com), Texas Highways, the [Southern Foodways Alliance](https://www.southernfoodways.org) (Czech-Texan baker oral histories), Houstonia Magazine, [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura, and Edible Phoenix.
+Recurring publication sources for this region: [Texas Monthly](https://www.texasmonthly.com), [Saveur](https://www.saveur.com), Texas Highways, the [Southern Foodways Alliance](https://www.southernfoodways.org) (Czech-Texan baker oral histories), Houstonia Magazine, [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura, and Edible Phoenix.

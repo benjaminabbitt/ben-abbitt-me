@@ -10,12 +10,7 @@ unlisted: true
 
 > **Draft.** This pattern post is still being expanded as new entries surface across the survey. The pattern is worth noting; the entries listed below are not final.
 
-When an immigrant group follows extractive industry, food traditions get locked to the geology rather than to a metropolitan area. Two corridors run through the American West, both tracing extraction routes from the 19th century, both still producing distinctive regional food at every stop:
-
-- **Cornish miners** brought the pasty to every major US hard-rock mining community. The corridor runs from Michigan's Upper Peninsula across the Great Lakes, down through the Mountain West, into Arizona, and on into Mexican silver country.
-- **Basque sheepherders** anchored a corridor from Boise through Northern Nevada to Bakersfield, with each town preserving the same boarding-house dining format.
-
-In both cases, the food survives where the immigrants stayed after the industry collapsed. Containment is total because the mining or sheepherding routes never overlapped with later metropolitan growth.
+Pasties at every UP Michigan diner. Pasties in Butte, Montana. Pasties in Grass Valley, California. Pasties in Bisbee, Arizona. The Cornish miners followed copper, gold, silver, and lead, and the pasty followed them. The Basque corridor is its companion: sheepherder boarding houses from Boise through Reno to Bakersfield, each serving the same multi-course communal meal. Two extraction corridors, two food traditions locked to where the work was rather than where the people are. The dishes survive where the immigrant communities stayed after the industries collapsed, and almost nowhere else.
 
 ## The Cornish Pasty Corridor
 
@@ -81,7 +76,7 @@ The southern anchor. Family-style multi-course meals at long communal tables, th
 
 ## The pattern
 
-Both corridors illustrate the same point: when an immigrant group is recruited for extractive industry, food traditions follow the geology, not the metropolis. The Cornish corridor follows hard-rock mining belts. The Basque corridor follows sheep-grazing routes. In both cases, the dishes survive where the immigrant communities stayed after the industry collapsed (or evolved). The reason these dishes are unfamiliar isn't that they're new or obscure but that they're locked to towns most Americans never visit.
+Both corridors make the same point: when an immigrant group is recruited for extractive industry, food traditions follow the geology, not the metropolis. The Cornish corridor follows hard-rock mining belts. The Basque corridor follows sheep-grazing routes. The dishes are unfamiliar not because they're new or obscure, but because they're locked to towns most Americans never visit.
 
 A side note: the chislic and runza of the Great Plains follow a third extractive corridor, German-Russian wheat farming. Same template, different industry. *See [The Plains & Heartland](/posts/modern-forage-plains-heartland).*
 
@@ -93,8 +88,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage), including the methodology tracker, the cross-cutting pattern analysis, and the source-by-source validation logs.
+Methodology, validation logs, and the cross-cutting pattern analysis live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). Multiple UP pasty and Mountain West entries were either surfaced or confirmed by responses there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Multiple UP pasty and Mountain West entries were either surfaced or confirmed there.
 
 For the Basque corridor specifically, [Buber's Basque Page](http://buber.net/Basque/) is the most comprehensive online archive of US Basque-American foodways.

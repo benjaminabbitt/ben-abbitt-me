@@ -10,9 +10,9 @@ unlisted: true
 
 > **Draft.** This pattern post is still being expanded as new entries surface across the survey. The pattern is worth noting; the entries listed below are not final.
 
-The deepest containment in the survey is in the grocery store rather than the restaurant. Dishes get press; condiments do cultural work invisibly. People don't think of their dressing as regional. They use it on everything, assume everyone else does too, and then move and discover otherwise.
+The deepest containment in the survey is in the grocery store, not the restaurant. Dishes get press; condiments do cultural work invisibly. People don't think of their dressing as regional. They use it on everything, assume everyone else does too, and then move and discover otherwise.
 
-The discovery mechanism for this category is diaspora nostalgia: "I moved and can't find it." The single best signal is when someone packs the condiment in their suitcase or has it shipped across state lines. When Heinz launched "Mayochup" nationally in 2018, Utah and Idaho residents (where fry sauce has been the standard since the 1940s) publicly objected. That's the containment signature.
+The discovery mechanism is diaspora nostalgia: "I moved and can't find it." The single best signal is when someone packs the condiment in their suitcase or has it shipped across state lines. When Heinz launched "Mayochup" nationally in 2018, Utah and Idaho residents (where fry sauce has been the standard since the 1940s) publicly objected. That's the containment signature.
 
 ## Beverages
 
@@ -51,6 +51,7 @@ Dressings, sauces, and spreads that are invisible inside their region (used on e
 - **Vermont Boiled Cider** (New England, 1660s origin). Apple cider reduced 7:1 to a dark, sweet-tart syrup ("apple molasses"). Colonial-era tradition nearly extinct. Wood's Cider Mill (Weathersfield VT, since 1882) is essentially the last producer. On Slow Food's Ark of Taste. *Regional context: [The Northeast & Mid-Atlantic](/posts/modern-forage-northeast).*
 - **Cleveland Brown Mustard** (Cleveland, 1920s). Spicy brown mustard. Two rival brands (Bertman Ball Park and Stadium Mustard) split the city's sports allegiance. "You either eat Stadium or Ball Park, no middle ground." *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes).*
 - **Henry Bain Sauce** (Louisville, KY, 1900s). Chutney-pickled walnut-ketchup-Worcestershire condiment created by a Black maître d' at the Pendennis Club. Derby-party staple. Exclusively club-only for 100+ years, bottled for retail only in 2009. *Regional context: [The South](/posts/modern-forage-south).*
+- **Chicago Creamy Garlic Dressing** (Chicago, since 1950). Mayo-and-sometimes-sour-cream creamy garlic dressing created by Greek immigrant Peter Alexander at Alexander's Steak House on 63rd St. Conrad Hilton Jr. shipped monthly cases to himself and Elizabeth Taylor starting 1950. Spread across Chicago Greek steakhouses, Italian-American pizzerias, and old-line carryouts. Chicago Pizza & Oven Grinder Co. ships jars nationwide; Marie's Creamy Italian Garlic at Mariano's is the closest supermarket proxy. East Coast Italian-American restaurants serve oil-and-vinegar instead. *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes); pattern: [The Greek Diner Empire](/posts/modern-forage-greek-diner-empire).*
 
 *Sources for Durkee: [Garden & Gun](https://gardenandgun.com) (2025, longform); [HuffPost](https://www.huffpost.com) (2013); [The Kitchn](https://www.thekitchn.com) (2019); Ukulele Underground Forum (2025, diaspora panic); Civil War Talk Forum (diaspora nostalgia); Palatable Pastime (2024). Six+ sources.*
 
@@ -76,8 +77,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage). The methodology tracker contains the full condiment-containment seed-to-longform loop, which was the systematic search mechanism that surfaced most of the entries above.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). The condiment-containment seed-to-longform loop documented in the tracker was the systematic search mechanism that surfaced most of the entries above.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). The "I moved and can't find" framing in that thread surfaced multiple condiment entries that no listicle had previously captured.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The "I moved and can't find" framing surfaced multiple condiment entries that no listicle had captured.
 
-The single best secondary source for this category is [Garden & Gun](https://gardenandgun.com)'s 2025 Durkee Famous Sauce longform, which articulated the "inherited love" framing that opened up the broader condiment-containment thesis.
+The standout secondary source for this category is [Garden & Gun](https://gardenandgun.com)'s 2025 Durkee Famous Sauce longform, which articulated the "inherited love" framing that opened up the broader condiment-containment thesis.

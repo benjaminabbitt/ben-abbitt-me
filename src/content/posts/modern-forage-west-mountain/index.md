@@ -8,7 +8,7 @@ excerpt: "California, Pacific Northwest, Hawaii, Utah, Idaho, Wyoming, Colorado,
 unlisted: true
 ---
 
-The West Coast looks young in food terms compared to the South or the Northeast, but the survey turns up the same containment story driven by 19th-century immigrant labor: Basque sheepherders, Cornish gold-rush miners, Chinese railroad workers. The Mountain West adds Wyoming sarma and Colorado green chile burgers; Hawaii contributes an entire plantation-era noodle culture; and California carries the southern terminus of the Basque corridor and the canonical Santa Maria barbecue tradition.
+Cornish miners brought the pasty to gold-rush Grass Valley. Basque sheepherders set up boarding houses from Boise through Reno to Bakersfield. Chinese railroad workers in Rock Springs invented a Chinese-Mexican fusion that exists in one Wyoming town. Yugoslav immigrants opened a sarma steakhouse in Hudson, Wyoming (population around 450) that's still serving. The plantation-era Hawaiian noodle culture is its own world. Twenty-five regional dishes from the islands to the Rockies to the California coast, almost all of them tracing back to a 19th-century immigrant-labor wave.
 
 ## California
 
@@ -176,8 +176,8 @@ An open-faced cheeseburger (often double patty) smothered in green chile sauce, 
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage), including the methodology tracker and source-by-source validation logs.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). The Pueblo slopper, Rock Springs chili meat, Hudson WY sarma, and Boise finger steaks were all surfaced or confirmed there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The Pueblo slopper, Rock Springs chili meat, Hudson WY sarma, and Boise finger steaks all came out of it.
 
-Recurring publication sources for the West and Mountain West: [Chowhound](https://www.chowhound.com), Hawaii Magazine, [Saveur](https://www.saveur.com), HistoryLink.org (Seattle teriyaki), Cowboy State Daily, [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura, KCET PBS SoCal (Bakersfield Basque), and [Buber's Basque Page](http://buber.net/Basque/) (the canonical online archive of US Basque-American foodways).
+Recurring publication sources for this region: [Chowhound](https://www.chowhound.com), Hawaii Magazine, [Saveur](https://www.saveur.com), HistoryLink.org (Seattle teriyaki), Cowboy State Daily, [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura, KCET PBS SoCal (Bakersfield Basque), and [Buber's Basque Page](http://buber.net/Basque/) (the canonical online archive of US Basque-American foodways).

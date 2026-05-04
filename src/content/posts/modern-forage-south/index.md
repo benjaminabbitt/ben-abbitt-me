@@ -8,7 +8,7 @@ excerpt: "Carolinas, Mississippi, Alabama, Georgia, Kentucky, Florida, Appalachi
 unlisted: true
 ---
 
-The South spans the most distinct regional traditions in the survey. Each sub-region carries its own immigrant overlay (Greek in Birmingham and Jackson, Lebanese in the Delta, Czech-Texan along the I-10 corridor, Cuban-Italian in Tampa, French and Spanish in St. Augustine, Caribbean in South Florida) on top of the Southern foundation.
+Birmingham hot dogs invented by a Greek-immigrant family. Mississippi Delta tamales sold by grocers with Lebanese surnames. A pickle soaked in Kool-Aid that turns neon red. Mayo-vinegar-horseradish white BBQ sauce in Decatur, Alabama, and almost nowhere else. Sonker in a single North Carolina county. The Hot Brown only at the Brown Hotel and a few imitators. Hand-pulled taffy from a mule wagon in New Orleans. Roughly forty-five dishes, each with its own immigrant overlay sitting on top of the Southern foundation: Greek in Birmingham and Jackson, Lebanese in the Delta, Cuban-Italian in Tampa, French and Spanish in St. Augustine, Caribbean in South Florida.
 
 ## South Carolina
 
@@ -301,8 +301,8 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-The full underlying research lives in the [`modern_forage` repository on GitHub](https://github.com/benjaminabbitt/modern_forage), including the methodology tracker and the source-by-source validation logs.
+Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
 
-The Reddit thread we ran to seed and corroborate diaspora signals across the survey is [r/chicagofood: "What food does your city have that literally NOWHERE ELSE has?"](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/). Several Southern entries (chocolate gravy, possum pie, koolickles) were either surfaced or confirmed by responses there.
+We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Chocolate gravy, possum pie, and koolickles all came from responses there.
 
-Recurring publication sources for the South: the [Southern Foodways Alliance](https://www.southernfoodways.org) Oral History Initiative (Birmingham hot dogs, comeback sauce, West Indies salad), [Garden & Gun](https://gardenandgun.com), [NCpedia](https://www.ncpedia.org), [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura section, and the [Mississippi Encyclopedia](https://mississippiencyclopedia.org).
+Recurring publication sources for this region: the [Southern Foodways Alliance](https://www.southernfoodways.org) Oral History Initiative (Birmingham hot dogs, comeback sauce, West Indies salad), [Garden & Gun](https://gardenandgun.com), [NCpedia](https://www.ncpedia.org), [Atlas Obscura](https://www.atlasobscura.com)'s Gastro Obscura section, and the [Mississippi Encyclopedia](https://mississippiencyclopedia.org).
