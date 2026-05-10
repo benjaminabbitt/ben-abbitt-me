@@ -94,7 +94,7 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-Methodology, the immigrant-adaptation pattern analysis, and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage).
+Methodology, the immigrant-adaptation pattern analysis, and validation logs live in the [`modern_forage/` on GitHub](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage).
 
 We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Springfield cashew chicken, Rock Springs chili meat, and the Akutagawa lead all came out of it.
 

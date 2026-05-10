@@ -88,7 +88,7 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-Methodology, validation logs, and the cross-cutting pattern analysis live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
+Methodology, validation logs, and the cross-cutting pattern analysis live in the [`modern_forage/` on GitHub](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). Every entry passed a 2+ independent-source check.
 
 We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Multiple UP pasty and Mountain West entries were either surfaced or confirmed there.
 

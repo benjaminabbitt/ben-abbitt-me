@@ -78,7 +78,7 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check; the citations under each dish list them.
+Methodology and validation logs live in the [`modern_forage/` on GitHub](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). Every entry passed a 2+ independent-source check; the citations under each dish list them.
 
 We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. Several Greek-American entries here were either surfaced or confirmed there.
 

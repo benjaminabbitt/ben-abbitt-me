@@ -1,18 +1,13 @@
 ---
-import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { getCollection } from "astro:content";
 import PostFeed from "@/components/PostFeed.astro";
 import TagRefine from "@/theme/components/TagRefine.astro";
-import { tagSlug } from "@/theme/lib/tags";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { knownTags } from "@/theme/lib/knownTags";
-import { getCollection } from "astro:content";
+import { tagSlug } from "@/theme/lib/tags";
 
-const all = await getCollection(
-	"posts",
-	({ data }) => !data.draft && !data.unlisted,
-);
-const sorted = all.sort(
-	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
-);
+const all = await getCollection("posts", ({ data }) => !data.draft && !data.unlisted);
+const sorted = all.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
 const allTagSlugs = new Set<string>(knownTags);
 for (const p of all) for (const t of p.data.tags) allTagSlugs.add(tagSlug(t));

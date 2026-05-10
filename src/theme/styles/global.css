@@ -94,7 +94,9 @@ body {
 	font-family: var(--font-serif-body);
 	font-size: 17px;
 	line-height: 1.55;
-	transition: background 0.2s ease, color 0.2s ease;
+	transition:
+		background 0.2s ease,
+		color 0.2s ease;
 }
 
 a {
@@ -137,13 +139,17 @@ li {
 		color: #111;
 	}
 	.no-print {
+		/* biome-ignore lint/complexity/noImportantStyles: print rules must override runtime palette */
 		display: none !important;
 	}
 	a {
+		/* biome-ignore lint/complexity/noImportantStyles: print rules must override runtime palette */
 		color: #111 !important;
 	}
 	[data-palette] {
+		/* biome-ignore lint/complexity/noImportantStyles: print rules must override runtime palette */
 		background: #fff !important;
+		/* biome-ignore lint/complexity/noImportantStyles: print rules must override runtime palette */
 		color: #111 !important;
 	}
 }

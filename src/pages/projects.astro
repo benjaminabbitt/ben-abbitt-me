@@ -1,12 +1,11 @@
 ---
-import PageLayout from "@/theme/layouts/PageLayout.astro";
-import ProjectFeed from "@/components/ProjectFeed.astro";
 import { getCollection } from "astro:content";
+import ProjectFeed from "@/components/ProjectFeed.astro";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
 
 const all = await getCollection("projects");
 const sorted = all.sort((a, b) => {
-	if (a.data.order != null && b.data.order != null)
-		return a.data.order - b.data.order;
+	if (a.data.order != null && b.data.order != null) return a.data.order - b.data.order;
 	return b.data.createdAt.localeCompare(a.data.createdAt);
 });
 ---

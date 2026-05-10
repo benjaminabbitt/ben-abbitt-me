@@ -1,14 +1,14 @@
 {
-  "id": "git-expunge",
-  "name": "git-expunge",
-  "createdAt": "2024-05-01",
-  "status": "tool",
-  "tagline": "Surgically remove files from a git repo's history.",
-  "blurb": "A thin, safer wrapper around the dance of filter-repo + gc + force-push. Built the day I pushed a large binary I couldn't undo.",
-  "stack": ["Shell", "Git"],
-  "site": null,
-  "github": "https://github.com/benjaminabbitt/git-expunge",
-  "extras": [],
-  "note": ".gitignore your build artifacts, kids.",
-  "order": 4
+	"id": "git-expunge",
+	"name": "git-expunge",
+	"createdAt": "2024-05-01",
+	"status": "tool",
+	"tagline": "Surgically remove files from a git repo's history.",
+	"blurb": "A thin, safer wrapper around the dance of filter-repo + gc + force-push. Built the day I pushed a large binary I couldn't undo.",
+	"stack": ["Shell", "Git"],
+	"site": null,
+	"github": "https://github.com/benjaminabbitt/git-expunge",
+	"extras": [],
+	"note": ".gitignore your build artifacts, kids.",
+	"order": 4
 }

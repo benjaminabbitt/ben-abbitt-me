@@ -73,8 +73,8 @@ export function evaluate<T>(
 	getTagsFor: (item: T) => readonly string[],
 ): EvalResult<T> {
 	const byTag = new Map<string, Set<number>>();
-	for (let i = 0; i < items.length; i++) {
-		for (const tag of getTagsFor(items[i]!)) {
+	for (const [i, item] of items.entries()) {
+		for (const tag of getTagsFor(item)) {
 			let set = byTag.get(tag);
 			if (!set) {
 				set = new Set();
@@ -95,24 +95,24 @@ export function evaluate<T>(
 			continue;
 		}
 		if (tok.op === "and") {
-			if (stack.length < 2) return { ok: false, error: "AND needs 2 operands" };
-			const b = stack.pop()!;
-			const a = stack.pop()!;
+			const b = stack.pop();
+			const a = stack.pop();
+			if (!a || !b) return { ok: false, error: "AND needs 2 operands" };
 			stack.push({
 				ids: intersection(a.ids, b.ids),
 				desc: `(${a.desc} AND ${b.desc})`,
 			});
 		} else if (tok.op === "or") {
-			if (stack.length < 2) return { ok: false, error: "OR needs 2 operands" };
-			const b = stack.pop()!;
-			const a = stack.pop()!;
+			const b = stack.pop();
+			const a = stack.pop();
+			if (!a || !b) return { ok: false, error: "OR needs 2 operands" };
 			stack.push({
 				ids: union(a.ids, b.ids),
 				desc: `(${a.desc} OR ${b.desc})`,
 			});
 		} else if (tok.op === "not") {
-			if (stack.length < 1) return { ok: false, error: "NOT needs 1 operand" };
-			const a = stack.pop()!;
+			const a = stack.pop();
+			if (!a) return { ok: false, error: "NOT needs 1 operand" };
 			stack.push({
 				ids: complement(universe, a.ids),
 				desc: `NOT ${a.desc}`,
@@ -121,26 +121,23 @@ export function evaluate<T>(
 	}
 
 	while (stack.length > 1) {
-		const b = stack.pop()!;
-		const a = stack.pop()!;
+		const b = stack.pop();
+		const a = stack.pop();
+		if (!a || !b) break;
 		stack.push({
 			ids: intersection(a.ids, b.ids),
 			desc: `${a.desc} AND ${b.desc}`,
 		});
 	}
 
-	if (stack.length === 0) {
+	const final = stack.pop();
+	if (!final) {
 		return { ok: true, items: [], description: "" };
 	}
 
-	const final = stack[0]!;
-	const filtered: T[] = [];
-	for (let i = 0; i < items.length; i++) {
-		if (final.ids.has(i)) filtered.push(items[i]!);
-	}
 	return {
 		ok: true,
-		items: filtered,
+		items: items.filter((_, i) => final.ids.has(i)),
 		description: final.desc.replace(/^\((.*)\)$/, "$1"),
 	};
 }

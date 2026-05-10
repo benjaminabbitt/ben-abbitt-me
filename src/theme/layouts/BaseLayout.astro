@@ -1,11 +1,14 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
 	title?: string | undefined;
 	description?: string | undefined;
 }
-const { title = 'Append Only — Ben Abbitt', description = 'Software architecture, AI wrangling, lessons learned.' } = Astro.props;
+const {
+	title = "Append Only — Ben Abbitt",
+	description = "Software architecture, AI wrangling, lessons learned.",
+} = Astro.props;
 ---
 
 <!doctype html>

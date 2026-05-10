@@ -176,7 +176,7 @@ An open-faced cheeseburger (often double patty) smothered in green chile sauce, 
 
 ## Research & primary sources
 
-Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). Every entry passed a 2+ independent-source check.
+Methodology and validation logs live in the [`modern_forage/` on GitHub](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). Every entry passed a 2+ independent-source check.
 
 We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The Pueblo slopper, Rock Springs chili meat, Hudson WY sarma, and Boise finger steaks all came out of it.
 

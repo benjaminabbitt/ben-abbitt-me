@@ -1,14 +1,14 @@
 {
-  "id": "harp",
-  "name": "harp / harp-py",
-  "createdAt": "2024-08-10",
-  "status": "active",
-  "tagline": "Human-Appropriate Random Phraselets.",
-  "blurb": "Go and Python libraries for generating memorable random phrases. Different role than UUIDs: pick one when you need a name a human can read aloud, not when you need collision resistance.",
-  "stack": ["Go", "Python", "protobuf"],
-  "site": null,
-  "github": "https://github.com/benjaminabbitt/harp",
-  "extras": [{ "label": "harp-py", "href": "https://github.com/benjaminabbitt/harp-py" }],
-  "note": "The Python port exists because I got tired of shelling out to the Go binary from notebooks.",
-  "order": 3
+	"id": "harp",
+	"name": "harp / harp-py",
+	"createdAt": "2024-08-10",
+	"status": "active",
+	"tagline": "Human-Appropriate Random Phraselets.",
+	"blurb": "Go and Python libraries for generating memorable random phrases. Different role than UUIDs: pick one when you need a name a human can read aloud, not when you need collision resistance.",
+	"stack": ["Go", "Python", "protobuf"],
+	"site": null,
+	"github": "https://github.com/benjaminabbitt/harp",
+	"extras": [{ "label": "harp-py", "href": "https://github.com/benjaminabbitt/harp-py" }],
+	"note": "The Python port exists because I got tired of shelling out to the Go binary from notebooks.",
+	"order": 3
 }

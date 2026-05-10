@@ -1,107 +1,116 @@
 {
-  "intro": "Senior Solution Architect at Slalom. Deep, varied experience across cloud infrastructure, software engineering, and AI / LLM / prompt engineering. I look at problems and design systems to solve them from first principles.",
-  "contact": {
-    "email": "benjamin.abbitt@gmail.com",
-    "linkedin": "https://www.linkedin.com/in/benjaminabbitt",
-    "github": "https://github.com/benjaminabbitt",
-    "location": "Dallas, TX"
-  },
-  "interests": ["probability & stats", "voting systems", "social dynamics", "game theory", "rocketry"],
-  "roles": [
-    {
-      "id": "slalom",
-      "years": "2020 — present",
-      "company": "Slalom Consulting",
-      "title": "Senior Solution Architect",
-      "domain": "Cloud · AI · software architecture",
-      "note": "A lot of different industries over a lot of years. The common thread: show up, find the load-bearing wrong thing, replace it without stopping the work already in flight.",
-      "engagements": [
-        {
-          "id": "slalom-ag",
-          "title": "Solution Architect / Technical Lead — Agriculture",
-          "domain": "Customer & Billing Management",
-          "bullets": [
-            "Architected and led a team to implement an asynchronous customer & billing management system, replacing two prior attempts that were failing due to unacceptable performance.",
-            "Solution exceeded requirements by an order of magnitude — 3s end-to-end update time vs a 30s requirement."
-          ]
-        },
-        {
-          "id": "slalom-tax",
-          "title": "Solution Architect — Tax",
-          "domain": "Tax preparation software back-end",
-          "bullets": [
-            "Architected a data migration for a tax-preparation software company that will result in net savings of greater than $1M USD / yr in direct licensing costs, plus significant reduction in operating expense."
-          ]
-        },
-        {
-          "id": "slalom-ins",
-          "title": "Solution Architect — Insurance",
-          "domain": "Single-pane-of-glass CRM",
-          "bullets": [
-            "Architected and managed a team to implement a custom CRM to present insurance sales associates a unified dashboard of their actionable items.",
-            "Changed architectures with minimal disruption of ongoing work during the project, in response to changing business requirements."
-          ]
-        },
-        {
-          "id": "slalom-heavy",
-          "title": "Solution Architect — Heavy Equipment Manufacturing",
-          "domain": "IoT data management & processing engine",
-          "bullets": [
-            "Performed latency and performance analysis across a myriad of Amazon Web Services products, culminating in a change of direction of the organization toward a novel data storage architecture.",
-            "Performance analysis uncovered new-to-AWS defects in released services."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "pariveda-arch",
-      "years": "2017 — 2020",
-      "company": "Pariveda Solutions",
-      "title": "Application / Cloud / DevOps Architect",
-      "domain": "Architecture · rescue work",
-      "bullets": [
-        "Built a vertical-slice generator (microservice + frontend) — slice setup from weeks to minutes.",
-        "Containerized a 20-year-old tax-prep app suite — dev setup from a week+ to hours.",
-        "Rescued a two-months-late online-ordering app; re-architected off a global mutable store, shipped on time."
-      ],
-      "note": "Most of what I know about pulling a project out of a hole came from these years."
-    },
-    {
-      "id": "pariveda-craftsman",
-      "years": "2014 — 2017",
-      "company": "Pariveda Solutions",
-      "title": "Software Craftsman",
-      "domain": "Troubleshooting · velocity · devops",
-      "bullets": [
-        "Shipped a checksum-based defense against URL manipulation in a banking app in under six hours.",
-        "Cut mobile-app production builds from multi-hour to single-digit minutes.",
-        "Parachuted into teams for weeks-to-months as architectural + devops troubleshooter."
-      ],
-      "note": "The parachute-in role taught me to read a codebase the way a doctor reads a chart."
-    },
-    {
-      "id": "aa-craftsman",
-      "years": "2011 — 2014",
-      "company": "American Airlines",
-      "title": "Software Craftsman",
-      "domain": "Forensic engineering · Android · TDD",
-      "bullets": [
-        "Reassembled a ~50k-line app from decompiled binaries + scraps of unversioned code after a server failure.",
-        "Android SME on a committee measuring vendor-change risk to in-flight entertainment.",
-        "Taught TDD to AA.com developers."
-      ],
-      "note": "Rebuilding from decompiled binaries was the week I stopped taking source control for granted."
-    }
-  ],
-  "skillGroups": [
-    { "label": "Polyglot dev", "items": ["Rust", "Go (Golang)", "Python", "Java", "Kotlin"] },
-    { "label": "IaC",          "items": ["Hashicorp Terraform / OpenTofu", "Docker", "Kubernetes", "Helm", "Podman"] },
-    { "label": "CI/CD",        "items": ["Jenkins", "Cloudbuild", "GitHub Workflows"] },
-    { "label": "FOSS I ship",  "items": ["Context Loom (ctxloom.dev)", "Angzarr (angzarr.io)"] }
-  ],
-  "certs": [
-    "Google Cloud Platform — Cloud DevOps Engineer · Professional · AI Leader",
-    "Amazon Web Services — Certified DevOps Engineer · Professional · Architect · Professional (historical)"
-  ],
-  "education": []
+	"intro": "Senior Solution Architect at Slalom. Deep, varied experience across cloud infrastructure, software engineering, and AI / LLM / prompt engineering. I look at problems and design systems to solve them from first principles.",
+	"contact": {
+		"email": "benjamin.abbitt@gmail.com",
+		"linkedin": "https://www.linkedin.com/in/benjaminabbitt",
+		"github": "https://github.com/benjaminabbitt",
+		"location": "Dallas, TX"
+	},
+	"interests": [
+		"probability & stats",
+		"voting systems",
+		"social dynamics",
+		"game theory",
+		"rocketry"
+	],
+	"roles": [
+		{
+			"id": "slalom",
+			"years": "2020 — present",
+			"company": "Slalom Consulting",
+			"title": "Senior Solution Architect",
+			"domain": "Cloud · AI · software architecture",
+			"note": "A lot of different industries over a lot of years. The common thread: show up, find the load-bearing wrong thing, replace it without stopping the work already in flight.",
+			"engagements": [
+				{
+					"id": "slalom-ag",
+					"title": "Solution Architect / Technical Lead — Agriculture",
+					"domain": "Customer & Billing Management",
+					"bullets": [
+						"Architected and led a team to implement an asynchronous customer & billing management system, replacing two prior attempts that were failing due to unacceptable performance.",
+						"Solution exceeded requirements by an order of magnitude — 3s end-to-end update time vs a 30s requirement."
+					]
+				},
+				{
+					"id": "slalom-tax",
+					"title": "Solution Architect — Tax",
+					"domain": "Tax preparation software back-end",
+					"bullets": [
+						"Architected a data migration for a tax-preparation software company that will result in net savings of greater than $1M USD / yr in direct licensing costs, plus significant reduction in operating expense."
+					]
+				},
+				{
+					"id": "slalom-ins",
+					"title": "Solution Architect — Insurance",
+					"domain": "Single-pane-of-glass CRM",
+					"bullets": [
+						"Architected and managed a team to implement a custom CRM to present insurance sales associates a unified dashboard of their actionable items.",
+						"Changed architectures with minimal disruption of ongoing work during the project, in response to changing business requirements."
+					]
+				},
+				{
+					"id": "slalom-heavy",
+					"title": "Solution Architect — Heavy Equipment Manufacturing",
+					"domain": "IoT data management & processing engine",
+					"bullets": [
+						"Performed latency and performance analysis across a myriad of Amazon Web Services products, culminating in a change of direction of the organization toward a novel data storage architecture.",
+						"Performance analysis uncovered new-to-AWS defects in released services."
+					]
+				}
+			]
+		},
+		{
+			"id": "pariveda-arch",
+			"years": "2017 — 2020",
+			"company": "Pariveda Solutions",
+			"title": "Application / Cloud / DevOps Architect",
+			"domain": "Architecture · rescue work",
+			"bullets": [
+				"Built a vertical-slice generator (microservice + frontend) — slice setup from weeks to minutes.",
+				"Containerized a 20-year-old tax-prep app suite — dev setup from a week+ to hours.",
+				"Rescued a two-months-late online-ordering app; re-architected off a global mutable store, shipped on time."
+			],
+			"note": "Most of what I know about pulling a project out of a hole came from these years."
+		},
+		{
+			"id": "pariveda-craftsman",
+			"years": "2014 — 2017",
+			"company": "Pariveda Solutions",
+			"title": "Software Craftsman",
+			"domain": "Troubleshooting · velocity · devops",
+			"bullets": [
+				"Shipped a checksum-based defense against URL manipulation in a banking app in under six hours.",
+				"Cut mobile-app production builds from multi-hour to single-digit minutes.",
+				"Parachuted into teams for weeks-to-months as architectural + devops troubleshooter."
+			],
+			"note": "The parachute-in role taught me to read a codebase the way a doctor reads a chart."
+		},
+		{
+			"id": "aa-craftsman",
+			"years": "2011 — 2014",
+			"company": "American Airlines",
+			"title": "Software Craftsman",
+			"domain": "Forensic engineering · Android · TDD",
+			"bullets": [
+				"Reassembled a ~50k-line app from decompiled binaries + scraps of unversioned code after a server failure.",
+				"Android SME on a committee measuring vendor-change risk to in-flight entertainment.",
+				"Taught TDD to AA.com developers."
+			],
+			"note": "Rebuilding from decompiled binaries was the week I stopped taking source control for granted."
+		}
+	],
+	"skillGroups": [
+		{ "label": "Polyglot dev", "items": ["Rust", "Go (Golang)", "Python", "Java", "Kotlin"] },
+		{
+			"label": "IaC",
+			"items": ["Hashicorp Terraform / OpenTofu", "Docker", "Kubernetes", "Helm", "Podman"]
+		},
+		{ "label": "CI/CD", "items": ["Jenkins", "Cloudbuild", "GitHub Workflows"] },
+		{ "label": "FOSS I ship", "items": ["Context Loom (ctxloom.dev)", "Angzarr (angzarr.io)"] }
+	],
+	"certs": [
+		"Google Cloud Platform — Cloud DevOps Engineer · Professional · AI Leader",
+		"Amazon Web Services — Certified DevOps Engineer · Professional · Architect · Professional (historical)"
+	],
+	"education": []
 }

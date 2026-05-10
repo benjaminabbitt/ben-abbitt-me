@@ -1,7 +1,7 @@
 ---
-import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import Prose from "@/theme/components/Prose.astro";
-import { getCollection, render, type CollectionEntry } from "astro:content";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
 import { tagHref } from "@/theme/lib/tags";
 

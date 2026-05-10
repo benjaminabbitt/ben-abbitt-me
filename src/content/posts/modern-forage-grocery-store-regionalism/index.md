@@ -77,7 +77,7 @@ Browse the rest of the [Modern Forage survey](/posts/q/modern-forage/).
 
 ## Research & primary sources
 
-Methodology and validation logs live in the [`modern_forage` repo on GitHub](https://github.com/benjaminabbitt/modern_forage). The condiment-containment seed-to-longform loop documented in the tracker was the systematic search mechanism that surfaced most of the entries above.
+Methodology and validation logs live in the [`modern_forage/` on GitHub](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). The condiment-containment seed-to-longform loop documented in the tracker was the systematic search mechanism that surfaced most of the entries above.
 
 We ran [this r/chicagofood thread](https://old.reddit.com/r/chicagofood/comments/1t2noo0/what_food_does_your_city_have_that_literally/) to surface diaspora signals. The "I moved and can't find" framing surfaced multiple condiment entries that no listicle had captured.
 

@@ -1,8 +1,8 @@
 ---
-import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { getEntry } from "astro:content";
 import ResumeFeed from "@/components/ResumeFeed.astro";
 import PrintButton from "@/theme/components/PrintButton.astro";
-import { getEntry } from "astro:content";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
 
 const entry = await getEntry("resume", "resume");
 if (!entry) throw new Error("resume entry not found");

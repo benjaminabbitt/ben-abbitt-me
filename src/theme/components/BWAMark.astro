@@ -5,13 +5,13 @@
 // Bottom points are softened via strokeLinejoin="round" so the outer silhouette reads as a B on its side.
 
 interface Props {
-  size?: number | string;
-  stroke?: number;
-  color?: string;
-  title?: string;
+	size?: number | string;
+	stroke?: number;
+	color?: string;
+	title?: string;
 }
 
-const { size = 32, stroke = 8, color = 'currentColor', title = 'BWA' } = Astro.props;
+const { size = 32, stroke = 8, color = "currentColor", title = "BWA" } = Astro.props;
 ---
 
 <svg

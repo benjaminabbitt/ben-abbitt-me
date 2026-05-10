@@ -12,8 +12,7 @@ const posts = defineCollection({
 	loader: glob({
 		base: "./src/content/posts",
 		pattern: "**/*.{md,mdx}",
-		generateId: ({ entry }) =>
-			entry.replace(/\.(md|mdx)$/, "").replace(/\/index$/, ""),
+		generateId: ({ entry }) => entry.replace(/\.(md|mdx)$/, "").replace(/\/index$/, ""),
 	}),
 	schema: ({ image }) =>
 		z.object({
@@ -55,9 +54,7 @@ const projects = defineCollection({
 		stack: z.array(z.string()).default([]),
 		site: z.string().nullable().optional(),
 		github: z.string().nullable().optional(),
-		extras: z
-			.array(z.object({ label: z.string(), href: z.string() }))
-			.default([]),
+		extras: z.array(z.object({ label: z.string(), href: z.string() })).default([]),
 		note: z.string().nullable().optional(),
 		order: z.number().optional(),
 	}),
@@ -95,9 +92,7 @@ const resume = defineCollection({
 				note: z.string().optional(),
 			}),
 		),
-		skillGroups: z.array(
-			z.object({ label: z.string(), items: z.array(z.string()) }),
-		),
+		skillGroups: z.array(z.object({ label: z.string(), items: z.array(z.string()) })),
 		certs: z.array(z.string()),
 		education: z
 			.array(

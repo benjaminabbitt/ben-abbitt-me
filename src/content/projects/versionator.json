@@ -1,14 +1,14 @@
 {
-  "id": "versionator",
-  "name": "versionator",
-  "createdAt": "2024-02-01",
-  "status": "tool",
-  "tagline": "Templating + version emission with environment and world state.",
-  "blurb": "Emits versioned artifacts from templates, injecting environment and world state at build time — commit hashes, timestamps, branch, and whatever else you need stamped into the output.",
-  "stack": ["HTML", "JS", "GH Pages"],
-  "site": "https://benjaminabbitt.github.io/versionator",
-  "github": "https://github.com/benjaminabbitt/versionator",
-  "extras": [],
-  "note": null,
-  "order": 5
+	"id": "versionator",
+	"name": "versionator",
+	"createdAt": "2024-02-01",
+	"status": "tool",
+	"tagline": "Templating + version emission with environment and world state.",
+	"blurb": "Emits versioned artifacts from templates, injecting environment and world state at build time — commit hashes, timestamps, branch, and whatever else you need stamped into the output.",
+	"stack": ["HTML", "JS", "GH Pages"],
+	"site": "https://benjaminabbitt.github.io/versionator",
+	"github": "https://github.com/benjaminabbitt/versionator",
+	"extras": [],
+	"note": null,
+	"order": 5
 }
