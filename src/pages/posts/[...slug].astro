@@ -1,5 +1,6 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
+import DishCount from "@/components/DishCount.astro";
 import Prose from "@/theme/components/Prose.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
@@ -72,7 +73,7 @@ const date = post.data.publishDate.toISOString().slice(0, 10);
 		</header>
 
 		<Prose>
-			<Content />
+			<Content components={{ DishCount }} />
 		</Prose>
 	</article>
 </PageLayout>

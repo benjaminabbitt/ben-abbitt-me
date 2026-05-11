@@ -39,6 +39,20 @@ const posts = defineCollection({
 			unlisted: z.boolean().default(false),
 			marginalia: z.string().optional(),
 			excerpt: z.string().optional(),
+			/**
+			 * Excerpt template with `{count}` placeholder, substituted from
+			 * `dishCount` (populated by the remark-dish-count plugin). If set,
+			 * this takes precedence over the literal `excerpt` field in
+			 * listings. Lets the per-MSA Modern Forage excerpts auto-update
+			 * when a new dish is added to the post.
+			 */
+			excerptTemplate: z.string().optional(),
+			/**
+			 * Auto-populated by `src/lib/remark-dish-count.ts` from H3 markers
+			 * (`### Heading \{.dish\}`). Don't set manually; the plugin
+			 * overwrites this field on every build.
+			 */
+			dishCount: z.number().optional(),
 		}),
 });
 

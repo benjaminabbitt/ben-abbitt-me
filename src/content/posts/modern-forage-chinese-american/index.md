@@ -1,60 +1,60 @@
 ---
 title: "Modern Forage: Chinese-American"
-description: "Six American cities where Chinese-American restaurateurs invented dishes for the local palate that never made it back to China and never escaped the metro."
+description: "Six American cities where Chinese-American restaurateurs invented dishes for the local palate that rarely traveled back to China or beyond the home metro."
 publishDate: "3 May 2026"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "Cantonese cooking adapted to Ozarks chicken-fried steak, Detroit gravy, Mexican-laborer palates in Wyoming, and Korean-Chinese wings on Lawrence Avenue."
-excerpt: "Springfield cashew chicken, the St. Paul sandwich, Rock Springs chili meat, Detroit almond boneless chicken, NOLA yakamein, Chicago lollipop wings, and the Wrigleyville Akutagawa. Seven dishes, same template."
+excerptTemplate: "Springfield cashew chicken, the St. Paul sandwich, Rock Springs chili meat, Detroit almond boneless chicken, NOLA yakamein, Chicago lollipop wings, and the Wrigleyville Akutagawa. {Count} dishes, same template."
 unlisted: true
 ---
 
 > **Draft.** This pattern post is still being expanded as new entries surface across the survey. The pattern is worth noting; the entries listed below are not final.
 
-Cashew chicken in Springfield, MO that's actually breaded and gravy-smothered. An egg foo young patty on white bread in St. Louis. A Chinese-Mexican fusion in a Wyoming railroad town. Brown gravy on shredded iceberg in Detroit. A Creole noodle soup in New Orleans. Korean-Chinese chicken wings frenched into lollipops on a single block of Chicago's Lawrence Avenue. A Japanese-American hamburger-and-eggs scramble named after the customer who ordered it in 1968. Seven dishes invented by Asian-American restaurateurs to fit a local non-Asian palate. Each one moved freely within its city through informal recipe sharing. None of them moved beyond it.
+Cashew chicken in Springfield, MO that's actually breaded and gravy-smothered. An egg foo young patty on white bread in St. Louis. A Chinese-Mexican fusion in a Wyoming railroad town. Brown gravy on shredded iceberg in Detroit. A Creole noodle soup in New Orleans. Korean-Chinese chicken wings frenched into lollipops on a single block of Chicago's Lawrence Avenue. A Japanese-American hamburger-and-eggs scramble named after the customer who ordered it in 1968. Eight dishes invented by Asian-American restaurateurs to fit a local non-Asian palate. Each one moved freely within its city through informal recipe sharing. None of them moved beyond it.
 
-## Springfield-Style Cashew Chicken — Springfield, MO (1963)
+## Springfield-Style Cashew Chicken — Springfield, MO (1963) \{.dish\}
 *Regional context: [The Plains & Heartland](/posts/modern-forage-plains-heartland).*
 
 Boneless chicken chunks breaded and deep-fried (like chicken-fried steak), smothered in a brown sauce of soy, oyster sauce, and chicken stock, topped with cashews and chopped green onions, served over white rice. Created in 1963 by David Leong (1920-2020), a Cantonese immigrant and WWII D-Day veteran, at Leong's Tea House. Leong realized Ozarks locals loved fried chicken and chicken-fried steak but were unfamiliar with Chinese food, so he hybridized them. He freely shared the recipe, and by the 1970s hundreds of local Chinese restaurants served their own version. Today 70+ restaurants in the Springfield metro serve it, including non-Chinese restaurants. Standard "cashew chicken" nationally is a stir-fry. The Springfield version's deep-fried, gravy-smothered preparation is completely different.
 
 *Sources: [KCUR](https://www.kcur.org) / Kansas City NPR (2021/2025, with Ling Leong interview); [Fodors](https://www.fodors.com) (2024); [Wikipedia](https://en.wikipedia.org/wiki/Springfield-style_cashew_chicken); Feast Magazine (2022, 2023, with Wing Yee Leong interview); Dann Woellert food etymology blog (2016). Five+ independent sources.*
 
-## St. Paul Sandwich — St. Louis, MO (1940s)
+## St. Paul Sandwich — St. Louis, MO (1940s) \{.dish\}
 *Regional context: [The Plains & Heartland](/posts/modern-forage-plains-heartland).*
 
 An egg foo young patty on white bread with dill pickles, iceberg lettuce, onions, and mayo. A Chinese-American fusion dish created in the 1940s, commonly attributed to Steven Yuen of Park Chop Suey. Despite St. Louis having many distinctive foods (toasted ravioli, provel cheese, gooey butter cake, the slinger), the St. Paul sandwich is arguably the most obscure outside the city. It remains a staple at Chinese-American restaurants across the metro area.
 
 *Sources: Lovefood.com; [Wikipedia](https://en.wikipedia.org/wiki/St._Paul_sandwich); multiple St. Louis food histories.*
 
-## Chili Meat — Rock Springs, WY (1960s)
+## Chili Meat — Rock Springs, WY (1960s) \{.dish\}
 *Regional context: [The West Coast & Mountain West](/posts/modern-forage-west-mountain).*
 
-A Chinese-Mexican fusion dish: ground beef cooked with bell peppers, onions, soy sauce, sugar, and garlic, served over steamed rice. Created in the 1960s at the New Grand Cafe (117 K Street, downtown Rock Springs) by a Chinese woman named Dolly, specifically to appeal to the Mexican workers at the restaurant. Rock Springs' Chinese-immigrant history (railroad and coal mining era) intersecting with its Mexican labor community produced a unique fusion that exists nowhere else. Now served at the Renegade Cafe, Sands Cafe/Hungry Buddha food truck, and Lew's Restaurant, all in Rock Springs (pop ~23k). When the recipe was posted to a local Facebook group, it went viral locally. Quote from family source: "This dish is local only to Rock Springs area. You won't find it anywhere but here in our town."
+A Chinese-Mexican fusion dish: ground beef cooked with bell peppers, onions, soy sauce, sugar, and garlic, served over steamed rice. Created in the 1960s at the New Grand Cafe (117 K Street, downtown Rock Springs) by a Chinese woman named Dolly, specifically to appeal to the Mexican workers at the restaurant. Rock Springs' Chinese-immigrant history (railroad and coal mining era) intersecting with its Mexican labor community produced a unique fusion that rarely appears elsewhere. Now served at the Renegade Cafe, Sands Cafe/Hungry Buddha food truck, and Lew's Restaurant, all in Rock Springs (pop ~23k). When the recipe was posted to a local Facebook group, it went viral locally. Quote from family source: "This dish is local only to Rock Springs area. You won't find it anywhere but here in our town."
 
 *Sources: SweetwaterNOW (2018, with named family sources Tanisha and Joe); University of Oregon Everyday Inclusion food blog (2022, independent personal account); Hungry Buddha/Sands food truck website; Foodie Flashpacker (Renegade Cafe comment). Four independent sources.*
 
-## Yakamein (Ya-Ka-Mein) — New Orleans, LA
+## Yakamein (Ya-Ka-Mein) — New Orleans, LA \{.dish\}
 *Regional context: [The South](/posts/modern-forage-south).*
 
 A noodle soup of spaghetti or noodles in beef broth seasoned with soy sauce and Creole spices, topped with chopped boneless chuck roast, hard-boiled egg, green onions, and hot sauce. Known locally as "Old Sober" for its hangover-cure properties. Sold at second lines and brass band funerals from street vendors. Origin debated: either African American soldiers returning from the Korean War with a craving for noodle soups they'd eaten overseas, or an adaptation from New Orleans' now-extinct Chinatown where Chinese immigrants served noodle soup to Creole clientele. "Ms. Linda the Yakamein Lady" is a current street vendor carrying the tradition. It's not ramen, not pho, distinctly New Orleans. A Chinese-American adaptation with an African American culinary layer on top.
 
 *Sources: [Food52](https://food52.com) (2020, detailed cultural essay); Food Network (hyper-regional dishes); neworleans.com (2026, current vendor listing); Big Easy Magazine (2025). Cross-confirmed.*
 
-## Detroit Almond Boneless Chicken (ABC) — Detroit, MI (~1940)
+## Detroit Almond Boneless Chicken (ABC) — Detroit, MI (~1940) \{.dish\}
 *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes).*
 
 Deep-fried boneless chicken breast, sliced on the diagonal, served on a bed of shredded iceberg lettuce, topped with brown mushroom gravy, slivered almonds, and green onions. Also known as War Su Gai. Chung's Chinese restaurant (~1940, Detroit's Chinatown) is credited with introducing the dish to Detroit. Filmmaker Curtis Chin, whose father inherited Chung's, confirms: "It was adopted by Detroit. You wouldn't find this in China." Competing origin claims from Columbus, OH (Wing's, Ding Ho) and Cincinnati (Dann Woellert traces it to Wong Yie's restaurant). At Ding Ho in Columbus, ABC outsells everything on the menu three to one. The dish is popular in Michigan, Ohio, and parts of Eastern Canada, but functionally unknown elsewhere. "Descriptions of it to Chinese restaurant personnel elsewhere have been met with blank stares."
 
 *Sources: [Mashed](https://www.mashed.com) (2024); Dann Woellert food etymologist blog (2023, detailed Cincinnati origin); Metro Times (2025, Detroit alt-weekly); Metro Times (2014, Curtis Chin/Chung's interview); Gourmandistan (2015); [Wikipedia](https://en.wikipedia.org/wiki/Almond_boneless_chicken); Food.com (diaspora comments). Seven+ sources.*
 
-## Lollipop Wings (Gam Pong Gi) — Albany Park, Chicago, IL (1980s)
+## Lollipop Wings (Gam Pong Gi) — Albany Park, Chicago, IL (1980s) \{.dish\}
 *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes).*
 
 Chicken drumettes frenched into a lollipop shape, deep-fried, drenched in a sweet, spicy, sticky sauce. Created in Chicago's Albany Park in the 1980s by two Korean-Chinese immigrant chefs working blocks apart on Lawrence Avenue. Hsing-Tseng Kao at Peking Mandarin (opened 1983) adapted a Shandong dish called gam pong gi ("dry stir-fried chicken") by making it with just wings, which were considered cheap junk cuts in 1980s America. Nai Tiao at Great Sea added two innovations: a generous sweet chili sauce and the frenching technique that created the lollipop handle for cleaner eating. The combination of cheap wings, addictive sauce, and the lollipop format turned Great Sea into a destination. The style spread throughout Chicago and eventually nationally (Guy Fieri has a recipe), but the canonical versions remain on Lawrence Avenue. Both restaurants changed ownership but retained the recipes. Korean-Chinese rather than Chinese-Chinese, but the same containment story applies.
 
 *Sources: [WBEZ](https://www.wbez.org)/Curious City (2017/2020, investigative piece by Monica Eng with named family sources Roger Kao and Jennifer Tiao); [Chicago Magazine](https://www.chicagomag.com) (July 2021, "Iconic Eats"); [Eater Chicago](https://chicago.eater.com) (Ashok Selvam, credited Great Sea as "one of the originators"); The Infatuation Chicago (best wings guide); NBC Chicago/Food Guy (2025, with Monica Eng interview); Axios Chicago (2022); Newcity Resto (2015, taste test); Monica Eng & David Hammond, *Made in Chicago: Stories Behind 30 Great Hometown Bites* (U of Illinois Press, 2023). Eight+ independent sources.*
 
-## Akutagawa — Wrigleyville, Chicago, IL (late 1960s)
+## Akutagawa — Wrigleyville, Chicago, IL (late 1960s) \{.dish\}
 *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes).*
 
 A wok-and-griddle scramble of chopped hamburger meat (sometimes sausage or chicken), diced onions, green peppers, bean sprouts, and beaten eggs, served over white rice with brown gravy poured on top. Often comes with toast on the side. Created in the late 1960s at Hamburger King, a Wrigleyville diner at 3435 N. Sheffield Ave, by owner Tom Yamauchi for a regular customer named George Akutagawa, who walked in one morning and asked for "something special." The dish was named after the customer. It emerged from the post-WWII Japanese-American community that resettled in Lakeview and Wrigleyville after West Coast internment. Monica Eng calls it "a quiet attempt to assert their culture during a time when they were told not to." Often described as reverse yoshoku: Western diner food rebuilt with Japanese sensibility, rather than the more familiar Japanese-of-Western direction. The structural resemblance to Hawaiian loco moco (rice + meat + brown gravy) is no accident, but the Akutagawa is its own dish with its own neighborhood. Hamburger King closed; the original 3435 N. Sheffield space is now Rice'N Bread under Korean ownership, which preserved the recipe. Fullerton Restaurant (2400 W. Fullerton Ave) serves it off-menu. Susie's still has it on the menu. Almost no documented presence outside Chicago's Lakeview and Wrigleyville orbit.
@@ -65,7 +65,7 @@ The Akutagawa is the second Japanese/Korean-American entry in the survey alongsi
 
 **Where to eat:** [Rice'N Bread](https://www.google.com/maps/search/Rice+N+Bread+3435+N+Sheffield+Chicago), 3435 N Sheffield Ave, Chicago. The original Hamburger King address; Korean owners kept the dish on the menu. [Fullerton Restaurant](https://www.google.com/maps/search/Fullerton+Restaurant+2400+W+Fullerton+Chicago), 2400 W Fullerton Ave (off-menu, ask). Susie's, Lakeview.
 
-## Chicago-Style Egg Roll (Peanut Butter in the Filling) — Chicago (citywide, default by mid-century)
+## Chicago-Style Egg Roll (Peanut Butter in the Filling) — Chicago (citywide, default by mid-century) \{.dish\}
 *Regional context: [The Great Lakes & Rust Belt](/posts/modern-forage-great-lakes). Originating figure (David Leong) also created Springfield-style cashew chicken above.*
 
 Cantonese-American egg roll filling — pork, shrimp, cabbage — bound with peanut butter mixed into the meat-and-vegetable mixture before frying. The peanut butter is a background flavor and a binder, not a topping or a dipping sauce; the wrapper still gets the standard hot mustard and bright-orange duck sauce on the side. Unmistakable in side-by-side tastings against a coastal egg roll. The Takeout calls peanut butter in the filling the marker that "you're eating at a place cooking in the preferred Chicago way." Origin per Monica Eng's Tribune reporting: David Leong picked up the peanut-butter trick at a Philadelphia restaurant in 1945 after his Army discharge. The technique migrated to Chicago and stuck as the default Cantonese-American house style; nobody has identified the first Chicago restaurant to adopt it, but by mid-century it was standard. Two decades later Leong reinvented himself in Missouri and created Springfield-style cashew chicken — same originating figure, two different regional dishes, separated by 18 years and 500 miles. Detroit is explicitly contrasted in coverage ("same Chinese-American food, no peanut butter"); Twin Cities, St. Louis, Cleveland, and the coasts have no documented version. The technique itself isn't Chicago-invented (Philadelphia 1945 is the earliest known instance), but the *convention as the default house style* is Chicago-localized.

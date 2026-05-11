@@ -2,8 +2,48 @@
 
 **Thread:** [Glier's produces a million pounds of goetta a year. 99% of it never leaves Greater Cincinnati. I'm cataloging dishes like this — what am I missing?](https://old.reddit.com/r/cincyeats/comments/1t9927q/gliers_produces_a_million_pounds_of_goetta_a_year/)
 **First processed:** 2026-05-10
-**Last processed:** 2026-05-10 (delta run #3)
-**Processed comment IDs:** ol0b8hj, ol0c1rb, ol0c88w, ol0isg9, ol0phuw, ol0ndqm, ol0niao, ol0pifq, ol0s0rs, ol0ufqo, ol11gef, ol11p4h, ol121wr, ol19jm0, ol1agzj, ol1g7tj, ol1gbt3, ol1gg0n, ol1gm67, ol1gxxu, ol1itie, ol1ivxf, ol1j1m6, ol1pnda, ol1ptv7, ol21bqj, ol2e26q, ol2qz45, ol2sujr, ol2w33h, ol35kfb, ol3oozx
+**Last processed:** 2026-05-11 (delta run #4)
+**Processed comment IDs:** ol0b8hj, ol0c1rb, ol0c88w, ol0isg9, ol0phuw, ol0ndqm, ol0niao, ol0pifq, ol0s0rs, ol0ufqo, ol11gef, ol11p4h, ol121wr, ol19jm0, ol1agzj, ol1g7tj, ol1gbt3, ol1gg0n, ol1gm67, ol1gxxu, ol1itie, ol1ivxf, ol1j1m6, ol1pnda, ol1ptv7, ol21bqj, ol2e26q, ol2qz45, ol2sujr, ol2w33h, ol35kfb, ol3oozx, ol405ld, ol4rvks, ol579nu
+
+### Delta run #4 (2026-05-11): one new top-level candidate (Nectar Soda); city-chicken reply posted; one validation comment in already-engaged subtree
+
+Three new comments this run:
+
+- [ol405ld](https://old.reddit.com/r/cincyeats/comments/1t9927q/gliers_produces_a_million_pounds_of_goetta_a_year/ol405ld/) — u/strcrssd's drafted reply to u/_Elduder about city chicken has been posted. Confirms the Great Lakes / Polish-and-Italian-immigrant framing, cites Wikipedia + the 1933 La Normandie "en brochette" datapoint + the Cincinnati Magazine Eckerlin listing, credits u/Bearcarnikki for the downthread confirmation. Closes the city-chicken loop from delta run #3.
+- [ol4rvks](https://old.reddit.com/r/cincyeats/comments/1t9927q/gliers_produces_a_million_pounds_of_goetta_a_year/ol4rvks/) — u/Chuck331 (reply to Bugatti252's metts/brats top-level): "Love white brats, mustard and sauerkraut for me." Already-engaged subtree (strcrssd replied at ol0phuw and ol1gxxu). Skipped per skip-rule. Local-eater validation signal for the Cincinnati Brat / mett tradition, no new candidate.
+- [ol579nu](https://old.reddit.com/r/cincyeats/comments/1t9927q/gliers_produces_a_million_pounds_of_goetta_a_year/ol579nu/) — u/magicaldarwin (top-level): "Nectar Soda, a sundae flavoring similar to tutti frutti. Only found at Graeters, Aglameisis, and some places in New Orleans." Fresh candidate. The Cincinnati-and-New-Orleans dual presence is exactly the contested-origin pattern. Researched below.
+
+#### Candidate: Nectar Soda — Cincinnati and New Orleans [✅ PROMOTE, contested origin]
+
+**Suggested by:** [u/magicaldarwin](https://old.reddit.com/r/cincyeats/comments/1t9927q/gliers_produces_a_million_pounds_of_goetta_a_year/ol579nu/)
+**Disposition reason:** Eight named sources, all four containment factors met, both cities preserve active vendor presence. The Cincinnati-vs-New-Orleans origin dispute is the central story rather than a disqualifier. Per the updated [contested-origin policy](/posts/modern-forage-how-this-works/#contested-origin-dishes), the dish goes into both `modern-forage-cincinnati` and `modern-forage-new-orleans` with a cross-referenced attribution note in each.
+
+**What it is:** A pink ice-cream-fountain drink built on a bittersweet vanilla-and-almond syrup, served as a soda over a scoop of vanilla ice cream with whipped cream on top. Described as "tastes like poundcake." The Cincinnati version stays closer to the canonical vanilla-and-almond profile; New Orleans variants sometimes drift toward tutti-frutti.
+
+**Origin:** Genuinely contested. New Orleans: Isaac Lyons (Civil War vet) founded I.L. Lyons & Co. in 1866 and developed the nectar syrup in the 1880s, distributed via K&B Drugstores and other soda fountains across the city. Cincinnati: John Mullane invented his version at his Fourth Street confectionery and soda fountain by 1892 (per Dann Woellert, the Cincinnati food etymologist). Both cities have continuous documentation from roughly the same period and likely developed nectar sodas in parallel within the late-19th-century American drugstore-soda-fountain tradition. A limited 20th-century diffusion via Richmond IN (Finney's) and Los Angeles (William Wright, 1940s rebrand as "New Orleans Nectar") didn't take.
+
+**Containment evidence:**
+- **Geographic containment**: Outside Cincinnati and New Orleans, nectar soda is essentially unknown as a soda-fountain category. The two cities concentrate the tradition.
+- **Name-recognition failure**: Ordering a "nectar soda" elsewhere gets a blank stare. Not in national soda-fountain vocabulary.
+- **No national chain adoption**: No national chain carries it. Cincinnati has Aglamesis Bro's (since 1908), Graeter's (since 1870 as a company), and United Dairy Farmers; New Orleans has snowball stands (Hansen's Sno-Bliz, Plum Street, Brocato's) and the recent New Orleans Nectar Soda Syrup revival brand.
+- **Active local culture**: Active vendor presence in both cities, multi-vendor on both sides.
+- **Containment mechanism**: Apparatus-adjacent (artifact of the drugstore soda fountain era; the dish stayed where the apparatus and supplier network stayed). Layered with immigrant-community-locked on the Cincinnati side (German-Cincinnati confectioner network).
+
+**Sources:**
+- [The Nectar Soda Standoff: Cincinnati vs. New Orleans](https://dannwoellertthefoodetymologist.wordpress.com/2018/10/17/the-nectar-soda-standoff-cincinnati-vs-new-orleans/) — Dann Woellert, 2018. Canonical Cincinnati-side longform with the Mullane / 1892 attribution and the "we can debunk New Orleans" line.
+- [How sweet it was: The history of New Orleans nectar soda](https://www.nola.com/300/how-sweet-it-was-the-history-of-new-orleans-nectar-soda/article_86f8ba98-4565-5586-8aff-1c046f49a51f.html) — NOLA.com 300 for 300. Lyons / 1866 / 1880s lineage; "distinctly New Orleans concoction" framing.
+- [Why Cincinnati's Legendary Nectar Soda Is So Pink](https://www.tastingtable.com/1813661/cincinnati-nectar-soda-pink/) — Tasting Table. Aglamesis and Graeter's preparation method; Mullane attribution.
+- [Nectar-Drenched Snow Flows Through the Veins of New Orleans](https://www.vice.com/en/article/nectar-drenched-snow-flows-though-the-veins-of-new-orleans/) — Vice. Snowball-era continuity and modern revival.
+- [Cincinnati Enquirer (via AOL)](https://www.aol.com/graeters-aglamesis-bros-helped-cincinnati-031504988.html) — Vendor context for Aglamesis 1908 and Graeter's 1870.
+- [Nectar Cream Sodas (Glazed & Confused / Graham Blackall)](http://graham-blackall.squarespace.com/blog-1/nectar-cream-soda) — Independent Cincinnati-vs-NOLA comparison.
+- [New Orleans Nectar Soda Syrup (BevNET)](https://www.bevnet.com/brands/nectarsoda) — Modern commercial revival.
+- [Aglamesis Bro's (Wikipedia)](https://en.wikipedia.org/wiki/Aglamesis_Bro's) — Nectar-soda menu staple since 1908.
+
+**Action:** Promoted same day. The staged file was published into both posts and removed from `_pending/`.
+- Cincinnati: `src/content/posts/modern-forage-cincinnati/index.mdx` — new `### Nectar Soda — Cincinnati, OH` section between Opera Cream and Fish Log, Mullane / 1892 origin foregrounded, NOLA parallel noted, cross-link to the New Orleans post. Frontmatter description / excerpt / lead paragraph updated.
+- New Orleans: `src/content/posts/modern-forage-new-orleans/index.mdx` — new `### Nectar Soda — New Orleans, LA` section after Snowballs, Lyons / 1866 / 1880s origin foregrounded, Cincinnati parallel noted, cross-link back. Frontmatter description / excerpt / lead paragraph updated to reflect five distribution channels.
+
+Both anchors verified in the rendered HTML: `#nectar-soda--cincinnati-oh` and `#nectar-soda--new-orleans-la`.
 
 ### Delta run #3 (2026-05-10): one new candidate (city chicken) in cottage ham subtree
 

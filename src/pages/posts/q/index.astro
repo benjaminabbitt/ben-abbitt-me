@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import PostFeed from "@/components/PostFeed.astro";
 import TagRefine from "@/theme/components/TagRefine.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { renderExcerpt } from "@/lib/dish-count";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
 import { effectiveUpdateDate } from "@/lib/post-dates";
@@ -20,6 +21,10 @@ const allTags = [...allTagSlugs].sort();
 const manifest = sorted.map((p) => ({
 	id: p.id,
 	tags: p.data.tags.map(tagSlug),
+	text: [p.data.title, renderExcerpt(p.data, p.body), p.data.description]
+		.filter(Boolean)
+		.join(" ")
+		.toLowerCase(),
 }));
 
 const presentEmpty = new Set<string>();
@@ -56,6 +61,28 @@ const presentEmpty = new Set<string>();
 		<TagRefine segments={[]} allTags={allTags} presentTags={presentEmpty} />
 	</div>
 
+	<div class="mb-6" data-q-search-wrap>
+		<div
+			class="flex items-baseline gap-3 px-5 py-3 border border-rule rounded-md bg-bg-alt/40 focus-within:border-accent transition-colors"
+		>
+			<label
+				for="q-search"
+				class="font-mono text-[10.5px] text-fg-faint uppercase tracking-[0.08em] shrink-0"
+			>
+				Search
+			</label>
+			<input
+				id="q-search"
+				type="search"
+				data-q-search
+				placeholder="title or excerpt..."
+				class="flex-1 min-w-0 bg-transparent font-mono text-[13px] text-fg placeholder:text-fg-faint focus:outline-none"
+				autocomplete="off"
+				spellcheck="false"
+			/>
+		</div>
+	</div>
+
 	<div data-q-feed>
 		<PostFeed entries={sorted} showExcerpt />
 	</div>
@@ -82,7 +109,7 @@ const presentEmpty = new Set<string>();
 <script>
 	import { evaluate, parse } from "@/lib/tagfs";
 
-	type ManifestItem = { id: string; tags: string[] };
+	type ManifestItem = { id: string; tags: string[]; text: string };
 
 	const ROOT = "/posts/q/";
 
@@ -105,11 +132,28 @@ const presentEmpty = new Set<string>();
 				.replace(/^\/+/, "")
 				.replace(/\/+$/, "");
 			const newPath = decoded ? `${ROOT}${decoded}/` : ROOT;
-			window.history.replaceState(null, "", newPath + url.hash);
+			window.history.replaceState(
+				null,
+				"",
+				newPath + url.search.replace(/(\?|&)p=[^&]*/, "") + url.hash,
+			);
 		}
 		const path = window.location.pathname;
 		const rest = path.startsWith(ROOT) ? path.slice(ROOT.length) : "";
 		return rest.split("/").filter(Boolean);
+	}
+
+	function readSearch(): string {
+		const url = new URL(window.location.href);
+		return (url.searchParams.get("s") ?? "").trim().toLowerCase();
+	}
+
+	function writeSearch(value: string): void {
+		const url = new URL(window.location.href);
+		const trimmed = value.trim();
+		if (trimmed) url.searchParams.set("s", trimmed);
+		else url.searchParams.delete("s");
+		window.history.replaceState(null, "", url.toString());
 	}
 
 	function escapeAttr(s: string): string {
@@ -126,8 +170,10 @@ const presentEmpty = new Set<string>();
 		present: Set<string>,
 	): string {
 		const isRoot = segments.length === 0;
+		const search = readSearch();
+		const querySuffix = search ? `?s=${encodeURIComponent(search)}` : "";
 		const url = (suffix: string[]) =>
-			`${ROOT}${[...segments, ...suffix].join("/")}/`;
+			`${ROOT}${[...segments, ...suffix].join("/")}/${querySuffix}`;
 		const sortedTags = [...tags].sort();
 		const items = sortedTags
 			.map((t) => {
@@ -148,7 +194,7 @@ const presentEmpty = new Set<string>();
 						${orBtn}
 						<a href="${escapeAttr(url([t, "not"]))}" class="font-mono text-[16px] leading-none text-fg-faint hover:text-accent px-1.5" title="${escapeAttr(notTitle)}" aria-label="${escapeAttr(notAria)}">¬</a>
 					</span>
-					<a href="/posts/q/${escapeAttr(t)}/" class="font-mono text-[13px] hover:text-accent transition-colors ${accentCls}" title="Start a new query with #${escapeAttr(t)}">#${escapeAttr(t)}</a>
+					<a href="${escapeAttr(`/posts/q/${t}/${querySuffix}`)}" class="font-mono text-[13px] hover:text-accent transition-colors ${accentCls}" title="Start a new query with #${escapeAttr(t)}">#${escapeAttr(t)}</a>
 				</li>`;
 			})
 			.join("");
@@ -185,6 +231,7 @@ const presentEmpty = new Set<string>();
 	function applyQuery(): void {
 		const segments = readSegments();
 		const isEmpty = segments.length === 0;
+		const search = readSearch();
 
 		let matchedIds: Set<string>;
 		let description = "All posts";
@@ -202,6 +249,22 @@ const presentEmpty = new Set<string>();
 			} else {
 				description = result.description || "All posts";
 				matchedIds = new Set(result.items.map((m) => m.id));
+			}
+		}
+
+		if (search) {
+			const filtered = new Set<string>();
+			for (const m of manifest) {
+				if (matchedIds.has(m.id) && m.text.includes(search)) {
+					filtered.add(m.id);
+				}
+			}
+			matchedIds = filtered;
+			if (isEmpty) {
+				kicker = "Search";
+				description = `Search: "${search}"`;
+			} else {
+				description = `${description} · "${search}"`;
 			}
 		}
 
@@ -235,15 +298,29 @@ const presentEmpty = new Set<string>();
 				? "/posts/q/"
 				: `/posts/q/${segments.join("/")}/`;
 		if (emptyEl) {
-			if (visibleCount === 0 && !isEmpty) emptyEl.removeAttribute("hidden");
+			if (visibleCount === 0 && (!isEmpty || search))
+				emptyEl.removeAttribute("hidden");
 			else emptyEl.setAttribute("hidden", "");
 		}
-		if (!isEmpty && refineWrap) {
+		if ((!isEmpty || search) && refineWrap) {
+			const detailsEl = refineWrap.querySelector<HTMLDetailsElement>("details");
+			const wasOpen = detailsEl?.open ?? false;
 			const present = new Set(segments.filter((s) => allTagSet.has(s)));
 			refineWrap.innerHTML = tagRefineHTML(segments, allTags, present);
+			const newDetails = refineWrap.querySelector<HTMLDetailsElement>("details");
+			if (newDetails) newDetails.open = wasOpen;
 		}
 
-		document.title = `${isEmpty ? "Posts" : description} · Reduction`;
+		document.title = `${isEmpty && !search ? "Posts" : description} · Reduction`;
+	}
+
+	const searchInput = document.querySelector<HTMLInputElement>("[data-q-search]");
+	if (searchInput) {
+		searchInput.value = readSearch();
+		searchInput.addEventListener("input", () => {
+			writeSearch(searchInput.value);
+			applyQuery();
+		});
 	}
 
 	applyQuery();

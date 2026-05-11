@@ -1,0 +1,21 @@
+---
+import { spellCount } from "@/lib/dish-count";
+
+interface Props {
+	count: number;
+	/** Capitalize the first letter (sentence start). Default false. */
+	capitalize?: boolean;
+	/** Render digits instead of spelled-out words. Default false. */
+	digits?: boolean;
+	/** Override the singular/plural noun (default "dish"/"dishes"). */
+	noun?: string;
+	nounPlural?: string;
+}
+
+const { count, capitalize = false, digits = false, noun = "dish", nounPlural = "dishes" } = Astro.props;
+
+const numeric = typeof count === "number" && Number.isFinite(count) ? count : 0;
+const display = digits ? String(numeric) : spellCount(numeric, capitalize);
+const word = numeric === 1 ? noun : nounPlural;
+---
+{`${display} ${word}`}
