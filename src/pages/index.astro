@@ -5,10 +5,11 @@ import TagRefine from "@/theme/components/TagRefine.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
+import { effectiveUpdateDate } from "@/lib/post-dates";
 
 const all = await getCollection("posts", ({ data }) => !data.draft && !data.unlisted);
 const sorted = all
-	.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf())
+	.sort((a, b) => effectiveUpdateDate(b).valueOf() - effectiveUpdateDate(a).valueOf())
 	.slice(0, 12);
 
 const allTagSlugs = new Set<string>(knownTags);
@@ -23,31 +24,33 @@ const interests = [
 ];
 ---
 
-<PageLayout current="index" title="Append Only — Ben Abbitt">
+<PageLayout current="index" title="Reduction · Ben Abbitt">
 	<section class="mb-12 max-w-[720px]">
 		<h1
 			class="font-serif font-medium text-[48px] sm:text-[72px] leading-none tracking-[-0.025em] mb-5"
 		>
-			Append Only
+			Reduction
 		</h1>
 		<p class="text-[18px] leading-[1.55] text-fg-dim max-w-[620px]">
-			<a href="/posts/q/technical-learnings/" class="tagline-link"
-				>Technical learnings</a
-			>,
+			What I build, read, cook, and pour, reduced to what's worth keeping.
 			<a href="/posts/q/software-architecture/" class="tagline-link"
-				>software architecture</a
+				>Software architecture</a
 			>,
-			<a href="/posts/q/llm/" class="tagline-link">AI wrangling</a>, and
-			<a href="/posts/q/tools/" class="tagline-link">the tools I keep reaching for</a>.
-			Plus
+			<a href="/posts/q/llm/" class="tagline-link">AI wrangling</a>,
+			<a href="/posts/q/technical-learnings/" class="tagline-link"
+				>technical learnings</a
+			>, and
+			<a href="/posts/q/tools/" class="tagline-link"
+				>the tools I keep reaching for</a
+			>. Plus
+			<a href="/posts/q/cocktail/" class="tagline-link">cocktails</a>,
+			<a href="/posts/q/food/" class="tagline-link">food</a>,
+			<a href="/posts/q/travel/" class="tagline-link">travel and tourism</a>,
 			<a href="/posts/q/social-dynamics/" class="tagline-link"
 				>social dynamics</a
-			>,
-			<a href="/posts/q/travel/" class="tagline-link">travel and tourism</a>,
-			<a href="/posts/q/cocktail/" class="tagline-link">cocktails</a>,
-			<a href="/posts/q/food/" class="tagline-link">food</a>, and
-			<a href="/posts/q/culture/" class="tagline-link">culture</a>. Notes from Ben
-			Abbitt.
+			>, and
+			<a href="/posts/q/culture/" class="tagline-link">culture</a>. Notes from
+			Ben Abbitt.
 		</p>
 		<p class="font-serif-body text-[15px] text-fg-dim mt-4 italic">
 			<span

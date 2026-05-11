@@ -1,0 +1,1140 @@
+---
+import { getCollection } from "astro:content";
+import countiesTopo from "us-atlas/counties-albers-10m.json";
+import { geoPath } from "d3-geo";
+import GithubSlugger from "github-slugger";
+import { feature, mesh } from "topojson-client";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import countiesData from "../../subprojects/modern_forage/geography/counties.json";
+import entriesData from "../../subprojects/modern_forage/geography/entries.json";
+import namedRegions from "../../subprojects/modern_forage/geography/named-regions.json";
+import cbsaColors from "../../subprojects/modern_forage/geography/cbsa-colors.json";
+
+type County = {
+	fips: string;
+	county: string;
+	state: string;
+	cbsa_code: string | null;
+	cbsa_name: string | null;
+	cbsa_type: "MSA" | "μSA" | null;
+	rucc_code: number | null;
+	tier: string | null;
+};
+
+type Entry = {
+	slug: string;
+	dish: string;
+	geo_label: string;
+	cbsa_code: string | null;
+	cbsa_name: string | null;
+	state: string | null;
+	primary_county_fips: string | null;
+	contributing_counties: string[];
+	named_regions: string[];
+	census_divisions?: string[];
+	scope: string | null;
+	pattern_only: boolean;
+};
+
+const counties = countiesData as County[];
+const entries = entriesData as Entry[];
+
+const countyById = new Map<string, County>();
+for (const c of counties) countyById.set(c.fips, c);
+
+const entriesByCounty = new Map<string, Entry[]>();
+const entriesByCbsa = new Map<string, Entry[]>();
+const entriesByRegion = new Map<string, Entry[]>();
+const entriesByDivision = new Map<string, Entry[]>();
+for (const e of entries) {
+	if (e.pattern_only) continue;
+	for (const f of e.contributing_counties) {
+		if (!entriesByCounty.has(f)) entriesByCounty.set(f, []);
+		entriesByCounty.get(f)?.push(e);
+	}
+	if (e.cbsa_code) {
+		if (!entriesByCbsa.has(e.cbsa_code)) entriesByCbsa.set(e.cbsa_code, []);
+		entriesByCbsa.get(e.cbsa_code)?.push(e);
+	}
+	for (const r of e.named_regions) {
+		if (!entriesByRegion.has(r)) entriesByRegion.set(r, []);
+		entriesByRegion.get(r)?.push(e);
+	}
+	for (const d of e.census_divisions ?? []) {
+		if (!entriesByDivision.has(d)) entriesByDivision.set(d, []);
+		entriesByDivision.get(d)?.push(e);
+	}
+}
+
+const countyFeatures = feature(
+	countiesTopo as any,
+	(countiesTopo as any).objects.counties,
+);
+const stateMesh = mesh(
+	countiesTopo as any,
+	(countiesTopo as any).objects.states,
+	(a: any, b: any) => a !== b,
+);
+const nationMesh = mesh(
+	countiesTopo as any,
+	(countiesTopo as any).objects.states,
+	(a: any, b: any) => a === b,
+);
+
+// MSA mesh: draw an edge if the two counties are in different MSAs,
+// or if one is in an MSA and the other isn't. Don't draw between two non-MSA counties.
+const msaByFips = new Map<string, string | null>();
+for (const c of counties) {
+	msaByFips.set(c.fips, c.cbsa_type === "MSA" ? c.cbsa_code : null);
+}
+const msaMesh = mesh(
+	countiesTopo as any,
+	(countiesTopo as any).objects.counties,
+	(a: any, b: any) => {
+		const ma = msaByFips.get(String(a.id)) ?? null;
+		const mb = msaByFips.get(String(b.id)) ?? null;
+		if (ma === null && mb === null) return false;
+		return ma !== mb;
+	},
+);
+
+const path = geoPath();
+
+const W = 975;
+const H = 610;
+
+const countyPaths: Array<{
+	fips: string;
+	d: string;
+	hasEntries: boolean;
+	entryCount: number;
+	cbsaCode: string | null;
+	cbsaType: string | null;
+	rucc: number | null;
+	regions: string[];
+	division: string;
+}> = [];
+
+// Expand each region's effective county set: any MSA with at least one county in the
+// base region also contributes all its other counties (so the region polygon swallows
+// the MSAs it overlaps). Per-region `exclude_cbsas` lets a region opt out of pulling
+// in specific MSAs whose containment doesn't actually belong to the region.
+type RegionDef = {
+	counties: string[];
+	exclude_cbsas?: string[];
+};
+const countiesByCbsa = new Map<string, string[]>();
+for (const c of counties) {
+	if (c.cbsa_code && c.cbsa_type === "MSA") {
+		if (!countiesByCbsa.has(c.cbsa_code)) countiesByCbsa.set(c.cbsa_code, []);
+		countiesByCbsa.get(c.cbsa_code)?.push(c.fips);
+	}
+}
+const expandedRegionCounties: Record<string, string[]> = {};
+for (const [key, region] of Object.entries(
+	namedRegions as Record<string, RegionDef>,
+)) {
+	const base = new Set(region.counties);
+	const excludeCbsas = new Set(region.exclude_cbsas ?? []);
+	const includeCbsas = new Set<string>();
+	for (const fips of base) {
+		const meta = countyById.get(fips);
+		if (meta?.cbsa_code && meta.cbsa_type === "MSA" && !excludeCbsas.has(meta.cbsa_code)) {
+			includeCbsas.add(meta.cbsa_code);
+		}
+	}
+	for (const cbsa of includeCbsas) {
+		for (const fips of countiesByCbsa.get(cbsa) ?? []) {
+			base.add(fips);
+		}
+	}
+	expandedRegionCounties[key] = [...base];
+}
+
+const regionByFips = new Map<string, string[]>();
+for (const [key, fipsList] of Object.entries(expandedRegionCounties)) {
+	for (const fips of fipsList) {
+		if (!regionByFips.has(fips)) regionByFips.set(fips, []);
+		regionByFips.get(fips)?.push(key);
+	}
+}
+
+const STATE_TO_DIVISION: Record<string, string> = {
+	CT: "new_england", ME: "new_england", MA: "new_england", NH: "new_england",
+	RI: "new_england", VT: "new_england",
+	NJ: "mid_atlantic", NY: "mid_atlantic", PA: "mid_atlantic",
+	IL: "east_north_central", IN: "east_north_central", MI: "east_north_central",
+	OH: "east_north_central", WI: "east_north_central",
+	IA: "west_north_central", KS: "west_north_central", MN: "west_north_central",
+	MO: "west_north_central", NE: "west_north_central", ND: "west_north_central",
+	SD: "west_north_central",
+	DE: "south_atlantic", DC: "south_atlantic", FL: "south_atlantic",
+	GA: "south_atlantic", MD: "south_atlantic", NC: "south_atlantic",
+	SC: "south_atlantic", VA: "south_atlantic", WV: "south_atlantic",
+	AL: "east_south_central", KY: "east_south_central", MS: "east_south_central",
+	TN: "east_south_central",
+	AR: "west_south_central", LA: "west_south_central", OK: "west_south_central",
+	TX: "west_south_central",
+	AZ: "mountain", CO: "mountain", ID: "mountain", MT: "mountain",
+	NV: "mountain", NM: "mountain", UT: "mountain", WY: "mountain",
+	AK: "pacific", CA: "pacific", HI: "pacific", OR: "pacific", WA: "pacific",
+};
+const DIVISION_NAMES: Record<string, string> = {
+	new_england: "New England",
+	mid_atlantic: "Mid-Atlantic",
+	east_north_central: "East North Central",
+	west_north_central: "West North Central",
+	south_atlantic: "South Atlantic",
+	east_south_central: "East South Central",
+	west_south_central: "West South Central",
+	mountain: "Mountain",
+	pacific: "Pacific",
+};
+
+const cbsaColorsTyped = cbsaColors as {
+	msa_palette: string[];
+	division_colors: Record<string, string>;
+	msa_colors: Record<string, string>;
+	msa_color_idx: Record<string, number>;
+};
+const MSA_COLORS = cbsaColorsTyped.msa_colors;
+const DIVISION_COLORS = cbsaColorsTyped.division_colors;
+
+// Generate CSS rules:
+// - One rule per MSA mapping data-cbsa → its assigned hex
+// - One rule per Census division mapping data-division → its pastel hex (non-MSA only)
+const coverageCSS = [
+	...Object.entries(MSA_COLORS).map(
+		([code, hex]) =>
+			`svg[data-layer="coverage"] .county[data-cbsa="${code}"] { fill: ${hex}; }`,
+	),
+	...Object.entries(DIVISION_COLORS).map(
+		([key, hex]) =>
+			`svg[data-layer="coverage"] .county:not([data-cbsa-type="MSA"])[data-division="${key}"] { fill: ${hex}; }`,
+	),
+].join("\n");
+
+for (const f of (countyFeatures as any).features) {
+	const fips = String(f.id);
+	const meta = countyById.get(fips);
+	const ents = entriesByCounty.get(fips) || [];
+	const d = path(f);
+	if (!d) continue;
+	countyPaths.push({
+		fips,
+		d,
+		hasEntries: ents.length > 0,
+		entryCount: ents.length,
+		cbsaCode: meta?.cbsa_code ?? null,
+		cbsaType: meta?.cbsa_type ?? null,
+		rucc: meta?.rucc_code ?? null,
+		regions: regionByFips.get(fips) || [],
+		division: meta?.state ? STATE_TO_DIVISION[meta.state] ?? "" : "",
+	});
+}
+
+const statePathD = path(stateMesh) || "";
+const nationPathD = path(nationMesh) || "";
+const msaPathD = path(msaMesh) || "";
+
+// Per-named-region outline meshes: drawn from the EXPANDED county sets (which include
+// MSAs absorbed by the region's overlap), so outlines wrap the MSAs not bisect them.
+const regionOutlines: Array<{ key: string; d: string }> = [];
+for (const [regionKey, fipsList] of Object.entries(expandedRegionCounties)) {
+	const fipsSet = new Set(fipsList);
+	const regionMesh = mesh(
+		countiesTopo as any,
+		(countiesTopo as any).objects.counties,
+		(a: any, b: any) => fipsSet.has(String(a.id)) !== fipsSet.has(String(b.id)),
+	);
+	const d = path(regionMesh);
+	if (d) regionOutlines.push({ key: regionKey, d });
+}
+
+// Region colour palette (reused for the regions layer AND the hover highlight).
+const REGION_COLORS: Record<string, string> = {
+	upper_peninsula_michigan: "#4b6cb7",
+	illinois_valley: "#c39b46",
+	northern_illinois_outside_chicago: "#c39b46",
+	iron_range_minnesota: "#3a8d6e",
+	great_plains_german_russian: "#b07a3e",
+	cornish_mining_corridor: "#6b3e75",
+	mining_pasty_corridor: "#6b3e75",
+	basque_corridor: "#8b3a3a",
+	pa_dutch_country: "#5b6e3e",
+	mississippi_delta: "#2f6e7a",
+	upstate_ny_central: "#c14d4d",
+	western_pa_eastern_oh: "#555555",
+	appalachian_southern_ohio: "#8a7438",
+	pacific_northwest: "#3a6e8a",
+	lowcountry_sc: "#4a8a6e",
+};
+
+// Generate per-region hover CSS. data-regions is comma-separated; use ~= after splitting
+// on comma in JS by setting a different attribute. Simpler: use space-separated in
+// data-regions-token plus the ~= selector, OR test each comma-position via four
+// attribute selectors. Going with four attribute-selector forms which covers all
+// positions in a comma-list reliably.
+const regionHoverCSS = Object.entries(REGION_COLORS)
+	.map(
+		([key, color]) => `
+svg[data-hover-region="${key}"] .region-outline[data-region-outline-key="${key}"] {
+	stroke-opacity: 0.92;
+	stroke: ${color};
+}
+svg[data-hover-region="${key}"] .county[data-regions="${key}"],
+svg[data-hover-region="${key}"] .county[data-regions^="${key},"],
+svg[data-hover-region="${key}"] .county[data-regions$=",${key}"],
+svg[data-hover-region="${key}"] .county[data-regions*=",${key},"] {
+	opacity: 1;
+	fill: ${color};
+	fill-opacity: 0.75;
+	stroke: ${color};
+	stroke-width: 0.5;
+}
+`,
+	)
+	.join("\n");
+
+const entryCountWithGeo = entries.filter((e) => !e.pattern_only).length;
+const msasWithCoverage = entriesByCbsa.size;
+const totalMsas = new Set(
+	counties.filter((c) => c.cbsa_type === "MSA").map((c) => c.cbsa_code),
+).size;
+const regionsWithCoverage = entriesByRegion.size;
+
+const compactEntries = entries.map((e) => ({
+	slug: e.slug,
+	dish: e.dish,
+	geo: e.geo_label,
+	cbsa: e.cbsa_code,
+	cbsaName: e.cbsa_name,
+	state: e.state,
+	scope: e.scope,
+	regions: e.named_regions,
+	divisions: e.census_divisions ?? [],
+	patternOnly: e.pattern_only,
+}));
+
+const namedRegionList = Object.entries(
+	namedRegions as Record<string, { name: string; description: string }>,
+).map(([key, v]) => ({
+	key,
+	name: v.name,
+	description: v.description,
+	count: entriesByRegion.get(key)?.length ?? 0,
+}));
+
+const regionNameMap: Record<string, string> = Object.fromEntries(
+	Object.entries(namedRegions as Record<string, { name: string }>).map(
+		([key, v]) => [key, v.name],
+	),
+);
+
+// Build link maps from the rendered post collection so the atlas can deep-link
+// each dish to its heading anchor and each MSA / known region to its post.
+const allPosts = await getCollection("posts");
+const REDIRECTED_AGGREGATES = new Set([
+	"modern-forage-great-lakes",
+	"modern-forage-northeast",
+	"modern-forage-plains-heartland",
+	"modern-forage-south",
+	"modern-forage-texas-southwest",
+	"modern-forage-west-mountain",
+]);
+const foragePosts = allPosts.filter(
+	(p) =>
+		p.id.startsWith("modern-forage-") && !REDIRECTED_AGGREGATES.has(p.id),
+);
+
+// dishPortion → list of {postSlug, anchor}. dishPortion is the heading text
+// before the em-dash separator we use in the post H3s ("Dish — City, ST"),
+// lower-cased and trimmed. Anchors are slugified by github-slugger to match
+// what Astro/rehype-slug emits at build time.
+type HeadingHit = { postSlug: string; anchor: string };
+const headingsByDish = new Map<string, HeadingHit[]>();
+const postHasHeading = new Map<string, Set<string>>();
+for (const post of foragePosts) {
+	const slugger = new GithubSlugger();
+	const body = post.body ?? "";
+	postHasHeading.set(post.id, new Set());
+	for (const line of body.split("\n")) {
+		const m = line.match(/^###\s+(.+?)\s*$/);
+		if (!m) continue;
+		const fullHeading = m[1] ?? "";
+		const anchor = slugger.slug(fullHeading);
+		postHasHeading.get(post.id)?.add(anchor);
+		const dishPortion = fullHeading.split(/\s[—–-]\s/)[0]?.trim() ?? fullHeading;
+		const key = dishPortion.toLowerCase();
+		if (!headingsByDish.has(key)) headingsByDish.set(key, []);
+		headingsByDish.get(key)?.push({ postSlug: post.id, anchor });
+	}
+}
+
+// entry.slug → {postSlug, anchor}. Try exact dish-name match first; fall back
+// to a substring match for compound headings ("Metts and Brats" covers the
+// "Cincinnati Brat" entry). Prefer hits in the post matching the entry's CBSA.
+const entryLinkMap: Record<string, { postSlug: string; anchor: string }> = {};
+const cbsaPostCounts = new Map<string, Map<string, number>>();
+for (const e of entries) {
+	if (e.pattern_only) continue;
+	const dishKey = e.dish.toLowerCase();
+	let hits = headingsByDish.get(dishKey) ?? [];
+	if (hits.length === 0) {
+		// Substring fallback: any heading whose dish portion contains the entry
+		// dish, or vice-versa.
+		for (const [k, v] of headingsByDish) {
+			if (k.includes(dishKey) || dishKey.includes(k)) hits = hits.concat(v);
+		}
+	}
+	if (hits.length === 0) continue;
+	// If multiple hits, pick the one whose post is the most-likely MSA match
+	// for this entry's CBSA. Heuristic: post slug containing the first word of
+	// the cbsa_name, lower-cased and de-spaced.
+	let chosen = hits[0];
+	if (hits.length > 1 && e.cbsa_name) {
+		const cityToken = e.cbsa_name
+			.split(",")[0]
+			?.split("-")[0]
+			?.trim()
+			.toLowerCase()
+			.replace(/\s+/g, "-");
+		if (cityToken) {
+			const m = hits.find((h) => h.postSlug.includes(cityToken));
+			if (m) chosen = m;
+		}
+	}
+	if (!chosen) continue;
+	entryLinkMap[e.slug] = chosen;
+	if (e.cbsa_code) {
+		if (!cbsaPostCounts.has(e.cbsa_code))
+			cbsaPostCounts.set(e.cbsa_code, new Map());
+		const m = cbsaPostCounts.get(e.cbsa_code);
+		if (m) m.set(chosen.postSlug, (m.get(chosen.postSlug) ?? 0) + 1);
+	}
+}
+
+// cbsa_code → most-frequent matched post slug. Used for the panel header link
+// and for the dish-without-anchor fallback.
+const cbsaPostMap: Record<string, string> = {};
+for (const [cbsa, counts] of cbsaPostCounts) {
+	let best: [string, number] | null = null;
+	for (const entry of counts) {
+		if (!best || entry[1] > best[1]) best = entry;
+	}
+	if (best) cbsaPostMap[cbsa] = best[0];
+}
+
+// Census division → non-MSA post. These are the canonical homes for diffuse
+// regional dishes that don't pin to a single MSA. Divisions without a post
+// (mid_atlantic, pacific) are intentionally absent; the panel falls back to
+// plain text for those.
+const divisionPostMap: Record<string, string> = {
+	east_north_central: "modern-forage-east-north-central-non-msa",
+	east_south_central: "modern-forage-east-south-central-non-msa",
+	mountain: "modern-forage-mountain-non-msa",
+	new_england: "modern-forage-new-england-non-msa",
+	south_atlantic: "modern-forage-south-atlantic-non-msa",
+	west_north_central: "modern-forage-west-north-central-non-msa",
+	west_south_central: "modern-forage-west-south-central-non-msa",
+};
+
+// Named-region → post (and optional anchor). Only regions with a dedicated
+// post live here. Mining-corridors h2 anchors confirmed against rendered HTML.
+const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
+	cornish_mining_corridor: {
+		postSlug: "modern-forage-mining-corridors",
+		anchor: "the-cornish-pasty-corridor",
+	},
+	mining_pasty_corridor: {
+		postSlug: "modern-forage-mining-corridors",
+		anchor: "the-cornish-pasty-corridor",
+	},
+	basque_corridor: {
+		postSlug: "modern-forage-mining-corridors",
+		anchor: "the-basque-boarding-house-corridor",
+	},
+};
+---
+
+<PageLayout
+	current="posts"
+	title="Modern Forage Atlas · Reduction"
+	description="Interactive county-level map of hyper-local US regional dishes catalogued in the Modern Forage survey."
+>
+	<header class="mb-8 max-w-[720px]">
+		<div
+			class="font-mono text-[11px] text-fg-faint tracking-[0.12em] uppercase mb-2"
+		>
+			Modern Forage
+		</div>
+		<h1
+			class="font-serif font-medium text-[44px] leading-[1.05] tracking-[-0.02em] mb-3"
+		>
+			Atlas
+		</h1>
+		<p class="text-fg-dim text-[15px] mb-2">
+			{entryCountWithGeo} entries across {msasWithCoverage} of {totalMsas}
+			MSAs plus {regionsWithCoverage} named non-metro regions. Hover any
+			county for detail, click to list dishes; switch to the named-regions
+			layer to highlight cross-CBSA corridors.
+		</p>
+		<p class="text-fg-faint text-[13px]">
+			MSA boundaries follow the OMB July 2023 delineations. MSAs coloured by
+			a five-hue balanced greedy assignment on the county-adjacency graph
+			(Okabe-Ito palette, CVD-verified at min ΔE=15.7 across protan, deutan,
+			and tritan); no two adjacent MSAs share a hue. Per-MSA lightness varies
+			±10% within each class for sub-distinction. Non-MSA and μSA counties
+			grouped by Census Bureau Division (9 pastel buckets).
+		</p>
+	</header>
+
+	<div class="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]">
+		<div class="flex items-center gap-2 flex-wrap">
+			<span class="font-mono text-[11px] text-fg-faint uppercase tracking-[0.08em]"
+				>Layer</span
+			>
+			<div class="inline-flex border border-rule rounded flex-wrap">
+				<button
+					class="px-3 py-1 text-[12px] font-mono bg-bg-alt"
+					data-layer-btn="coverage"
+					aria-pressed="true">MSAs + divisions</button
+				>
+				<button
+					class="px-3 py-1 text-[12px] font-mono border-l border-rule"
+					data-layer-btn="regions"
+					aria-pressed="false">named regions</button
+				>
+			</div>
+		</div>
+		<label class="flex items-center gap-2">
+			<input type="checkbox" data-toggle="msa-outlines" checked />
+			<span class="text-[12px]">MSA outlines</span>
+		</label>
+		<label class="flex items-center gap-2">
+			<input type="checkbox" data-toggle="state-outlines" checked />
+			<span class="text-[12px]">State outlines</span>
+		</label>
+	</div>
+
+	<div class="relative">
+		<svg
+			viewBox={`0 0 ${W} ${H}`}
+			class="w-full h-auto bg-bg-alt/30 rounded border border-rule"
+			data-layer="coverage"
+			role="img"
+			aria-label="Choropleth map of US counties showing Modern Forage entry coverage"
+		>
+			<g data-layer-counties>
+				{
+					countyPaths.map((c) => (
+						<path
+							d={c.d}
+							data-fips={c.fips}
+							data-has-entries={c.hasEntries ? "1" : "0"}
+							data-entry-count={c.entryCount}
+							data-cbsa={c.cbsaCode ?? ""}
+							data-cbsa-type={c.cbsaType ?? ""}
+							data-regions={c.regions.join(",")}
+							data-division={c.division}
+							class="county"
+						/>
+					))
+				}
+			</g>
+			<path
+				d={msaPathD}
+				class="msa-mesh"
+				fill="none"
+				stroke="currentColor"
+				stroke-opacity="0.55"
+				stroke-width="0.6"
+				pointer-events="none"
+				data-mesh="msa"
+			/>
+			<g data-region-outlines pointer-events="none">
+				{
+					regionOutlines.map((r) => (
+						<path
+							class="region-outline"
+							data-region-outline-key={r.key}
+							d={r.d}
+							fill="none"
+							stroke-width="2.2"
+							stroke-linejoin="round"
+							stroke-linecap="round"
+							stroke-opacity="0"
+						/>
+					))
+				}
+			</g>
+			<path
+				d={statePathD}
+				class="state-mesh"
+				fill="none"
+				stroke="currentColor"
+				stroke-opacity="0.4"
+				stroke-width="0.5"
+				pointer-events="none"
+				data-mesh="state"
+			/>
+			<path
+				d={nationPathD}
+				class="nation-mesh"
+				fill="none"
+				stroke="currentColor"
+				stroke-opacity="0.7"
+				stroke-width="0.8"
+				pointer-events="none"
+			/>
+		</svg>
+
+		<div
+			data-tooltip
+			class="pointer-events-none absolute hidden bg-bg-alt border border-rule rounded px-3 py-2 text-[12px] shadow-lg max-w-[280px] z-10"
+		>
+		</div>
+	</div>
+
+	<aside
+		data-detail-panel
+		class="mt-6 border border-rule rounded p-4 bg-bg-alt/30"
+		hidden
+	>
+		<div class="flex items-baseline justify-between gap-4 mb-3">
+			<h2
+				class="font-serif font-medium text-[22px] tracking-tight"
+				data-detail-title
+			>
+			</h2>
+			<button
+				class="font-mono text-[11px] text-fg-faint hover:text-accent"
+				data-detail-close>close ✕</button
+			>
+		</div>
+		<div class="text-[12px] text-fg-faint mb-3" data-detail-meta></div>
+		<ul class="space-y-2" data-detail-entries></ul>
+	</aside>
+
+	<section class="mt-10">
+		<h2
+			class="font-serif font-medium text-[20px] tracking-tight mb-3"
+		>
+			Named non-metro regions
+		</h2>
+		<ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-[13px]">
+			{
+				namedRegionList
+					.filter((r) => r.count > 0)
+					.sort((a, b) => b.count - a.count)
+					.map((r) => {
+						const post = regionPostMap[r.key];
+						const href = post
+							? `/posts/${post.postSlug}/${post.anchor ? "#" + post.anchor : ""}`
+							: null;
+						return (
+							<li
+								class="border-b border-rule/40 pb-1.5 region-list-item cursor-pointer"
+								data-region-key={r.key}
+							>
+								<div class="flex items-baseline justify-between gap-2">
+									{href ? (
+										<a
+											href={href}
+											class="font-medium hover:text-accent underline-offset-4 hover:underline"
+										>
+											{r.name}
+										</a>
+									) : (
+										<span class="font-medium">{r.name}</span>
+									)}
+									<span class="font-mono text-[11px] text-fg-faint">
+										{r.count} {r.count === 1 ? "entry" : "entries"}
+									</span>
+								</div>
+								<div class="text-fg-dim text-[12px]">{r.description}</div>
+							</li>
+						);
+					})
+			}
+		</ul>
+	</section>
+
+	<script type="application/json" data-entries set:html={JSON.stringify(compactEntries)}></script>
+	<script type="application/json" data-region-names set:html={JSON.stringify(regionNameMap)}></script>
+	<script type="application/json" data-division-names set:html={JSON.stringify(DIVISION_NAMES)}></script>
+	<script type="application/json" data-entry-links set:html={JSON.stringify(entryLinkMap)}></script>
+	<script type="application/json" data-cbsa-posts set:html={JSON.stringify(cbsaPostMap)}></script>
+	<script type="application/json" data-region-posts set:html={JSON.stringify(regionPostMap)}></script>
+	<script type="application/json" data-division-posts set:html={JSON.stringify(divisionPostMap)}></script>
+	<style is:inline set:html={regionHoverCSS}></style>
+	<style is:inline set:html={coverageCSS}></style>
+</PageLayout>
+
+<style>
+	svg .county {
+		fill: var(--color-bg-alt, #efeae4);
+		stroke: rgba(0, 0, 0, 0.06);
+		stroke-width: 0.3;
+		cursor: pointer;
+		transition: opacity 80ms ease;
+	}
+	/* MSAs + divisions layer: MSA county → assigned hex (per-MSA CSS rules emitted
+	   server-side); non-MSA + μSA county → Census division pastel. No fading based
+	   on entry coverage — every county at full opacity in its proper colour. */
+	svg[data-layer="coverage"] .county {
+		fill-opacity: 1;
+	}
+	svg .county:hover {
+		stroke: var(--color-fg, #222);
+		stroke-width: 0.6;
+	}
+
+	/* Named-regions layer */
+	svg[data-layer="regions"] .county {
+		fill: rgba(0, 0, 0, 0.03);
+	}
+	svg[data-layer="regions"] .county[data-regions*="upper_peninsula_michigan"] { fill: #4b6cb7; fill-opacity: 0.65; }
+	svg[data-layer="regions"] .county[data-regions*="illinois_valley"] { fill: #c39b46; fill-opacity: 0.7; }
+	svg[data-layer="regions"] .county[data-regions*="iron_range_minnesota"] { fill: #3a8d6e; fill-opacity: 0.7; }
+	svg[data-layer="regions"] .county[data-regions*="great_plains_german_russian"] { fill: #b07a3e; fill-opacity: 0.55; }
+	svg[data-layer="regions"] .county[data-regions*="cornish_mining_corridor"] { fill: #6b3e75; fill-opacity: 0.75; }
+	svg[data-layer="regions"] .county[data-regions*="basque_corridor"] { fill: #8b3a3a; fill-opacity: 0.75; }
+	svg[data-layer="regions"] .county[data-regions*="pa_dutch_country"] { fill: #5b6e3e; fill-opacity: 0.75; }
+	svg[data-layer="regions"] .county[data-regions*="mississippi_delta"] { fill: #2f6e7a; fill-opacity: 0.75; }
+	svg[data-layer="regions"] .county[data-regions*="mining_pasty_corridor"] { fill: #6b3e75; fill-opacity: 0.65; }
+	svg[data-layer="regions"] .county[data-regions*="upstate_ny_central"] { fill: #c14d4d; fill-opacity: 0.7; }
+	svg[data-layer="regions"] .county[data-regions*="western_pa_eastern_oh"] { fill: #555; fill-opacity: 0.6; }
+	svg[data-layer="regions"] .county[data-regions*="appalachian_southern_ohio"] { fill: #8a7438; fill-opacity: 0.7; }
+	svg[data-layer="regions"] .county[data-regions*="pacific_northwest"] { fill: #3a6e8a; fill-opacity: 0.65; }
+	svg[data-layer="regions"] .county[data-regions*="lowcountry_sc"] { fill: #4a8a6e; fill-opacity: 0.75; }
+	svg[data-layer="regions"] .county[data-regions*="northern_illinois_outside_chicago"] { fill: #c39b46; fill-opacity: 0.55; }
+
+
+
+	svg .state-mesh { color: var(--color-fg, #222); }
+	svg .nation-mesh { color: var(--color-fg, #222); }
+
+	/* Region outline highlight on hover. Outlines hidden by default; only the matching
+	   region's outline becomes visible when svg[data-hover-region] is set. */
+	svg .region-outline {
+		stroke: var(--color-fg, #222);
+		transition: stroke-opacity 90ms ease;
+	}
+	svg[data-hover-region] .county { opacity: 0.18; transition: opacity 90ms ease; }
+	svg[data-hover-region] .county:hover { opacity: 1; }
+
+	.region-list-item.highlight {
+		background: color-mix(in oklab, currentColor 6%, transparent);
+	}
+	.region-list-item.locked {
+		background: color-mix(in oklab, currentColor 10%, transparent);
+		outline: 1px solid color-mix(in oklab, currentColor 25%, transparent);
+	}
+	.region-list-item.locked::after {
+		content: " · locked";
+		font-family: ui-monospace, monospace;
+		font-size: 10px;
+		color: var(--color-fg-faint, #888);
+		margin-left: 6px;
+	}
+
+	[data-toggle="msa-outlines"]:not(:checked) ~ * .county[data-cbsa-type] {
+		/* placeholder; the toggle is handled in JS */
+	}
+
+	[data-tooltip] strong { font-weight: 600; }
+	[data-tooltip] .small { color: var(--color-fg-faint, #888); font-size: 11px; }
+</style>
+
+<script>
+	type CompactEntry = {
+		slug: string;
+		dish: string;
+		geo: string;
+		cbsa: string | null;
+		cbsaName: string | null;
+		state: string | null;
+		scope: string | null;
+		regions: string[];
+		divisions: string[];
+		patternOnly: boolean;
+	};
+
+	const entriesEl = document.querySelector<HTMLScriptElement>("[data-entries]");
+	const entries: CompactEntry[] = entriesEl
+		? JSON.parse(entriesEl.textContent ?? "[]")
+		: [];
+	const regionNamesEl = document.querySelector<HTMLScriptElement>(
+		"[data-region-names]",
+	);
+	const regionNames: Record<string, string> = regionNamesEl
+		? JSON.parse(regionNamesEl.textContent ?? "{}")
+		: {};
+	const divisionNamesEl = document.querySelector<HTMLScriptElement>(
+		"[data-division-names]",
+	);
+	const divisionNames: Record<string, string> = divisionNamesEl
+		? JSON.parse(divisionNamesEl.textContent ?? "{}")
+		: {};
+	const entryLinksEl = document.querySelector<HTMLScriptElement>(
+		"[data-entry-links]",
+	);
+	const entryLinks: Record<string, { postSlug: string; anchor: string }> =
+		entryLinksEl ? JSON.parse(entryLinksEl.textContent ?? "{}") : {};
+	const cbsaPostsEl = document.querySelector<HTMLScriptElement>(
+		"[data-cbsa-posts]",
+	);
+	const cbsaPosts: Record<string, string> = cbsaPostsEl
+		? JSON.parse(cbsaPostsEl.textContent ?? "{}")
+		: {};
+	const regionPostsEl = document.querySelector<HTMLScriptElement>(
+		"[data-region-posts]",
+	);
+	const regionPosts: Record<string, { postSlug: string; anchor?: string }> =
+		regionPostsEl ? JSON.parse(regionPostsEl.textContent ?? "{}") : {};
+	const divisionPostsEl = document.querySelector<HTMLScriptElement>(
+		"[data-division-posts]",
+	);
+	const divisionPosts: Record<string, string> = divisionPostsEl
+		? JSON.parse(divisionPostsEl.textContent ?? "{}")
+		: {};
+
+	function entryHref(e: CompactEntry): string | null {
+		const direct = entryLinks[e.slug];
+		if (direct) return `/posts/${direct.postSlug}/#${direct.anchor}`;
+		if (e.cbsa && cbsaPosts[e.cbsa]) return `/posts/${cbsaPosts[e.cbsa]}/`;
+		return null;
+	}
+
+	function displayRegion(key: string): string {
+		return regionNames[key] || key;
+	}
+
+	const svg = document.querySelector<SVGSVGElement>("svg[data-layer]");
+	const tooltip = document.querySelector<HTMLElement>("[data-tooltip]");
+	const detailPanel = document.querySelector<HTMLElement>("[data-detail-panel]");
+	const detailTitle = document.querySelector<HTMLElement>("[data-detail-title]");
+	const detailMeta = document.querySelector<HTMLElement>("[data-detail-meta]");
+	const detailList = document.querySelector<HTMLElement>("[data-detail-entries]");
+	const detailClose = document.querySelector<HTMLElement>("[data-detail-close]");
+
+	const entriesByCbsa = new Map<string, CompactEntry[]>();
+	const entriesByRegion = new Map<string, CompactEntry[]>();
+	const entriesByDivision = new Map<string, CompactEntry[]>();
+	const paths = document.querySelectorAll<SVGPathElement>("svg .county");
+
+	for (const e of entries) {
+		if (e.patternOnly) continue;
+		if (e.cbsa) {
+			if (!entriesByCbsa.has(e.cbsa)) entriesByCbsa.set(e.cbsa, []);
+			entriesByCbsa.get(e.cbsa)?.push(e);
+		}
+		for (const r of e.regions) {
+			if (!entriesByRegion.has(r)) entriesByRegion.set(r, []);
+			entriesByRegion.get(r)?.push(e);
+		}
+		for (const d of e.divisions) {
+			if (!entriesByDivision.has(d)) entriesByDivision.set(d, []);
+			entriesByDivision.get(d)?.push(e);
+		}
+	}
+
+	function entriesForCounty(path: SVGPathElement): CompactEntry[] {
+		const cbsa = path.dataset.cbsa;
+		const regions = (path.dataset.regions ?? "").split(",").filter(Boolean);
+		const division = path.dataset.division ?? "";
+		const cbsaType = path.dataset.cbsaType ?? "";
+		const seen = new Set<string>();
+		const out: CompactEntry[] = [];
+		if (cbsa) {
+			for (const e of entriesByCbsa.get(cbsa) ?? []) {
+				if (!seen.has(e.slug)) {
+					seen.add(e.slug);
+					out.push(e);
+				}
+			}
+		}
+		for (const r of regions) {
+			for (const e of entriesByRegion.get(r) ?? []) {
+				if (!seen.has(e.slug)) {
+					seen.add(e.slug);
+					out.push(e);
+				}
+			}
+		}
+		// Division-scoped entries surface only on non-MSA counties (μSA or
+		// rural). MSA counties already have their own metro post; mixing in
+		// division-wide patterns there would double-list dishes that aren't
+		// metro-specific.
+		if (cbsaType !== "MSA" && division) {
+			for (const e of entriesByDivision.get(division) ?? []) {
+				if (!seen.has(e.slug)) {
+					seen.add(e.slug);
+					out.push(e);
+				}
+			}
+		}
+		return out;
+	}
+
+	function showTooltip(evt: MouseEvent, path: SVGPathElement) {
+		if (!tooltip) return;
+		const fips = path.dataset.fips ?? "";
+		const cbsa = path.dataset.cbsa ?? "";
+		const cbsaType = path.dataset.cbsaType ?? "";
+		const regions = (path.dataset.regions ?? "").split(",").filter(Boolean);
+		const division = path.dataset.division ?? "";
+		const ents = entriesForCounty(path);
+		const cbsaEntries = cbsa ? entriesByCbsa.get(cbsa) : undefined;
+		const cbsaLabel = cbsa
+			? `${cbsaType} ${cbsa}${cbsaEntries?.[0]?.cbsaName ? " · " + cbsaEntries[0].cbsaName : ""}`
+			: "non-CBSA";
+		const regionLabel = regions.length
+			? `Regions: ${regions.map(displayRegion).join(", ")}`
+			: "";
+		const divisionLabel = division
+			? `Division: ${divisionNames[division] || division}`
+			: "";
+		const entryLines = ents.length
+			? `<div class="mt-1"><strong>${ents.length}</strong> ${ents.length === 1 ? "entry" : "entries"}: ${ents.slice(0, 3).map((e) => e.dish).join(", ")}${ents.length > 3 ? "…" : ""}</div>`
+			: '<div class="small mt-1">No entries here</div>';
+		tooltip.innerHTML = `
+			<div><strong>FIPS ${fips}</strong></div>
+			<div class="small">${cbsaLabel}</div>
+			${divisionLabel ? `<div class="small">${divisionLabel}</div>` : ""}
+			${regionLabel ? `<div class="small">${regionLabel}</div>` : ""}
+			${entryLines}
+		`;
+		tooltip.classList.remove("hidden");
+		const rect = svg?.getBoundingClientRect();
+		if (rect) {
+			tooltip.style.left = `${evt.clientX - rect.left + 12}px`;
+			tooltip.style.top = `${evt.clientY - rect.top + 12}px`;
+		}
+	}
+
+	function hideTooltip() {
+		tooltip?.classList.add("hidden");
+	}
+
+	function showDetails(path: SVGPathElement) {
+		if (!detailPanel || !detailTitle || !detailMeta || !detailList) return;
+		const fips = path.dataset.fips ?? "";
+		const cbsa = path.dataset.cbsa ?? "";
+		const cbsaType = path.dataset.cbsaType ?? "";
+		const regions = (path.dataset.regions ?? "").split(",").filter(Boolean);
+		const ents = entriesForCounty(path);
+		const cbsaName = entriesByCbsa.get(cbsa)?.[0]?.cbsaName;
+		const division = path.dataset.division ?? "";
+		const divisionName = division ? divisionNames[division] || division : "";
+		const isMsa = cbsaType === "MSA";
+		// Title precedence: MSA name > named region > division (for non-MSA
+		// counties, the division is the canonical home for diffuse patterns) >
+		// FIPS fallback.
+		const titleText = isMsa
+			? cbsaName ?? `FIPS ${fips}`
+			: regions[0]
+				? displayRegion(regions[0])
+				: divisionName
+					? `${divisionName} (non-MSA)`
+					: `FIPS ${fips}`;
+		// Title link: MSA post > named-region post > division non-MSA post.
+		let titleHref: string | null = null;
+		if (isMsa && cbsa && cbsaPosts[cbsa]) titleHref = `/posts/${cbsaPosts[cbsa]}/`;
+		if (!titleHref && regions.length) {
+			for (const r of regions) {
+				const rp = regionPosts[r];
+				if (rp) {
+					titleHref = `/posts/${rp.postSlug}/${rp.anchor ? "#" + rp.anchor : ""}`;
+					break;
+				}
+			}
+		}
+		if (!titleHref && !isMsa && division && divisionPosts[division]) {
+			titleHref = `/posts/${divisionPosts[division]}/`;
+		}
+		detailTitle.innerHTML = titleHref
+			? `<a href="${titleHref}" class="hover:text-accent underline-offset-4 hover:underline">${escape(titleText)}</a>`
+			: escape(titleText);
+		const metaParts: string[] = [];
+		if (cbsaType && cbsa)
+			metaParts.push(`${cbsaType} ${cbsa}${cbsaName ? " · " + cbsaName : ""}`);
+		if (division) metaParts.push(`Division: ${divisionNames[division] || division}`);
+		if (regions.length)
+			metaParts.push(`Regions: ${regions.map(displayRegion).join(", ")}`);
+		metaParts.push(`FIPS ${fips}`);
+		detailMeta.textContent = metaParts.join(" · ");
+		detailList.innerHTML = ents.length
+			? ents
+					.map((e) => {
+						const href = entryHref(e);
+						const dishLabel = href
+							? `<a href="${href}" class="font-medium hover:text-accent underline-offset-4 hover:underline">${escape(e.dish)}</a>`
+							: `<span class="font-medium">${escape(e.dish)}</span>`;
+						return `<li class="text-[14px]">${dishLabel}<span class="text-fg-faint text-[12px] ml-2">${escape(e.geo)}</span></li>`;
+					})
+					.join("")
+			: '<li class="text-fg-dim text-[14px]">No entries tagged to this location yet.</li>';
+		detailPanel.removeAttribute("hidden");
+	}
+
+	function escape(s: string): string {
+		return s
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;");
+	}
+
+	let lockedRegion: string | null = null;
+
+	function setHoverRegion(key: string | null) {
+		if (!svg) return;
+		if (lockedRegion) return; // lock overrides any hover transition
+		if (key) {
+			svg.setAttribute("data-hover-region", key);
+		} else {
+			svg.removeAttribute("data-hover-region");
+		}
+		for (const li of document.querySelectorAll<HTMLElement>(
+			".region-list-item",
+		)) {
+			li.classList.toggle("highlight", li.dataset.regionKey === key);
+		}
+	}
+
+	function toggleLockRegion(key: string | null) {
+		if (!svg) return;
+		if (!key) return;
+		if (lockedRegion === key) {
+			lockedRegion = null;
+			svg.removeAttribute("data-hover-region");
+			for (const li of document.querySelectorAll<HTMLElement>(
+				".region-list-item",
+			)) {
+				li.classList.remove("highlight");
+				li.classList.remove("locked");
+			}
+		} else {
+			lockedRegion = key;
+			svg.setAttribute("data-hover-region", key);
+			for (const li of document.querySelectorAll<HTMLElement>(
+				".region-list-item",
+			)) {
+				const isMatch = li.dataset.regionKey === key;
+				li.classList.toggle("highlight", isMatch);
+				li.classList.toggle("locked", isMatch);
+			}
+		}
+	}
+
+	for (const p of paths) {
+		p.addEventListener("mousemove", (e) => showTooltip(e, p));
+		p.addEventListener("mouseleave", () => {
+			hideTooltip();
+			setHoverRegion(null);
+		});
+		p.addEventListener("mouseenter", () => {
+			const regions = (p.dataset.regions ?? "").split(",").filter(Boolean);
+			// Only auto-highlight when the county is in EXACTLY one named region.
+			if (regions.length === 1) {
+				setHoverRegion(regions[0] ?? null);
+			} else {
+				setHoverRegion(null);
+			}
+		});
+		p.addEventListener("click", () => {
+			showDetails(p);
+			const regions = (p.dataset.regions ?? "").split(",").filter(Boolean);
+			if (regions.length === 1 && regions[0]) {
+				toggleLockRegion(regions[0]);
+			}
+		});
+	}
+
+	for (const li of document.querySelectorAll<HTMLElement>(".region-list-item")) {
+		li.addEventListener("mouseenter", () => {
+			const key = li.dataset.regionKey ?? "";
+			if (key) setHoverRegion(key);
+		});
+		li.addEventListener("mouseleave", () => setHoverRegion(null));
+		li.addEventListener("focus", () => {
+			const key = li.dataset.regionKey ?? "";
+			if (key) setHoverRegion(key);
+		});
+		li.addEventListener("blur", () => setHoverRegion(null));
+		li.addEventListener("click", (e) => {
+			// Anchor inside the row navigates; don't also lock the region.
+			if ((e.target as HTMLElement | null)?.closest("a")) return;
+			const key = li.dataset.regionKey ?? "";
+			if (key) {
+				setLayer("regions");
+				toggleLockRegion(key);
+			}
+		});
+		li.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				const key = li.dataset.regionKey ?? "";
+				if (key) {
+					setLayer("regions");
+					toggleLockRegion(key);
+				}
+			}
+		});
+		li.setAttribute("tabindex", "0");
+		li.setAttribute("role", "button");
+	}
+
+	detailClose?.addEventListener("click", () => {
+		detailPanel?.setAttribute("hidden", "");
+	});
+
+	function setLayer(layer: string) {
+		svg?.setAttribute("data-layer", layer);
+		for (const b of document.querySelectorAll<HTMLButtonElement>(
+			"[data-layer-btn]",
+		)) {
+			b.setAttribute(
+				"aria-pressed",
+				b.dataset.layerBtn === layer ? "true" : "false",
+			);
+			b.classList.toggle("bg-bg-alt", b.dataset.layerBtn === layer);
+		}
+	}
+
+	for (const btn of document.querySelectorAll<HTMLButtonElement>(
+		"[data-layer-btn]",
+	)) {
+		btn.addEventListener("click", () => {
+			setLayer(btn.dataset.layerBtn ?? "coverage");
+		});
+	}
+
+	const msaToggle = document.querySelector<HTMLInputElement>(
+		"[data-toggle='msa-outlines']",
+	);
+	const stateToggle = document.querySelector<HTMLInputElement>(
+		"[data-toggle='state-outlines']",
+	);
+	function updateStateOutline() {
+		const stateMesh = svg?.querySelector<SVGPathElement>("[data-mesh='state']");
+		if (stateMesh)
+			stateMesh.setAttribute(
+				"stroke-opacity",
+				stateToggle?.checked ? "0.4" : "0",
+			);
+	}
+	function updateMsaOutline() {
+		const msaMeshEl = svg?.querySelector<SVGPathElement>("[data-mesh='msa']");
+		if (msaMeshEl)
+			msaMeshEl.setAttribute(
+				"stroke-opacity",
+				msaToggle?.checked ? "0.55" : "0",
+			);
+	}
+	msaToggle?.addEventListener("change", updateMsaOutline);
+	stateToggle?.addEventListener("change", updateStateOutline);
+</script>
+</PageLayout>

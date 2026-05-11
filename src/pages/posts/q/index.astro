@@ -5,10 +5,13 @@ import TagRefine from "@/theme/components/TagRefine.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
+import { effectiveUpdateDate } from "@/lib/post-dates";
 
 const all = await getCollection("posts", ({ data }) => !data.draft && !data.unlisted);
 
-const sorted = [...all].sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const sorted = [...all].sort(
+	(a, b) => effectiveUpdateDate(b).valueOf() - effectiveUpdateDate(a).valueOf(),
+);
 
 const allTagSlugs = new Set<string>(knownTags);
 for (const p of all) for (const t of p.data.tags) allTagSlugs.add(tagSlug(t));
@@ -24,7 +27,7 @@ const presentEmpty = new Set<string>();
 
 <PageLayout
 	current="posts"
-	title="Posts — Append Only"
+	title="Posts · Reduction"
 	description="Everything I've written, most recent first."
 >
 	<header class="mb-10" data-q-header>
@@ -240,7 +243,7 @@ const presentEmpty = new Set<string>();
 			refineWrap.innerHTML = tagRefineHTML(segments, allTags, present);
 		}
 
-		document.title = `${isEmpty ? "Posts" : description} — Append Only`;
+		document.title = `${isEmpty ? "Posts" : description} · Reduction`;
 	}
 
 	applyQuery();
