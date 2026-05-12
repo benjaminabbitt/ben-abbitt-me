@@ -32,6 +32,7 @@ pnpm-debug.log*
 .gemini/
 .mcp.json
 .mcp.json.*.bak
+.obsidian/
 
 # in-progress research drafts (live in the modern_forage repo, not the blog)
 drafts/
