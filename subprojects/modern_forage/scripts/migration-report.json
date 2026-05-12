@@ -1,0 +1,1440 @@
+{
+  "mode": "apply",
+  "summary": {
+    "entries_total": 213,
+    "mapped_to_posts": 207,
+    "posts_touched": 94,
+    "posts_with_dish_overrides": 17,
+    "posts_already_have_geo": 0,
+    "unmapped": 6
+  },
+  "posts": {
+    "akron": {
+      "geo": {
+        "cbsa": "10420",
+        "primary_county": "39133",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "akron-white-french-dressing"
+      ]
+    },
+    "albuquerque": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "NM"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "carne-adovada",
+        "biscochitos"
+      ]
+    },
+    "arkansas-ozarks-non-msa": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "AR"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "chocolate-gravy"
+      ]
+    },
+    "austin": {
+      "geo": {
+        "cbsa": "12420",
+        "primary_county": "48021",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "breakfast-taco-culture"
+      ]
+    },
+    "bakersfield": {
+      "geo": {
+        "cbsa": "12540",
+        "primary_county": "06029",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "basque-boarding-house-dining"
+      ]
+    },
+    "baltimore": {
+      "geo": {
+        "cbsa": "12580",
+        "primary_county": "24003",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "peppermint-stick-in-a-lemon",
+        "pit-beef",
+        "lake-trout",
+        "berger-cookies",
+        "coddies"
+      ]
+    },
+    "bangor": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "ME"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "red-snapper-hot-dog"
+      ]
+    },
+    "binghamton": {
+      "geo": {
+        "cbsa": "13780",
+        "primary_county": "36007",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "spiedies"
+      ]
+    },
+    "birmingham-al": {
+      "geo": {
+        "cbsa": "13820",
+        "primary_county": "01007",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "birmingham-style-hot-dogs"
+      ]
+    },
+    "boise": {
+      "geo": {
+        "cbsa": "14260",
+        "primary_county": "16001",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Basque Boarding House-Style Dining",
+          "scope": "regional",
+          "zones": [
+            "basque_corridor"
+          ]
+        }
+      ],
+      "entries": [
+        "finger-steaks",
+        "basque-boarding-house-style-dining"
+      ]
+    },
+    "boston": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "MA"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "north-shore-roast-beef-three-way"
+      ]
+    },
+    "buffalo": {
+      "geo": {
+        "cbsa": "15380",
+        "primary_county": "36029",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "city-chicken",
+        "beef-on-weck",
+        "sponge-candy",
+        "loganberry"
+      ]
+    },
+    "butte": {
+      "geo": {
+        "cbsa": "15580",
+        "primary_county": "30093",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "butte-pasty"
+      ]
+    },
+    "charleston-sc": {
+      "geo": {
+        "cbsa": "16700",
+        "primary_county": "45015",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "she-crab-soup",
+        "benne-wafers"
+      ]
+    },
+    "charleston-wv": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "WV"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "tudors-biscuit-world"
+      ]
+    },
+    "chicago": {
+      "geo": {
+        "cbsa": "16980",
+        "primary_county": "17031",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Akutagawa",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Atomic Cake",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Beer Nuggets",
+          "scope": "regional",
+          "zones": [
+            "northern_illinois_outside_chicago"
+          ]
+        },
+        {
+          "name": "Breaded Steak Sandwich",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Chicago Hot Link / Tip-and-Link",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Gym Shoe (Jim Shoe) Sandwich",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Lollipop Wings (Gam Pong Gi Wings)",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Mild Sauce",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Mother-in-Law Sandwich",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Pizza Pot Pie",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Rainbow Cone",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Sweet Steak (Steak Supreme)",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Taffy Grapes",
+          "scope": "hyperlocal"
+        }
+      ],
+      "entries": [
+        "gym-shoe-jim-shoe-sandwich",
+        "flaming-saganaki",
+        "mild-sauce",
+        "chicago-hot-link-tip-and-link",
+        "chicago-style-giardiniera",
+        "jibarito",
+        "chicken-vesuvio",
+        "pizza-pot-pie",
+        "rainbow-cone",
+        "atomic-cake",
+        "taffy-grapes",
+        "walker-bros-apple-pancake",
+        "chicago-corn-roll-tamale",
+        "mother-in-law-sandwich",
+        "pizza-puff",
+        "sweet-steak-steak-supreme",
+        "breaded-steak-sandwich",
+        "maxwell-street-polish",
+        "lollipop-wings-gam-pong-gi-wings",
+        "akutagawa",
+        "chicago-style-egg-roll-peanut-butter-in-the-filling",
+        "chicago-jerk-chicken-egg-roll",
+        "shrimp-dejonghe",
+        "chicago-shrimp-house",
+        "mal\u00f6rt",
+        "beer-nuggets",
+        "chicago-creamy-garlic-dressing"
+      ]
+    },
+    "chinese-american": {
+      "geo": {
+        "pattern": true
+      },
+      "dishes": [],
+      "entries": [
+        "chinese-american-regional-adaptations"
+      ]
+    },
+    "cincinnati": {
+      "geo": {
+        "cbsa": "17140",
+        "primary_county": "39061",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Fish Log",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Opera Cream",
+          "scope": "regional"
+        }
+      ],
+      "entries": [
+        "goetta",
+        "cincinnati-mock-turtle-soup",
+        "cincinnati-steak-hoagie",
+        "cincinnati-fish-log",
+        "cincinnati-opera-cream",
+        "cincinnati-mett",
+        "cincinnati-brat",
+        "cincinnati-cheese-crown"
+      ]
+    },
+    "cleveland": {
+      "geo": {
+        "cbsa": "17410",
+        "primary_county": "39007",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "polish-boy",
+        "cleveland-cassata-cake",
+        "cleveland-brown-mustard-bertman-stadium"
+      ]
+    },
+    "columbus-ga": {
+      "geo": {
+        "cbsa": "17980",
+        "primary_county": "01113",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "scrambled-dog"
+      ]
+    },
+    "decatur-al": {
+      "geo": {
+        "cbsa": "19460",
+        "primary_county": "01079",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "white-bbq-sauce"
+      ]
+    },
+    "des-moines": {
+      "geo": {
+        "cbsa": "19780",
+        "primary_county": "19049",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Loose Meat / Maid-Rite Sandwich",
+          "scope": "statewide"
+        }
+      ],
+      "entries": [
+        "steak-de-burgo",
+        "loose-meat-maid-rite-sandwich"
+      ]
+    },
+    "detroit": {
+      "geo": {
+        "cbsa": "19820",
+        "primary_county": "26087",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Detroit Muskrat Dinner",
+          "scope": "regional"
+        }
+      ],
+      "entries": [
+        "dearborn-arab-american-foodways",
+        "detroit-almond-boneless-chicken-abc",
+        "detroit-coney-dog",
+        "detroit-muskrat-dinner",
+        "zip-sauce"
+      ]
+    },
+    "duluth": {
+      "geo": {
+        "zones": [
+          "iron_range_minnesota"
+        ],
+        "scope": "regional",
+        "states": [
+          "MN"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "porketta"
+      ]
+    },
+    "east-north-central-non-msa": {
+      "geo": {
+        "cbsa": "26860",
+        "primary_county": "42063",
+        "zones": [
+          "upper_peninsula_michigan"
+        ],
+        "scope": "regional"
+      },
+      "dishes": [
+        {
+          "name": "Persimmon Pudding",
+          "zones": []
+        },
+        {
+          "name": "Sugar Cream Pie",
+          "scope": "city_wide",
+          "zones": []
+        },
+        {
+          "name": "UP Michigan Pasty",
+          "zones": [
+            "mining_pasty_corridor",
+            "upper_peninsula_michigan"
+          ]
+        }
+      ],
+      "entries": [
+        "cudighi",
+        "up-michigan-pasty",
+        "finnish-up-foodways",
+        "sugar-cream-pie",
+        "persimmon-pudding"
+      ]
+    },
+    "east-south-central-non-msa": {
+      "geo": {
+        "cbsa": "18420",
+        "primary_county": "28003",
+        "zones": [
+          "mississippi_delta"
+        ],
+        "scope": "regional"
+      },
+      "dishes": [
+        {
+          "name": "Slug Burger",
+          "scope": "city_wide",
+          "zones": []
+        }
+      ],
+      "entries": [
+        "slug-burger",
+        "delta-hot-tamales",
+        "koolickles"
+      ]
+    },
+    "el-paso": {
+      "geo": {
+        "pattern": true
+      },
+      "dishes": [],
+      "entries": [
+        "el-paso-borderland-cuisine-distinct-from-tex-mex"
+      ]
+    },
+    "evansville": {
+      "geo": {
+        "cbsa": "21780",
+        "primary_county": "18129",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "brain-sandwich"
+      ]
+    },
+    "fairmont-wv": {
+      "geo": {
+        "cbsa": "21900",
+        "primary_county": "54049",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "pepperoni-roll"
+      ]
+    },
+    "fort-wayne": {
+      "geo": {
+        "cbsa": "26860",
+        "primary_county": "42063",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "breaded-pork-tenderloin-sandwich"
+      ]
+    },
+    "fresno": {
+      "geo": {
+        "cbsa": "23420",
+        "primary_county": "06019",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "armenian-foodways"
+      ]
+    },
+    "grand-rapids": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "MI"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "olive-burger"
+      ]
+    },
+    "greek-diner-empire": {
+      "geo": {
+        "pattern": true
+      },
+      "dishes": [],
+      "entries": [
+        "greek-american-regional-adaptations"
+      ]
+    },
+    "green-bay": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "WI"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "booyah"
+      ]
+    },
+    "honolulu": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "HI"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "loco-moco",
+        "spam-musubi",
+        "saimin",
+        "crack-seed-li-hing-mui",
+        "malasadas"
+      ]
+    },
+    "houston": {
+      "geo": {
+        "cbsa": "26420",
+        "primary_county": "48015",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "viet-cajun-crawfish"
+      ]
+    },
+    "hudson-wy": {
+      "geo": {
+        "scope": "hyperlocal",
+        "states": [
+          "WY"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "hudson-wy"
+      ]
+    },
+    "jackson-ms": {
+      "geo": {
+        "cbsa": "27140",
+        "primary_county": "28029",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "comeback-sauce"
+      ]
+    },
+    "jacksonville-fl": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "FL"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "minorcan-clam-chowder"
+      ]
+    },
+    "lafayette-la": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "LA"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "boudin-the-boudin-trail"
+      ]
+    },
+    "lancaster-pa": {
+      "geo": {
+        "cbsa": "29540",
+        "primary_county": "42071",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "shoofly-pie"
+      ]
+    },
+    "las-cruces": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "NM"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "green-chile-cheeseburger"
+      ]
+    },
+    "lebanon-pa": {
+      "geo": {
+        "zones": [
+          "pa_dutch_country"
+        ],
+        "scope": "regional",
+        "states": [
+          "PA"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "lebanon-bologna"
+      ]
+    },
+    "lexington-ky": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "KY"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "ale-8-one",
+        "beer-cheese"
+      ]
+    },
+    "lincoln-ne": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "NE"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "runza"
+      ]
+    },
+    "little-rock": {
+      "geo": {
+        "cbsa": "30780",
+        "primary_county": "05045",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Possum Pie",
+          "scope": "statewide"
+        }
+      ],
+      "entries": [
+        "cheese-dip",
+        "possum-pie"
+      ]
+    },
+    "louisville": {
+      "geo": {
+        "cbsa": "31140",
+        "primary_county": "18019",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "benedictine-spread",
+        "henry-bain-sauce",
+        "modjeska-candy",
+        "hot-brown"
+      ]
+    },
+    "mcallen": {
+      "geo": {
+        "cbsa": "32580",
+        "primary_county": "48215",
+        "zones": [
+          "rio_grande_valley"
+        ],
+        "scope": "regional"
+      },
+      "dishes": [],
+      "entries": [
+        "botana-platter"
+      ]
+    },
+    "memphis": {
+      "geo": {
+        "cbsa": "32820",
+        "primary_county": "05035",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "memphis-bbq-spaghetti"
+      ]
+    },
+    "miami": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "FL"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "floribbean-cuisine"
+      ]
+    },
+    "milwaukee": {
+      "geo": {
+        "cbsa": "33340",
+        "primary_county": "55079",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Brandy Old Fashioned",
+          "scope": "statewide"
+        }
+      ],
+      "entries": [
+        "cannibal-sandwich-tiger-meat",
+        "brandy-old-fashioned"
+      ]
+    },
+    "mining-corridors": {
+      "geo": {
+        "pattern": true
+      },
+      "dishes": [],
+      "entries": [
+        "basque-american-corridor",
+        "cornish-mining-pasty-corridor"
+      ]
+    },
+    "mobile": {
+      "geo": {
+        "cbsa": "33660",
+        "primary_county": "01097",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "west-indies-salad"
+      ]
+    },
+    "myrtle-beach": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "NC"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "calabash-style-seafood"
+      ]
+    },
+    "new-england-non-msa": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "ME",
+          "VT"
+        ]
+      },
+      "dishes": [
+        {
+          "name": "Grape-Nuts Ice Cream",
+          "scope": "regional"
+        }
+      ],
+      "entries": [
+        "grape-nuts-ice-cream",
+        "maple-creemee",
+        "needhams"
+      ]
+    },
+    "new-haven": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "CT"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "steamed-cheeseburger"
+      ]
+    },
+    "new-orleans": {
+      "geo": {
+        "cbsa": "35380",
+        "primary_county": "22051",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "yakamein-ya-ka-mein",
+        "creole-cream-cheese",
+        "roman-candy",
+        "snowballs-sno-balls"
+      ]
+    },
+    "new-york-city": {
+      "geo": {
+        "cbsa": "35620",
+        "primary_county": "34003",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "italian-hot-dog",
+        "texas-wiener"
+      ]
+    },
+    "ottawa-il": {
+      "geo": {
+        "zones": [
+          "illinois_valley",
+          "northern_illinois_outside_chicago"
+        ],
+        "scope": "regional"
+      },
+      "dishes": [],
+      "entries": [
+        "beef-roll"
+      ]
+    },
+    "owensboro": {
+      "geo": {
+        "cbsa": "36980",
+        "primary_county": "21059",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "burgoo"
+      ]
+    },
+    "pittsburgh": {
+      "geo": {
+        "cbsa": "38300",
+        "primary_county": "42003",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "chipped-chopped-ham",
+        "pittsburgh-salad",
+        "cookie-table"
+      ]
+    },
+    "portland-or": {
+      "geo": {
+        "zones": [
+          "pacific_northwest"
+        ],
+        "scope": "regional",
+        "states": [
+          "OR"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "salmon-candy",
+        "jojos"
+      ]
+    },
+    "providence": {
+      "geo": {
+        "cbsa": "39300",
+        "primary_county": "25005",
+        "scope": "statewide"
+      },
+      "dishes": [
+        {
+          "name": "New York System Wieners",
+          "scope": "city_wide"
+        }
+      ],
+      "entries": [
+        "stuffies-stuffed-quahogs",
+        "new-york-system-wieners",
+        "coffee-milk",
+        "pizza-strips"
+      ]
+    },
+    "pueblo": {
+      "geo": {
+        "cbsa": "39380",
+        "primary_county": "08101",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "pueblo-slopper"
+      ]
+    },
+    "racine": {
+      "geo": {
+        "cbsa": "39540",
+        "primary_county": "55101",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "kringle"
+      ]
+    },
+    "rochester": {
+      "geo": {
+        "cbsa": "40380",
+        "primary_county": "36051",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "garbage-plate"
+      ]
+    },
+    "rock-springs": {
+      "geo": {
+        "cbsa": "40540",
+        "primary_county": "56037",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "chili-meat"
+      ]
+    },
+    "salisbury": {
+      "geo": {
+        "scope": "regional"
+      },
+      "dishes": [],
+      "entries": [
+        "scrapple"
+      ]
+    },
+    "salt-lake-city": {
+      "geo": {
+        "cbsa": "41620",
+        "primary_county": "49035",
+        "scope": "statewide"
+      },
+      "dishes": [
+        {
+          "name": "Crownburger",
+          "scope": "city_wide"
+        }
+      ],
+      "entries": [
+        "crownburger",
+        "funeral-potatoes",
+        "dirty-soda"
+      ]
+    },
+    "san-antonio": {
+      "geo": {
+        "cbsa": "41700",
+        "primary_county": "48013",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "puffy-tacos",
+        "barbacoa-and-big-red"
+      ]
+    },
+    "san-diego": {
+      "geo": {
+        "cbsa": "41740",
+        "primary_county": "06073",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "california-burrito",
+        "carne-asada-fries"
+      ]
+    },
+    "san-francisco": {
+      "geo": {
+        "cbsa": "41860",
+        "primary_county": "06001",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "mission-burrito"
+      ]
+    },
+    "santa-fe": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "NM"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "sopaipillas"
+      ]
+    },
+    "santa-maria": {
+      "geo": {
+        "cbsa": "42200",
+        "primary_county": "06083",
+        "scope": "regional"
+      },
+      "dishes": [],
+      "entries": [
+        "santa-maria-style-barbecue"
+      ]
+    },
+    "scranton": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "PA"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "old-forge-pizza"
+      ]
+    },
+    "seattle": {
+      "geo": {
+        "cbsa": "42660",
+        "primary_county": "53033",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "seattle-dog",
+        "seattle-style-teriyaki"
+      ]
+    },
+    "sedalia": {
+      "geo": {
+        "cbsa": "42740",
+        "primary_county": "29159",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "guberburger"
+      ]
+    },
+    "south-atlantic-non-msa": {
+      "geo": {
+        "division": "south_atlantic",
+        "scope": "regional",
+        "states": [
+          "NC",
+          "SC"
+        ]
+      },
+      "dishes": [
+        {
+          "name": "Frogmore Stew (Lowcountry Boil)",
+          "zones": [
+            "lowcountry_sc"
+          ]
+        }
+      ],
+      "entries": [
+        "chicken-bog",
+        "frogmore-stew-lowcountry-boil",
+        "liver-mush",
+        "sonker",
+        "chow-chow",
+        "poke-sallet-poke-salad",
+        "soup-beans-and-cornbread",
+        "apple-stack-cake"
+      ]
+    },
+    "springfield-il": {
+      "geo": {
+        "cbsa": "44100",
+        "primary_county": "17129",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "horseshoe-sandwich"
+      ]
+    },
+    "springfield-mo": {
+      "geo": {
+        "cbsa": "44180",
+        "primary_county": "29043",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "springfield-style-cashew-chicken"
+      ]
+    },
+    "st-louis": {
+      "geo": {
+        "cbsa": "41180",
+        "primary_county": "17005",
+        "scope": "city_wide"
+      },
+      "dishes": [
+        {
+          "name": "Hot Salami Sandwich (Salam de Testa)",
+          "scope": "hyperlocal"
+        },
+        {
+          "name": "Toasted Ravioli",
+          "scope": "hyperlocal"
+        }
+      ],
+      "entries": [
+        "st-paul-sandwich",
+        "hot-salami-sandwich-salam-de-testa",
+        "gerber-sandwich",
+        "toasted-ravioli",
+        "gooey-butter-cake",
+        "pork-steak",
+        "ted-drewes-frozen-custard",
+        "red-hot-riplets",
+        "st-louis-style-pizza",
+        "snoots",
+        "slinger",
+        "mayfair-dressing"
+      ]
+    },
+    "syracuse": {
+      "geo": {
+        "cbsa": "45060",
+        "primary_county": "36053",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "salt-potatoes"
+      ]
+    },
+    "tampa": {
+      "geo": {
+        "cbsa": "45300",
+        "primary_county": "12053",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "cuban-sandwich"
+      ]
+    },
+    "toledo": {
+      "geo": {
+        "cbsa": "45780",
+        "primary_county": "39051",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "tony-packos-hungarian-hot-dog"
+      ]
+    },
+    "trenton": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "NJ"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "pork-roll-taylor-ham",
+        "disco-fries"
+      ]
+    },
+    "tucson": {
+      "geo": {
+        "cbsa": "46060",
+        "primary_county": "04019",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "sonoran-hot-dog"
+      ]
+    },
+    "twin-cities": {
+      "geo": {
+        "cbsa": "33460",
+        "primary_county": "27003",
+        "scope": "statewide"
+      },
+      "dishes": [
+        {
+          "name": "Hmong Sausage (Sai Krok)",
+          "scope": "city_wide"
+        },
+        {
+          "name": "Jucy Lucy",
+          "scope": "city_wide"
+        }
+      ],
+      "entries": [
+        "top-the-tater",
+        "jucy-lucy",
+        "hmong-sausage-sai-krok",
+        "tater-tot-hotdish"
+      ]
+    },
+    "utica": {
+      "geo": {
+        "cbsa": "46540",
+        "primary_county": "36043",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "chicken-riggies",
+        "utica-greens"
+      ]
+    },
+    "virginia-beach": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "VA"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "virginia-peanut-soup"
+      ]
+    },
+    "washington-dc": {
+      "geo": {
+        "cbsa": "47900",
+        "primary_county": "11001",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "half-smoke"
+      ]
+    },
+    "west-north-central-non-msa": {
+      "geo": {
+        "scope": "statewide",
+        "states": [
+          "IA",
+          "ND",
+          "NE",
+          "SD"
+        ]
+      },
+      "dishes": [
+        {
+          "name": "Chili and Cinnamon Rolls",
+          "scope": "regional"
+        },
+        {
+          "name": "Fleischkuechle",
+          "zones": [
+            "great_plains_german_russian"
+          ]
+        },
+        {
+          "name": "Knoephla Soup",
+          "zones": [
+            "great_plains_german_russian"
+          ]
+        },
+        {
+          "name": "Kuchen",
+          "zones": [
+            "great_plains_german_russian"
+          ]
+        }
+      ],
+      "entries": [
+        "chislic",
+        "dorothy-lynch-dressing",
+        "chili-and-cinnamon-rolls",
+        "knoephla-soup",
+        "kuchen",
+        "fleischkuechle"
+      ]
+    },
+    "west-south-central-non-msa": {
+      "geo": {
+        "scope": "regional",
+        "states": [
+          "TX"
+        ]
+      },
+      "dishes": [],
+      "entries": [
+        "kolaches-and-klobasniky"
+      ]
+    },
+    "winston-salem": {
+      "geo": {
+        "cbsa": "49180",
+        "primary_county": "37057",
+        "scope": "regional"
+      },
+      "dishes": [
+        {
+          "name": "Moravian Traditions",
+          "scope": "city_wide"
+        }
+      ],
+      "entries": [
+        "lexington-style-bbq-dip-and-red-slaw",
+        "moravian-traditions"
+      ]
+    },
+    "youngstown": {
+      "geo": {
+        "cbsa": "49660",
+        "primary_county": "39099",
+        "scope": "city_wide"
+      },
+      "dishes": [],
+      "entries": [
+        "brier-hill-pizza"
+      ]
+    }
+  },
+  "skipped_already_have_geo": [],
+  "unmapped": [
+    {
+      "slug": "south-carolina-mustard-based-bbq-sauce",
+      "dish": "South Carolina Mustard-Based BBQ Sauce",
+      "reason": "no post match"
+    },
+    {
+      "slug": "vietnamese-american-regional-adaptations",
+      "dish": "Vietnamese-American Regional Adaptations",
+      "reason": "no post match"
+    },
+    {
+      "slug": "japanesekorean-american-regional-adaptation",
+      "dish": "Japanese/Korean-American Regional Adaptation",
+      "reason": "no post match"
+    },
+    {
+      "slug": "german-russian-great-plains-foodways",
+      "dish": "German-Russian Great Plains Foodways",
+      "reason": "no post match"
+    },
+    {
+      "slug": "beverage-regionalism",
+      "dish": "Beverage Regionalism",
+      "reason": "no post match"
+    },
+    {
+      "slug": "regional-condiment-containment",
+      "dish": "Regional Condiment Containment",
+      "reason": "no post match"
+    }
+  ],
+  "notes": [
+    "Per-dish override syntax: the post's frontmatter `dishes:` list",
+    "carries per-dish exceptions. Each entry is keyed by `name` (the",
+    "H3/H2 dish-portion text) and lists only the fields that diverge",
+    "from the post-level `geo:` block. This is the Obsidian-native",
+    "replacement for the previous `{.dish cbsa=\"...\"}` attribute",
+    "syntax in headings.",
+    "",
+    "Pattern entries without a corresponding forage post are listed",
+    "in `unmapped`; they are not migratable until the post exists or",
+    "the entry is dropped.",
+    "",
+    "Per the 'fix bugs during migration' rule: the majority value of",
+    "each diverging field becomes the post-level default. Minority",
+    "values are emitted as per-dish overrides. Review the `dishes:`",
+    "entries on each post: if an override looks like a stale auto-",
+    "match bug from entries.json (e.g., a dish mis-tagged with a CBSA",
+    "from another state), drop it rather than freeze it into MDX."
+  ]
+}

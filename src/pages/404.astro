@@ -6,11 +6,34 @@ import PageLayout from "@/theme/layouts/PageLayout.astro";
 	<script is:inline>
 		(function () {
 			var path = window.location.pathname;
-			var prefix = "/posts/q/";
-			if (path.indexOf(prefix) === 0 && path !== prefix) {
-				var rest = path.slice(prefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
-				var hash = window.location.hash || "";
-				window.location.replace(prefix + "?p=" + encodeURIComponent(rest) + hash);
+			var hash = window.location.hash || "";
+			var search = window.location.search || "";
+			// /posts/modern-forage-{slug}/ → /forage/{slug}/  (collection split)
+			var mfMatch = path.match(/^\/posts\/modern-forage-([a-z0-9-]+)\/?$/);
+			if (mfMatch) {
+				window.location.replace("/forage/" + mfMatch[1] + "/" + search + hash);
+				return;
+			}
+			// /posts/q/modern-forage[anything] → /forage-atlas/  (forage tag query
+			// no longer makes sense once forage left the posts collection)
+			if (path.indexOf("/posts/q/modern-forage") === 0) {
+				window.location.replace("/forage-atlas/" + hash);
+				return;
+			}
+			// /posts/q/{segments}/ → /?p={segments}  (other tag queries land on main blog)
+			var qPrefix = "/posts/q/";
+			if (path.indexOf(qPrefix) === 0) {
+				var rest = path.slice(qPrefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
+				if (rest) {
+					window.location.replace("/?p=" + encodeURIComponent(rest) + hash);
+				} else {
+					window.location.replace("/" + search + hash);
+				}
+				return;
+			}
+			if (path === "/posts" || path === "/posts/") {
+				window.location.replace("/" + search + hash);
+				return;
 			}
 		})();
 	</script>
@@ -33,9 +56,9 @@ import PageLayout from "@/theme/layouts/PageLayout.astro";
 		<p class="font-mono text-[12px]">
 			<a href="/" class="text-accent hover:underline">/ home</a>
 			<span class="text-fg-faint mx-2">·</span>
-			<a href="/posts/" class="text-accent hover:underline">/posts/</a>
+			<a href="/projects/" class="text-accent hover:underline">/projects/</a>
 			<span class="text-fg-faint mx-2">·</span>
-			<a href="/posts/q/" class="text-accent hover:underline">/posts/q/</a>
+			<a href="/resume/" class="text-accent hover:underline">/resume/</a>
 		</p>
 	</div>
 </PageLayout>

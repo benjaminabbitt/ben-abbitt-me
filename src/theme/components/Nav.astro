@@ -1,5 +1,5 @@
 ---
-type Section = "index" | "posts" | "projects" | "resume";
+type Section = "index" | "posts" | "forage" | "projects" | "resume";
 interface Props {
 	current?: Section | undefined;
 }
@@ -7,7 +7,7 @@ const { current } = Astro.props;
 
 const items = [
 	{ id: "index", label: "index", href: "/" },
-	{ id: "posts", label: "posts", href: "/posts/" },
+	{ id: "forage", label: "modern forage", href: "/forage-atlas/" },
 	{ id: "projects", label: "projects", href: "/projects/" },
 	{ id: "resume", label: "résumé", href: "/resume/" },
 ] as const;

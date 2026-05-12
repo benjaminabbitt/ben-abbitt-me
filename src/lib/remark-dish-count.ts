@@ -5,25 +5,30 @@ import type { VFile } from "vfile";
 /**
  * Remark plugin that processes `{.dish}` class-suffix markers on headings:
  *
- *  1. Strips the `{.dish}` suffix from the rendered heading text
+ *  1. Strips the `{.dish ...}` suffix from the rendered heading text
+ *     (including any attribute payload like `{.dish cbsa="32580"}`)
  *  2. Adds `class="dish"` to the heading element (via hProperties)
  *  3. Counts marked headings and writes the total to
  *     `vfile.data.astro.frontmatter.dishCount`
  *
- * The class makes the dish entries selectable for future CSS styling and
- * for downstream tooling (anchor lists, atlas mapping). The frontmatter
- * count is consumed by `<DishCount count={frontmatter.dishCount} />`.
+ * The class makes the dish entries selectable for CSS and the count is
+ * consumed by `<DishCount />`. The attr payload (cbsa, zone, county, etc.)
+ * is parsed downstream by the atlas (`src/pages/forage-atlas.astro`) and
+ * the migration script directly off the raw MDX body, because Astro
+ * content collections don't propagate remark-mutated frontmatter fields
+ * other than the ones each consumer also reads off the body. See
+ * `countDishesInBody` in `src/lib/dish-count.ts` for the same pattern.
  *
  * Headings of any depth are eligible. Most city posts use H3 for dish
  * entries; pattern posts (Chinese-American, Greek Diner Empire) use H2 to
- * distinguish themselves from per-city posts. The plugin counts whatever
- * has the class marker, depth-agnostic.
+ * distinguish themselves from per-city posts.
  *
- * The pattern matches a trailing ` {.dish}` (with optional whitespace) on
- * the last text child of a heading. Multi-class extension (e.g.,
- * `{.dish .featured}`) is unsupported until a second class type emerges.
+ * Marker grammar:
+ *   `{.dish}`                          minimal form
+ *   `{.dish cbsa="32580"}`             per-dish CBSA override (pattern posts)
+ *   `{.dish cbsa="..." zone="..."}`    multiple attrs space-separated
  */
-const MARKER = /\s*\{\.dish\}\s*$/;
+const MARKER = /\s*\{\.dish(?:\s+[a-z_]+="[^"]*")*\s*\}\s*$/;
 
 const remarkDishCount: Plugin<[], Root> = () => {
 	return (tree: Root, file: VFile) => {

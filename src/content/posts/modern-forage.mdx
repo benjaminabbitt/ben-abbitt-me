@@ -1,0 +1,82 @@
+---
+title: "Modern Forage: A Survey of What Stayed Put"
+description: "American regional food has two cohorts: the famous ones that escaped to airport menus, and the hyper-local ones that didn't. Modern Forage is the inventory of the second."
+publishDate: "2026-05-11"
+tags: ["modern-forage", "food", "culture"]
+marginalia: "Two cohorts of American regional food: the famous ones that escaped to airport menus, and the hyper-local ones that stayed put. Modern Forage is the inventory of the second cohort, the dishes everyday at home and invisible everywhere else."
+excerpt: "American regional food has two cohorts. The famous one escaped to airports and food TV. The other one stayed in its home metro. Modern Forage is the inventory of the second."
+---
+
+American regional food has two cohorts.
+
+The first cohort is famous. Deep-dish pizza, the Philly cheesesteak, lobster rolls, Nashville hot chicken, the Reuben. These have escaped to airport menus, national chains, food TV, and the souvenir aisle at Cracker Barrel. If you ask a stranger at a bar in Sacramento to name a Chicago food, they will name deep-dish. If you ask them to name a Philadelphia food, they will name the cheesesteak. The dishes are durable enough to survive being printed on a Domino's promotional poster.
+
+The second cohort hasn't escaped. It is goetta on a Cincinnati breakfast plate, the [Springfield horseshoe](/forage/springfield-il/) under a half-foot of cheese sauce, chislic on a South Dakota bar menu, the [Cincinnati steak hoagie](/forage/cincinnati/) that's standard at Cincinnati pizzerias and largely absent from Philadelphia ones. Many of these dishes appear on hundreds of local menus and are unknown two states away. They have not been picked up by national chains. They are not in Wikipedia's food category cluster. They are absent from the Eater "essentials" list. They are everyday at home and invisible everywhere else.
+
+Modern Forage is the catalog of that second cohort. The premise is that the second cohort is bigger, stranger, and more interesting than the first one, and that no one has tried to inventory it systematically.
+
+## What the project is
+
+[Modern Forage](/forage-atlas/) is a survey of American dishes that have stayed put. Each entry is a dish in its home metro, with named sources documenting that the dish is locally common and outside-locally unknown. The survey runs from individual hyperlocal items (a single Cincinnati bakery's cheese crown, one Northside diner's fish log) up through city-wide common dishes (goetta across the Cincinnati MSA, the [Detroit Coney Dog](/forage/detroit/) across Detroit), and out to multi-city regional patterns where adjacent metros share an immigrant lineage. The Cornish pasty corridor through Michigan's Upper Peninsula, Butte, and Grass Valley. The [City Chicken](/forage/pittsburgh/) belt from Pittsburgh through Cleveland, Detroit, Buffalo, Binghamton, and as far west as Cincinnati.
+
+It is open source. The catalog of dishes, the research tracker (including the deferred list and the exclusion reasons), the named geographic regions, and the per-thread research logs all live at [`subprojects/modern_forage`](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). The published city posts under [/forage-atlas/](/forage-atlas/) are snapshots of a moving target.
+
+The companion to this post is [Modern Forage: How This Works](/forage/how-this-works/), which is the methodology document: the four-factor inclusion test, the exclusion categories, the source threshold, the disposition rubric, and the locking mechanisms behind the dishes already in the survey. This post is the why, not the how.
+
+## Why the gap matters
+
+Food media is structurally biased toward the first cohort. National outlets cover dishes that travel because dishes that travel get more page views, more cookbook spinoffs, and more advertiser interest. Local food media in any given metro covers a long tail of regional items, but each local market only covers itself, and the coverage rarely composes into a national picture of what is locally embedded everywhere. Wikipedia treats most hyperlocal items below the notability threshold. Travel guidebooks list the one or two famous regional dishes per stop and stop there.
+
+The result is that an enormous amount of working American regional food is documented entirely in three places: local newspaper archives, online posts from people who moved away, and oral history. The catalog does not exist anywhere consolidated. If you want to know what to eat in Springfield, Illinois, you can find the horseshoe with one query. If you want to know what to eat in Decatur or Quincy or Peoria, you are essentially on your own.
+
+Modern Forage is the answer to "what should I eat in this metro that I won't find at home." That is a real question with no good consolidated answer, and the answer turns out to be considerably more interesting than the question.
+
+## What makes a dish qualify
+
+The full rules are in [the methodology post](/forage/how-this-works/), but the short version is a four-factor test. A dish has to be (1) geographically concentrated and outside national food consciousness, (2) producing a blank stare when ordered outside its home metro, (3) absent from the menus of national chains, and (4) currently eaten by locals as everyday food, not preserved as a museum piece for tourists. A dish that meets two of these qualifies. Most promoted entries hit three or four.
+
+Beyond the test, every entry needs independent named sources. Diaspora forum threads are seed signals, not sources. The actual case for inclusion has to be built from food media, local TV news, longform journalism, academic press, oral histories, and food-historian blogs with traceable citations. A candidate with fewer than two named sources gets deferred, not excluded. Deferred candidates have explicit unlock conditions in the research tracker: "promote when a longform piece appears," "promote when the diaspora signal can be traced to specific transplant communities," "promote when the immigrant-community lineage is documented in a cookbook."
+
+## What's structurally interesting
+
+The most surprising finding from running the survey is that hyper-local dishes stay hyper-local for reasons that are nameable and that repeat. Every promoted entry names the mechanism that keeps the dish geographically contained. So far there are four, with a possible fifth emerging.
+
+**Immigrant-community-locked.** A dish that arrived with a specific immigrant community, embedded itself in their neighborhood institutions (butcher shops, bakeries, parish festivals, social clubs), and never found a propagation channel outside that community. The Cornish mining corridor's pasty distribution across the Upper Peninsula, Butte, and Grass Valley. The German-Russian Great Plains belt across the Dakotas and Nebraska. Greek immigrants who turned American Coney Island chains into a dish family. Cantonese restaurateurs who invented dishes for the local Anglo-American palate ([Springfield-style cashew chicken](/forage/springfield-mo/) in Missouri, the [Detroit almond boneless chicken](/forage/detroit/), the [St. Paul sandwich](/forage/st-louis/) in St. Louis). This category is the most common in the survey, by a wide margin.
+
+**Apparatus-locked.** A dish that requires a specific piece of equipment that has barely propagated outside the home region. The Chicago aquarium smoker that anchors the [rib tip and hot link](/forage/chicago/) tradition. Provel cheese, produced primarily for the [St. Louis pizza](/forage/st-louis/) market. The Ball Cream Beater behind the Cincinnati opera cream. The dish travels approximately as far as the apparatus does.
+
+**Operational-routine-locked.** A dish whose preparation or service depends on a specific routine that resists migration. The thinnest category in the survey, and the one where most candidates dissolve into recipe-locked or apparatus-locked once you push on them. Chicago Pizza and Oven Grinder Co.'s [Pizza Pot Pie](/forage/chicago/) is the canonical example: a triple-raised Sicilian dough draped over an inverted ceramic bowl, baked upside-down so the dough domes, then flipped tableside to plate.
+
+**Commitment-purchase-locked.** A dish sold primarily in formats few outsiders would buy on impulse. The [Atomic Cake](/forage/chicago/) sold as whole cakes only. The [Pittsburgh Cookie Table](/forage/pittsburgh/) wedding tradition, built on dozens of homemade varieties contributed by extended family. The dish rarely reaches the casual passing customer because it does not come in a casual format.
+
+A fifth informal category is emerging in the data but has not been formalized: tribute-product-locked, where a local dish is so embedded that non-dish brands reproduce it in adjacent product categories. Northside Cincinnati's Fish Logs Cider and Fish Logs gelato. Graeter's Cheese Crown ice cream. When the tribute pattern shows up, it is a load-bearing cultural-lock signal even when the dish itself has only one or two active vendors.
+
+## The diaspora signal
+
+The highest-leverage research input the survey accepts is one specific kind of online comment.
+
+It looks like this: "I moved from Cincinnati to Denver and I cannot find goetta anywhere." Or: "Spent two years trying to find a horseshoe in Atlanta. Nothing. Why does no one do this." Or: "Pittsburgh-born, living in Phoenix, would do anything for a real cookie table at my wedding."
+
+The diaspora-signal comment is structurally important because it is two qualifying signals at once. The author is testifying that the dish is everyday in the home metro, or they would not miss it daily. The author is also testifying that the dish is unavailable in the destination, or they would not be lamenting. One comment from one moved-away local can demonstrate both halves of the containment claim better than a thousand local press references can.
+
+Most of the candidates currently in the deferred list arrived through diaspora signal. Most of the deferred-to-promoted transitions come from a second piece of evidence (a named source, a cookbook citation, a documented immigrant-community lineage) confirming what the diaspora comment already implied.
+
+## How the research actually happens
+
+The work that turns a forum thread into a survey entry is mostly classification at scale. A 400-comment online thread about Cincinnati food contains maybe 20 distinct candidates, half of which are nationally famous regional icons that the survey excludes on principle, a third of which are already in the survey, and a small remainder that are genuine new candidates worth deferring or researching further. Doing this by hand for every relevant thread does not scale.
+
+The classification pipeline runs candidate forum threads through an LLM under a documented prompt that knows the survey's rules. Each candidate gets routed into one of the six dispositions in the methodology (`PROMOTE`, `PROMOTE WITH CONTAINMENT CAVEAT`, `DEFER`, `EXCLUDE`, `ALREADY COVERED`, `PROMOTION CANDIDATE`) with a citation back to the originating comment. I review every classification before any candidate moves into the canonical survey. The bar for promotion is named sources, not LLM confidence. The LLM is doing triage and citation linking. The inclusion decision is human and source-anchored.
+
+This is consistent with how I treat AI in any production-grade research workflow. The model is a fast classifier and a tireless reader, not the judge of what is true. Modern Forage is a small enough domain that the human-in-the-loop overhead is negligible and the speedup on the triage side is large. Without the LLM pass, the survey could absorb a couple of new threads per week. With it, several per day.
+
+The full prompt, the per-thread research logs, and the resulting candidate tables are all in the open repo. If you want to argue with a specific classification, the audit trail is right there.
+
+## How to use the survey, and how to contribute
+
+The fastest entry points are the [Atlas](/forage-atlas/), which is the map view of every covered metro, and the [methodology post](/forage/how-this-works/), which is the rules. Individual city posts are the place to land if you want to know what to eat in a specific metro. The [Cincinnati](/forage/cincinnati/), [Detroit](/forage/detroit/), [Pittsburgh](/forage/pittsburgh/), [Chicago](/forage/chicago/), [St. Louis](/forage/st-louis/), and [Springfield IL](/forage/springfield-il/) entries are the most fleshed out at this point.
+
+Suggestions are welcome at [u/strcrssd](https://old.reddit.com/u/strcrssd) or as GitHub issues against [the repo](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage). The fastest path from suggestion to a published entry is a comment with a named source attached. "There is a dish called X in metro Y, here is the local TV news segment about it" is the highest-density input the survey accepts.
+
+The survey is incomplete and will stay that way. New entries surface monthly. Existing entries get re-categorized when adjacent-metro research extends their geography. The City Chicken corridor has roughly doubled in width since the survey started. The published posts are snapshots; the [open repo](https://github.com/benjaminabbitt/ben-abbitt-me/tree/main/subprojects/modern_forage) is the moving target.
+
+If you grew up eating something that you cannot find anywhere else, the survey would like to hear about it.

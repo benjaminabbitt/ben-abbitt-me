@@ -1,0 +1,95 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import DishCount from "@/components/DishCount.astro";
+import Prose from "@/theme/components/Prose.astro";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { countWords, readMinutes } from "@/theme/lib/readTime";
+import { tagHrefForage } from "@/theme/lib/tags";
+
+export async function getStaticPaths() {
+	const all = await getCollection("forage", ({ data }) => !data.draft);
+	return all.map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
+}
+
+interface Props {
+	post: CollectionEntry<"forage">;
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const words = countWords(post.body ?? "");
+const minutes = readMinutes(words);
+const date = post.data.publishDate.toISOString().slice(0, 10);
+---
+
+<PageLayout
+	current="forage"
+	title={`${post.data.title} · Reduction`}
+	description={post.data.description}
+>
+	<article class="max-w-[680px] mx-auto">
+		<header class="mb-10">
+			<div
+				class="font-mono text-[11.5px] text-fg-faint flex gap-2 flex-wrap mb-5"
+			>
+				<span>{date}</span>
+				<span>·</span>
+				<span>{words.toLocaleString()} words · {minutes} min</span>
+				{
+					post.data.tags.length > 0 && (
+						<>
+							<span>·</span>
+							{post.data.tags.map((t) => (
+								<a href={tagHrefForage(t)} class="text-fg-dim hover:text-accent">
+									#{t}
+								</a>
+							))}
+						</>
+					)
+				}
+			</div>
+			<h1
+				class="font-serif font-medium text-[44px] leading-[1.08] tracking-[-0.02em]"
+			>
+				{post.data.title}
+			</h1>
+			{
+				post.data.marginalia && (
+					<p
+						class="font-serif italic text-[17px] text-accent mt-4 max-w-[42em] [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:opacity-80"
+						set:html={post.data.marginalia}
+					/>
+				)
+			}
+			{
+				!post.data.marginalia && post.data.description && (
+					<p class="font-serif-body italic text-[17px] text-fg-dim mt-4 max-w-[42em]">
+						{post.data.description}
+					</p>
+				)
+			}
+		</header>
+
+		<Prose>
+			<Content components={{ DishCount }} />
+		</Prose>
+	</article>
+</PageLayout>
+
+<script is:inline>
+	(function () {
+		const article = document.querySelector("article .prose");
+		if (!article) return;
+		for (const h of article.querySelectorAll("h2[id], h3[id], h4[id]")) {
+			if (h.querySelector(".heading-anchor")) continue;
+			const a = document.createElement("a");
+			a.className = "heading-anchor";
+			a.href = "#" + h.id;
+			a.setAttribute("aria-label", "Link to this section");
+			a.innerHTML = '<span class="heading-anchor-glyph">¶</span>';
+			h.appendChild(a);
+		}
+	})();
+</script>

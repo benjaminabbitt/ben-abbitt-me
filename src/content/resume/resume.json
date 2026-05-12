@@ -23,6 +23,26 @@
 			"note": "A lot of different industries over a lot of years. The common thread: show up, find the load-bearing wrong thing, replace it without stopping the work already in flight.",
 			"engagements": [
 				{
+					"id": "slalom-okhhs",
+					"title": "AI Lead — State Government",
+					"domain": "HHS eligibility document processing",
+					"bullets": [
+						"Architected a document-intelligence pipeline on Google Cloud (Vertex AI, Document AI, Cloud Run, Pub/Sub, GCS), enabling the state to handle the influx of forms and documentation under H.R.1 — 119th Congress (2025-2026).",
+						"Built a per-field confidence score combining image quality, agreement across intentionally-varied prompts, data-plausibility validation, and model logprobs.",
+						"Working end-to-end prototype delivered in 4 weeks; engagement ongoing."
+					]
+				},
+				{
+					"id": "slalom-crypto",
+					"title": "Solution Architect — Cryptocurrency",
+					"domain": "GitHub Enterprise → Cloud migration",
+					"bullets": [
+						"Architected an AI-supported migration of thousands of repositories from a corporate GitHub Enterprise installation to GitHub Cloud, meeting data-residency requirements; delivered in 6 months.",
+						"Organized, architected, and oversaw TDD AI agents as the human-in-the-loop to produce the migration tooling; downstream client developer review raised minimal additional feedback.",
+						"Migrated the company's project-management and developer-experience tooling onto the new platform, partnering directly with GitHub engineering on gaps."
+					]
+				},
+				{
 					"id": "slalom-ag",
 					"title": "Solution Architect / Technical Lead — Agriculture",
 					"domain": "Customer & Billing Management",
@@ -101,6 +121,17 @@
 	],
 	"skillGroups": [
 		{ "label": "Polyglot dev", "items": ["Rust", "Go (Golang)", "Python", "Java", "Kotlin"] },
+		{
+			"label": "AI / LLM",
+			"items": [
+				"TDD AI agents",
+				"HITL orchestration",
+				"Prompt engineering",
+				"LLM-assisted migration",
+				"Claude",
+				"LangChain (limited)"
+			]
+		},
 		{
 			"label": "IaC",
 			"items": ["Hashicorp Terraform / OpenTofu", "Docker", "Kubernetes", "Helm", "Podman"]

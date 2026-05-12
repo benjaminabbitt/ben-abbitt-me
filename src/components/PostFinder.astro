@@ -1,0 +1,157 @@
+---
+// Reusable find-it card + filterable post listing. Used by both blogs
+// (/index.astro for `posts`, /forage-atlas.astro for `forage`).
+//
+// All filtering is client-side via the inline script below; the script
+// is page-scoped (one PostFinder per page) — using two on a single page
+// would collide on the data-q-* selectors.
+import type { CollectionEntry } from "astro:content";
+import PostFeed from "@/components/PostFeed.astro";
+import { renderExcerpt } from "@/lib/dish-count";
+import { type BlogId, tagSlug } from "@/theme/lib/tags";
+
+type AnyPost = CollectionEntry<"posts"> | CollectionEntry<"forage">;
+
+interface Props {
+	entries: AnyPost[];
+	allTags: string[];
+	blog: BlogId;
+	kicker?: string | undefined;
+	defaultTitle?: string | undefined;
+	placeholder?: string | undefined;
+}
+const {
+	entries,
+	allTags,
+	blog,
+	kicker = "Posts",
+	defaultTitle = "All posts",
+	placeholder = "search or #tag (try #food, -#draft, #food|#cocktail)",
+} = Astro.props;
+
+const manifest = entries.map((p) => ({
+	id: p.id,
+	tags: p.data.tags.map(tagSlug),
+	text: [p.data.title, renderExcerpt(p.data, p.body), p.data.description]
+		.filter(Boolean)
+		.join(" ")
+		.toLowerCase(),
+}));
+
+const noun = entries.length === 1 ? "post" : "posts";
+---
+
+<header class="mb-10" data-q-header hidden>
+	<div
+		class="font-mono text-[11px] text-fg-faint tracking-[0.12em] uppercase mb-2"
+		data-q-kicker
+	>
+		{kicker}
+	</div>
+	<h1
+		class="font-serif font-medium text-[44px] leading-[1.05] tracking-[-0.02em] mb-3"
+		data-q-title
+	>
+		{defaultTitle}
+	</h1>
+	<p class="text-fg-dim text-[15px]">
+		<span data-q-count>{entries.length}</span>
+		<span data-q-noun>{noun}</span>.
+	</p>
+</header>
+
+<div
+	class="mb-8 border border-rule rounded-md bg-bg-alt/40 focus-within:border-accent/60 transition-colors"
+	data-q-find
+>
+	<div class="flex items-baseline gap-3 px-5 py-3">
+		<label
+			for="q-find"
+			class="font-mono text-[10.5px] text-fg-faint uppercase tracking-[0.08em] shrink-0"
+		>
+			Find
+		</label>
+		<input
+			id="q-find"
+			type="search"
+			data-q-input
+			placeholder={placeholder}
+			class="flex-1 min-w-0 bg-transparent font-mono text-[13px] text-fg placeholder:text-fg-faint focus:outline-none"
+			autocomplete="off"
+			spellcheck="false"
+		/>
+		<button
+			type="button"
+			data-q-clear
+			hidden
+			class="font-mono text-[11px] text-fg-faint hover:text-accent shrink-0 px-1.5 py-0.5 border border-rule rounded transition-colors"
+			title="Clear all filters"
+			aria-label="Clear all filters"
+		>
+			clear
+		</button>
+	</div>
+	<div
+		class="px-5 py-2 border-t border-rule/60 font-mono text-[10.5px] text-fg-faint tracking-[0.04em]"
+		data-q-active
+		hidden
+	>
+		<span data-q-active-list></span>
+	</div>
+	<details class="border-t border-rule/60 tag-disclosure">
+		<summary
+			class="cursor-pointer select-none px-5 py-2 flex items-center justify-between gap-4 hover:bg-bg-alt/60 transition-colors font-mono text-[10.5px] text-fg-faint uppercase tracking-[0.08em]"
+		>
+			<span
+				>Browse
+				<span class="normal-case tracking-normal text-[11px] text-fg-dim ml-2"
+					>· {allTags.length} tags · click to add to query</span
+				></span
+			>
+			<span
+				class="font-mono text-[11px] text-fg-faint tracking-[0.05em] flex items-center gap-1.5"
+			>
+				<span class="when-closed">show ▸</span>
+				<span class="when-open">hide ▾</span>
+			</span>
+		</summary>
+		<div class="px-5 pb-3 pt-1 flex flex-wrap gap-x-3 gap-y-1.5 items-baseline">
+			{
+				allTags.map((t) => (
+					<button
+						type="button"
+						data-q-tag={t}
+						class="font-mono text-[12px] text-fg-dim hover:text-accent transition-colors"
+						title={`Add #${t} to query`}
+					>
+						#{t}
+					</button>
+				))
+			}
+		</div>
+	</details>
+</div>
+
+<div data-q-feed>
+	<PostFeed entries={entries} showExcerpt blog={blog} />
+</div>
+<p class="text-fg-dim text-[15px] italic mt-4" data-q-empty hidden>
+	No posts match this query.
+</p>
+
+<script type="application/json" data-q-manifest set:html={JSON.stringify(manifest)} />
+<script type="application/json" data-q-tags set:html={JSON.stringify(allTags)} />
+
+<script>
+	import { initPostFinder } from "@/lib/post-finder";
+	initPostFinder();
+</script>
+
+<style>
+	.tag-disclosure[open] .when-closed {
+		display: none;
+	}
+	.tag-disclosure:not([open]) .when-open {
+		display: none;
+	}
+</style>

@@ -25,7 +25,7 @@ Team → Bounded Context (1:many, discouraged) → Domains (1:many) → Aggregat
 
 Teams *can* own multiple bounded contexts, but this is discouraged—language shifts between related contexts cause confusion. Each context owns one or more domains. Domain and bounded context remain different concepts—infrastructure boundary vs. organizational boundary. Teams track these mappings via K8s labels.
 
-This post uses "bounded context" when discussing DDD theory. See the [glossary](/glossary) for the full mapping.
+This post uses "bounded context" when discussing DDD theory.
 :::
 
 ## The Decision Containment Principle
@@ -223,7 +223,7 @@ For each key business decision the domain owns, ask:
 
 ## Where the Literature May Overcorrect
 
-The principles above represent mainstream DDD thinking. But having built [Angzarr](/getting-started)—an event-sourcing framework for distributed systems—I've encountered cases where rigid adherence to these rules creates its own problems.
+The principles above represent mainstream DDD thinking. But having built Angzarr—an event-sourcing framework for distributed systems—I've encountered cases where rigid adherence to these rules creates its own problems.
 
 :::warning[Flexibility Has Consequences]
 Angzarr aims to be fast, reliable, and *flexible*. That flexibility permits building terrible systems:
@@ -303,9 +303,9 @@ Angzarr supports patterns the literature flags as anti-patterns—**but discoura
 
 | Pattern | Orthodox View | Angzarr's Position |
 |---------|---------------|-------------------|
-| Sagas emitting commands | Avoid—events only | Supported but discouraged; prefer [facts](/features/facts) |
+| Sagas emitting commands | Avoid—events only | Supported but discouraged; prefer facts |
 | Cascading synchronous calls | Never | Supported for legacy boundaries; refactor when possible |
-| Undersized aggregates requiring coordination | Anti-pattern | Supported with [compensation](/features/compensation) tooling; indicates boundary debt |
+| Undersized aggregates requiring coordination | Anti-pattern | Supported with compensation tooling; indicates boundary debt |
 | "Large" aggregates | Anti-pattern | Sometimes correct—if the aggregate owns a cohesive set of decisions |
 
 **These are escape hatches, not recommended patterns.** Each represents technical debt—a workaround for boundaries that should ideally be redrawn. Angzarr provides the tooling because:

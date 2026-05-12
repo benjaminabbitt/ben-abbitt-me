@@ -5,9 +5,12 @@ import { geoPath } from "d3-geo";
 import GithubSlugger from "github-slugger";
 import { feature, mesh } from "topojson-client";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
+import PostFinder from "@/components/PostFinder.astro";
+import { effectiveUpdateDate } from "@/lib/post-dates";
+import { knownTags } from "@/theme/lib/knownTags";
+import { tagSlug } from "@/theme/lib/tags";
 import countiesData from "../../subprojects/modern_forage/geography/counties.json";
-import entriesData from "../../subprojects/modern_forage/geography/entries.json";
-import namedRegions from "../../subprojects/modern_forage/geography/named-regions.json";
+import zoneDefs from "../../subprojects/modern_forage/geography/zones.json";
 import cbsaColors from "../../subprojects/modern_forage/geography/cbsa-colors.json";
 
 type County = {
@@ -29,18 +32,143 @@ type Entry = {
 	cbsa_name: string | null;
 	state: string | null;
 	primary_county_fips: string | null;
-	contributing_counties: string[];
-	named_regions: string[];
+	zones: string[];
 	census_divisions?: string[];
 	scope: string | null;
 	pattern_only: boolean;
 };
 
 const counties = countiesData as County[];
-const entries = entriesData as Entry[];
 
 const countyById = new Map<string, County>();
 for (const c of counties) countyById.set(c.fips, c);
+
+// CBSA → counties (all types: MSA and μSA). Used to expand an entry's
+// per-county membership from its cbsa_code at build time.
+const countiesByCbsaAll = new Map<string, string[]>();
+for (const c of counties) {
+	if (!c.cbsa_code) continue;
+	if (!countiesByCbsaAll.has(c.cbsa_code)) countiesByCbsaAll.set(c.cbsa_code, []);
+	countiesByCbsaAll.get(c.cbsa_code)?.push(c.fips);
+}
+
+// Derive an entry's county membership from its geo metadata. An entry's
+// counties are the union of (a) all counties in its `cbsa_code` and
+// (b) all counties in each of its `zones`. zones.json and counties.json
+// are the single source of truth for geography; entry records carry only
+// their pointers (cbsa_code + zones) and the build resolves the counties.
+function expandEntryCounties(e: Entry): string[] {
+	const out = new Set<string>();
+	if (e.cbsa_code) {
+		for (const f of countiesByCbsaAll.get(e.cbsa_code) ?? []) out.add(f);
+	}
+	for (const r of e.zones) {
+		const def = (zoneDefs as Record<string, { counties?: string[] }>)[r];
+		for (const f of def?.counties ?? []) out.add(f);
+	}
+	return [...out];
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// Forage entries come from the forage MDX posts themselves: each post's
+// `geo:` frontmatter block is the post-level default; an optional
+// `dishes:` list carries per-dish overrides keyed by dish name. The dish
+// headings inside the body are located by their bare `{.dish}` marker.
+// The full structure is native Obsidian Properties + queryable via
+// Obsidian Bases.
+// ──────────────────────────────────────────────────────────────────────
+type PostGeo = {
+	cbsa?: string;
+	primary_county?: string;
+	zones?: string[];
+	division?: string;
+	states?: string[];
+	scope?: string;
+	pattern?: boolean;
+};
+type DishOverride = {
+	name: string;
+	cbsa?: string;
+	primary_county?: string;
+	zones?: string[];
+	division?: string;
+	states?: string[];
+	scope?: string;
+	pattern?: boolean;
+};
+type DishHeading = {
+	dish: string;
+	geoLabel: string | null;
+	depth: number;
+};
+const DISH_HEADING_RE = /^(#{2,3})\s+(.+?)\s+\\?\{\.dish\\?\}\s*$/;
+
+function extractDishHeadings(body: string): DishHeading[] {
+	const out: DishHeading[] = [];
+	for (const line of body.split("\n")) {
+		const m = line.match(DISH_HEADING_RE);
+		if (!m) continue;
+		const depth = (m[1] ?? "").length;
+		const headingText = (m[2] ?? "").trim();
+		const dishPortion = headingText.split(/\s[—–-]\s/)[0]?.trim() ?? headingText;
+		const geoParts = headingText.split(/\s[—–-]\s/).slice(1).join(" — ").trim();
+		out.push({ dish: dishPortion, geoLabel: geoParts || null, depth });
+	}
+	return out;
+}
+
+const foragePosts = await getCollection("forage", ({ data }) => !data.draft);
+
+function deriveEntries(): Entry[] {
+	const out: Entry[] = [];
+	const slugger = new GithubSlugger();
+	for (const post of foragePosts) {
+		const data = post.data as Record<string, unknown>;
+		const geo = (data.geo ?? {}) as PostGeo;
+		if (geo.pattern) continue;
+		const dishOverrides = (data.dishes ?? []) as DishOverride[];
+		const overrideByName = new Map<string, DishOverride>();
+		for (const d of dishOverrides) overrideByName.set(d.name.toLowerCase(), d);
+
+		const headings = extractDishHeadings(post.body ?? "");
+		for (const h of headings) {
+			const o = overrideByName.get(h.dish.toLowerCase()) ?? ({} as DishOverride);
+			if (o.pattern) continue;
+			const cbsa = o.cbsa ?? geo.cbsa ?? null;
+			const zones = o.zones ?? geo.zones ?? [];
+			const division = o.division ?? geo.division ?? null;
+			const primaryCounty = o.primary_county ?? geo.primary_county ?? null;
+			const scope = o.scope ?? geo.scope ?? null;
+			const states = o.states ?? geo.states ?? [];
+			let cbsaName: string | null = null;
+			let state: string | null = states[0] ?? null;
+			if (!state && primaryCounty) {
+				state = countyById.get(primaryCounty)?.state ?? null;
+			}
+			if (cbsa) {
+				const c = counties.find((c) => c.cbsa_code === cbsa);
+				cbsaName = c?.cbsa_name ?? null;
+				if (!state) state = c?.state ?? null;
+			}
+			out.push({
+				slug: slugger.slug(h.dish),
+				dish: h.dish,
+				geo_label: h.geoLabel ?? "",
+				cbsa_code: cbsa,
+				cbsa_name: cbsaName,
+				state,
+				primary_county_fips: primaryCounty,
+				zones,
+				census_divisions: division ? [division] : [],
+				scope,
+				pattern_only: false,
+			});
+		}
+	}
+	return out;
+}
+
+const entries = deriveEntries();
 
 const entriesByCounty = new Map<string, Entry[]>();
 const entriesByCbsa = new Map<string, Entry[]>();
@@ -48,7 +176,7 @@ const entriesByRegion = new Map<string, Entry[]>();
 const entriesByDivision = new Map<string, Entry[]>();
 for (const e of entries) {
 	if (e.pattern_only) continue;
-	for (const f of e.contributing_counties) {
+	for (const f of expandEntryCounties(e)) {
 		if (!entriesByCounty.has(f)) entriesByCounty.set(f, []);
 		entriesByCounty.get(f)?.push(e);
 	}
@@ -56,7 +184,7 @@ for (const e of entries) {
 		if (!entriesByCbsa.has(e.cbsa_code)) entriesByCbsa.set(e.cbsa_code, []);
 		entriesByCbsa.get(e.cbsa_code)?.push(e);
 	}
-	for (const r of e.named_regions) {
+	for (const r of e.zones) {
 		if (!entriesByRegion.has(r)) entriesByRegion.set(r, []);
 		entriesByRegion.get(r)?.push(e);
 	}
@@ -132,7 +260,7 @@ for (const c of counties) {
 }
 const expandedRegionCounties: Record<string, string[]> = {};
 for (const [key, region] of Object.entries(
-	namedRegions as Record<string, RegionDef>,
+	zoneDefs as Record<string, RegionDef>,
 )) {
 	const base = new Set(region.counties);
 	const excludeCbsas = new Set(region.exclude_cbsas ?? []);
@@ -268,6 +396,7 @@ const REGION_COLORS: Record<string, string> = {
 	appalachian_southern_ohio: "#8a7438",
 	pacific_northwest: "#3a6e8a",
 	lowcountry_sc: "#4a8a6e",
+	rio_grande_valley: "#b85c3c",
 };
 
 // Generate per-region hover CSS. data-regions is comma-separated; use ~= after splitting
@@ -311,13 +440,13 @@ const compactEntries = entries.map((e) => ({
 	cbsaName: e.cbsa_name,
 	state: e.state,
 	scope: e.scope,
-	regions: e.named_regions,
+	regions: e.zones,
 	divisions: e.census_divisions ?? [],
 	patternOnly: e.pattern_only,
 }));
 
 const namedRegionList = Object.entries(
-	namedRegions as Record<string, { name: string; description: string }>,
+	zoneDefs as Record<string, { name: string; description: string }>,
 ).map(([key, v]) => ({
 	key,
 	name: v.name,
@@ -326,26 +455,23 @@ const namedRegionList = Object.entries(
 }));
 
 const regionNameMap: Record<string, string> = Object.fromEntries(
-	Object.entries(namedRegions as Record<string, { name: string }>).map(
+	Object.entries(zoneDefs as Record<string, { name: string }>).map(
 		([key, v]) => [key, v.name],
 	),
 );
 
-// Build link maps from the rendered post collection so the atlas can deep-link
-// each dish to its heading anchor and each MSA / known region to its post.
-const allPosts = await getCollection("posts");
-const REDIRECTED_AGGREGATES = new Set([
-	"modern-forage-great-lakes",
-	"modern-forage-northeast",
-	"modern-forage-plains-heartland",
-	"modern-forage-south",
-	"modern-forage-texas-southwest",
-	"modern-forage-west-mountain",
-]);
-const foragePosts = allPosts.filter(
-	(p) =>
-		p.id.startsWith("modern-forage-") && !REDIRECTED_AGGREGATES.has(p.id),
-);
+// Sorted view + tag set for the listing PostFinder rendered below the atlas.
+const sortedForage = [...foragePosts]
+	.filter((p) => !p.data.unlisted)
+	.sort((a, b) => {
+		const da = effectiveUpdateDate(a).valueOf();
+		const db = effectiveUpdateDate(b).valueOf();
+		if (db !== da) return db - da;
+		return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+	});
+const forageTagSlugs = new Set<string>(knownTags);
+for (const p of sortedForage) for (const t of p.data.tags) forageTagSlugs.add(tagSlug(t));
+const forageAllTags = [...forageTagSlugs].sort();
 
 // dishPortion → list of {postSlug, anchor}. dishPortion is the heading text
 // before the em-dash separator we use in the post H3s ("Dish — City, ST"),
@@ -361,7 +487,12 @@ for (const post of foragePosts) {
 	for (const line of body.split("\n")) {
 		const m = line.match(/^###\s+(.+?)\s*$/);
 		if (!m) continue;
-		const fullHeading = m[1] ?? "";
+		// Strip the trailing `\{.dish\}` (or `{.dish}`) class marker before
+		// slugging. remarkDishCount removes the marker from the heading text
+		// AST before rehype-slug runs, so the rendered page anchor never
+		// includes "dish"; reading the raw markdown here would otherwise
+		// produce a slug that doesn't match the page's actual id.
+		const fullHeading = (m[1] ?? "").replace(/\s*\\?\{\.dish\\?\}\s*$/, "");
 		const anchor = slugger.slug(fullHeading);
 		postHasHeading.get(post.id)?.add(anchor);
 		const dishPortion = fullHeading.split(/\s[—–-]\s/)[0]?.trim() ?? fullHeading;
@@ -430,35 +561,39 @@ for (const [cbsa, counts] of cbsaPostCounts) {
 // (mid_atlantic, pacific) are intentionally absent; the panel falls back to
 // plain text for those.
 const divisionPostMap: Record<string, string> = {
-	east_north_central: "modern-forage-east-north-central-non-msa",
-	east_south_central: "modern-forage-east-south-central-non-msa",
-	mountain: "modern-forage-mountain-non-msa",
-	new_england: "modern-forage-new-england-non-msa",
-	south_atlantic: "modern-forage-south-atlantic-non-msa",
-	west_north_central: "modern-forage-west-north-central-non-msa",
-	west_south_central: "modern-forage-west-south-central-non-msa",
+	east_north_central: "east-north-central-non-msa",
+	east_south_central: "east-south-central-non-msa",
+	mountain: "mountain-non-msa",
+	new_england: "new-england-non-msa",
+	south_atlantic: "south-atlantic-non-msa",
+	west_north_central: "west-north-central-non-msa",
+	west_south_central: "west-south-central-non-msa",
 };
 
 // Named-region → post (and optional anchor). Only regions with a dedicated
 // post live here. Mining-corridors h2 anchors confirmed against rendered HTML.
 const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 	cornish_mining_corridor: {
-		postSlug: "modern-forage-mining-corridors",
+		postSlug: "mining-corridors",
 		anchor: "the-cornish-pasty-corridor",
 	},
 	mining_pasty_corridor: {
-		postSlug: "modern-forage-mining-corridors",
+		postSlug: "mining-corridors",
 		anchor: "the-cornish-pasty-corridor",
 	},
 	basque_corridor: {
-		postSlug: "modern-forage-mining-corridors",
+		postSlug: "mining-corridors",
 		anchor: "the-basque-boarding-house-corridor",
+	},
+	rio_grande_valley: {
+		postSlug: "mcallen",
+		anchor: "botana-platter--pharr--rio-grande-valley",
 	},
 };
 ---
 
 <PageLayout
-	current="posts"
+	current="forage"
 	title="Modern Forage Atlas · Reduction"
 	description="Interactive county-level map of hyper-local US regional dishes catalogued in the Modern Forage survey."
 >
@@ -475,9 +610,9 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 		</h1>
 		<p class="text-fg-dim text-[15px] mb-2">
 			{entryCountWithGeo} entries across {msasWithCoverage} of {totalMsas}
-			MSAs plus {regionsWithCoverage} named non-metro regions. Hover any
-			county for detail, click to list dishes; switch to the named-regions
-			layer to highlight cross-CBSA corridors.
+			MSAs plus {regionsWithCoverage} cultural zones. Hover any county for
+			detail, click to list dishes; switch to the zones layer to highlight
+			cross-CBSA corridors.
 		</p>
 		<p class="text-fg-faint text-[13px]">
 			MSA boundaries follow the OMB July 2023 delineations. MSAs coloured by
@@ -503,7 +638,7 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 				<button
 					class="px-3 py-1 text-[12px] font-mono border-l border-rule"
 					data-layer-btn="regions"
-					aria-pressed="false">named regions</button
+					aria-pressed="false">zones</button
 				>
 			</div>
 		</div>
@@ -620,7 +755,7 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 		<h2
 			class="font-serif font-medium text-[20px] tracking-tight mb-3"
 		>
-			Named non-metro regions
+			Zones
 		</h2>
 		<ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-[13px]">
 			{
@@ -630,7 +765,7 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 					.map((r) => {
 						const post = regionPostMap[r.key];
 						const href = post
-							? `/posts/${post.postSlug}/${post.anchor ? "#" + post.anchor : ""}`
+							? `/forage/${post.postSlug}/${post.anchor ? "#" + post.anchor : ""}`
 							: null;
 						return (
 							<li
@@ -669,6 +804,32 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 	<script type="application/json" data-division-posts set:html={JSON.stringify(divisionPostMap)}></script>
 	<style is:inline set:html={regionHoverCSS}></style>
 	<style is:inline set:html={coverageCSS}></style>
+
+	<section class="mt-16 pt-12 border-t border-rule">
+		<header class="mb-8 max-w-[720px]">
+			<div
+				class="font-mono text-[11px] text-fg-faint tracking-[0.12em] uppercase mb-2"
+			>
+				Modern Forage
+			</div>
+			<h2
+				class="font-serif font-medium text-[36px] leading-[1.05] tracking-[-0.02em] mb-3"
+			>
+				Survey entries
+			</h2>
+			<p class="text-fg-dim text-[15px]">
+				Every per-MSA and pattern post in the survey. Filter by tag or search
+				title and excerpt.
+			</p>
+		</header>
+		<PostFinder
+			entries={sortedForage}
+			allTags={forageAllTags}
+			blog="forage"
+			kicker="Forage"
+			defaultTitle="All forage entries"
+		/>
+	</section>
 </PageLayout>
 
 <style>
@@ -709,6 +870,7 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 	svg[data-layer="regions"] .county[data-regions*="pacific_northwest"] { fill: #3a6e8a; fill-opacity: 0.65; }
 	svg[data-layer="regions"] .county[data-regions*="lowcountry_sc"] { fill: #4a8a6e; fill-opacity: 0.75; }
 	svg[data-layer="regions"] .county[data-regions*="northern_illinois_outside_chicago"] { fill: #c39b46; fill-opacity: 0.55; }
+	svg[data-layer="regions"] .county[data-regions*="rio_grande_valley"] { fill: #b85c3c; fill-opacity: 0.75; }
 
 
 
@@ -802,8 +964,8 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 
 	function entryHref(e: CompactEntry): string | null {
 		const direct = entryLinks[e.slug];
-		if (direct) return `/posts/${direct.postSlug}/#${direct.anchor}`;
-		if (e.cbsa && cbsaPosts[e.cbsa]) return `/posts/${cbsaPosts[e.cbsa]}/`;
+		if (direct) return `/forage/${direct.postSlug}/#${direct.anchor}`;
+		if (e.cbsa && cbsaPosts[e.cbsa]) return `/forage/${cbsaPosts[e.cbsa]}/`;
 		return null;
 	}
 
@@ -941,18 +1103,18 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 					: `FIPS ${fips}`;
 		// Title link: MSA post > named-region post > division non-MSA post.
 		let titleHref: string | null = null;
-		if (isMsa && cbsa && cbsaPosts[cbsa]) titleHref = `/posts/${cbsaPosts[cbsa]}/`;
+		if (isMsa && cbsa && cbsaPosts[cbsa]) titleHref = `/forage/${cbsaPosts[cbsa]}/`;
 		if (!titleHref && regions.length) {
 			for (const r of regions) {
 				const rp = regionPosts[r];
 				if (rp) {
-					titleHref = `/posts/${rp.postSlug}/${rp.anchor ? "#" + rp.anchor : ""}`;
+					titleHref = `/forage/${rp.postSlug}/${rp.anchor ? "#" + rp.anchor : ""}`;
 					break;
 				}
 			}
 		}
 		if (!titleHref && !isMsa && division && divisionPosts[division]) {
-			titleHref = `/posts/${divisionPosts[division]}/`;
+			titleHref = `/forage/${divisionPosts[division]}/`;
 		}
 		detailTitle.innerHTML = titleHref
 			? `<a href="${titleHref}" class="hover:text-accent underline-offset-4 hover:underline">${escape(titleText)}</a>`

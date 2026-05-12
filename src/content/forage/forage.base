@@ -1,0 +1,103 @@
+# Obsidian Bases view over the Modern Forage post collection.
+#
+# Each forage post's frontmatter carries:
+#   geo:  cbsa, primary_county, zones[], division, states[], scope, pattern
+#   dishes:  per-dish overrides (only when a dish diverges from post defaults)
+#   dishCount:  auto-populated by remark-dish-count.ts (heading count)
+#
+# zones.json (subprojects/modern_forage/geography/zones.json) defines the
+# cultural-region zone keys referenced by geo.zones. The atlas
+# (src/pages/forage-atlas.astro) is the only consumer of these fields.
+
+filters:
+  and:
+    - 'file.inFolder("src/content/forage")'
+    - '!file.name.startsWith(".")'
+
+formulas:
+  dishCount: 'dishCount || 0'
+  zoneCount: 'geo && geo.zones ? geo.zones.length : 0'
+  overrideCount: 'dishes ? dishes.length : 0'
+  isPattern: 'geo && geo.pattern == true'
+  cbsaOrZone: 'geo && geo.cbsa ? geo.cbsa : (geo && geo.zones && geo.zones[0] ? geo.zones[0] : "")'
+
+properties:
+  geo.cbsa:
+    displayName: "CBSA"
+  geo.scope:
+    displayName: "Scope"
+  geo.zones:
+    displayName: "Zones"
+  geo.primary_county:
+    displayName: "Primary county FIPS"
+  formula.dishCount:
+    displayName: "Dishes"
+  formula.overrideCount:
+    displayName: "Overrides"
+
+views:
+  - name: "All forage posts"
+    type: table
+    order:
+      - file.name
+      - title
+      - geo.cbsa
+      - geo.scope
+      - geo.zones
+      - formula.dishCount
+      - formula.overrideCount
+    sort:
+      - property: file.name
+        direction: ASC
+
+  - name: "Per-MSA coverage"
+    type: table
+    filters:
+      and:
+        - '!geo.pattern'
+        - 'geo.cbsa'
+    order:
+      - geo.cbsa
+      - file.name
+      - geo.scope
+      - formula.dishCount
+    groupBy:
+      property: geo.cbsa
+    sort:
+      - property: geo.cbsa
+        direction: ASC
+
+  - name: "Zone-anchored posts"
+    type: table
+    filters: 'formula.zoneCount > 0'
+    order:
+      - file.name
+      - geo.zones
+      - geo.cbsa
+      - formula.dishCount
+    sort:
+      - property: geo.zones
+        direction: ASC
+
+  - name: "Pattern posts (no atlas pins)"
+    type: cards
+    filters: 'formula.isPattern'
+    order:
+      - file.name
+      - title
+      - formula.dishCount
+    sort:
+      - property: file.name
+        direction: ASC
+
+  - name: "Posts needing per-dish review"
+    type: table
+    filters: 'formula.overrideCount > 0'
+    order:
+      - file.name
+      - formula.overrideCount
+      - formula.dishCount
+      - geo.cbsa
+    sort:
+      - property: formula.overrideCount
+        direction: DESC

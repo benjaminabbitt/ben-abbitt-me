@@ -3,16 +3,24 @@ import type { CollectionEntry } from "astro:content";
 import { renderExcerpt } from "@/lib/dish-count";
 import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
-import { tagHref } from "@/theme/lib/tags";
+import { type BlogId, tagHrefFor } from "@/theme/lib/tags";
+
+type AnyPost = CollectionEntry<"posts"> | CollectionEntry<"forage">;
 
 interface Props {
-	entries: CollectionEntry<"posts">[];
+	entries: AnyPost[];
 	showExcerpt?: boolean | undefined;
+	blog?: BlogId | undefined;
 }
-const { entries, showExcerpt = false } = Astro.props;
+const { entries, showExcerpt = false, blog = "main" } = Astro.props;
 
 function fmtWords(n: number) {
 	return n.toLocaleString();
+}
+
+function postHref(p: AnyPost): string {
+	const base = p.collection === "forage" ? "/forage/" : "/posts/";
+	return `${base}${p.id}/`;
 }
 ---
 
@@ -38,7 +46,7 @@ function fmtWords(n: number) {
 						<span class="font-mono text-[11.5px] text-fg-dim">{date}</span>
 						<span class="flex flex-col gap-1 min-w-0">
 							<a
-								href={`/posts/${p.id}/`}
+								href={postHref(p)}
 								class="font-serif font-medium text-[19px] tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent before:absolute before:inset-0 before:content-['']"
 							>
 								{p.data.title}
@@ -47,7 +55,7 @@ function fmtWords(n: number) {
 								<span class="flex gap-2 flex-wrap relative z-10">
 									{p.data.tags.map((t) => (
 										<a
-											href={tagHref(t)}
+											href={tagHrefFor(blog, t)}
 											class="font-mono text-[10.5px] text-fg-faint hover:text-accent"
 										>
 											#{t}

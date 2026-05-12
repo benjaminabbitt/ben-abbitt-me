@@ -13,14 +13,15 @@ export default defineConfig({
 		remarkPlugins: [remarkDishCount],
 	},
 	redirects: {
-		// Old single-post URLs for the Modern Forage geographic survey.
-		// Now split into MSA/CBSA-level posts; readers land on the modern-forage tag page.
-		"/posts/modern-forage-great-lakes": "/posts/q/modern-forage",
-		"/posts/modern-forage-northeast": "/posts/q/modern-forage",
-		"/posts/modern-forage-plains-heartland": "/posts/q/modern-forage",
-		"/posts/modern-forage-south": "/posts/q/modern-forage",
-		"/posts/modern-forage-texas-southwest": "/posts/q/modern-forage",
-		"/posts/modern-forage-west-mountain": "/posts/q/modern-forage",
+		// Old single-post URLs for the original regional Modern Forage posts.
+		// Those got split into per-MSA posts that now live under the `forage`
+		// content collection at /forage/{slug}/. Readers land on the atlas.
+		"/posts/modern-forage-great-lakes": "/forage-atlas/",
+		"/posts/modern-forage-northeast": "/forage-atlas/",
+		"/posts/modern-forage-plains-heartland": "/forage-atlas/",
+		"/posts/modern-forage-south": "/forage-atlas/",
+		"/posts/modern-forage-texas-southwest": "/forage-atlas/",
+		"/posts/modern-forage-west-mountain": "/forage-atlas/",
 	},
 	vite: {
 		plugins: [tailwind()],
