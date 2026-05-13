@@ -1,7 +1,7 @@
 ---
 title: "Modern Forage: Grocery Store Regionalism"
 description: "Beverages and condiments are the deepest layer of containment, because the things in your fridge are the last to register as regional. Twenty-five examples nobody outside their region knows."
-publishDate: "2026-05-13T14:53:41-05:00"
+publishDate: "2026-05-12T15:18:28-05:00"
 tags: ["modern-forage", "food", "culture"]
 marginalia: "Vernors and Cheerwine and Moxie. Dorothy Lynch and Mayfair and Akron White French. The dishes get the press, but the condiments do the cultural work."
 excerpt: "Seven beverages and sixteen condiments, each invisible inside its region and unknown outside it. The hardest containment to spot, because nobody thinks of their dressing as regional."

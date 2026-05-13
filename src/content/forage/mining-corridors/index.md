@@ -1,7 +1,7 @@
 ---
 title: "Modern Forage: Mining Corridors"
 description: "When immigrant groups follow extractive industry, food traditions follow geology, not geography. Two corridors, the Cornish pasty and the Basque boarding house, traced across the American West."
-publishDate: "2026-05-13T14:53:41-05:00"
+publishDate: "2026-05-12T15:18:28-05:00"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "The Cornish came for tin and copper. The Basques came for sheep. Both produced food traditions locked to where the work was, not where the people are."
 excerpt: "Eleven Cornish-mining pasty communities from the UP to Bisbee. Three Basque sheepherder boarding-house cities from Boise to Bakersfield. The same containment story, traced along two extractive industries."

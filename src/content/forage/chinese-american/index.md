@@ -1,7 +1,7 @@
 ---
 title: "Modern Forage: Chinese-American"
 description: "Six American cities where Chinese-American restaurateurs invented dishes for the local palate that rarely traveled back to China or beyond the home metro."
-publishDate: "2026-05-13T14:53:41-05:00"
+publishDate: "2026-05-12T15:18:28-05:00"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "Cantonese cooking adapted to Ozarks chicken-fried steak, Detroit gravy, Mexican-laborer palates in Wyoming, and Korean-Chinese wings on Lawrence Avenue."
 excerptTemplate: "Springfield cashew chicken, the St. Paul sandwich, Rock Springs chili meat, Detroit almond boneless chicken, NOLA yakamein, Chicago lollipop wings, and the Wrigleyville Akutagawa. {Count} dishes, same template."

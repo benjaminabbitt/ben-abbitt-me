@@ -1,7 +1,7 @@
 ---
 title: "Modern Forage: The Greek Diner Empire"
 description: "Six American cities, six Greek-immigrant family businesses, six locked-in chili-on-everything dishes. The same structural story repeating from Birmingham to Providence."
-publishDate: "2026-05-13T14:53:41-05:00"
+publishDate: "2026-05-12T15:18:28-05:00"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "When the same immigrant wave drops the same template into six US cities, you get six dishes that look unrelated until you read them side by side."
 excerpt: "Birmingham hot dogs, Jackson MS comeback sauce, Detroit/Flint Coneys, NY System wieners, Paterson Texas wieners, Toledo's Tony Packo's. The structural argument in one essay."
