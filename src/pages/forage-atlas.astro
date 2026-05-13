@@ -332,14 +332,18 @@ const DIVISION_COLORS = cbsaColorsTyped.division_colors;
 // - One rule per MSA mapping data-cbsa → its assigned hex
 // - One rule per Census division mapping data-division → its pastel hex (non-MSA only)
 const coverageCSS = [
-	...Object.entries(MSA_COLORS).map(
-		([code, hex]) =>
-			`svg[data-layer="coverage"] .county[data-cbsa="${code}"] { fill: ${hex}; }`,
-	),
-	...Object.entries(DIVISION_COLORS).map(
-		([key, hex]) =>
-			`svg[data-layer="coverage"] .county:not([data-cbsa-type="MSA"])[data-division="${key}"] { fill: ${hex}; }`,
-	),
+	...Object.entries(MSA_COLORS)
+		.filter(([code]) => entriesByCbsa.has(code))
+		.map(
+			([code, hex]) =>
+				`svg[data-layer="coverage"] .county[data-cbsa="${code}"] { fill: ${hex}; }`,
+		),
+	...Object.entries(DIVISION_COLORS)
+		.filter(([key]) => entriesByDivision.has(key))
+		.map(
+			([key, hex]) =>
+				`svg[data-layer="coverage"] .county:not([data-cbsa-type="MSA"])[data-division="${key}"] { fill: ${hex}; }`,
+		),
 ].join("\n");
 
 for (const f of (countyFeatures as any).features) {
@@ -427,9 +431,6 @@ svg[data-hover-region="${key}"] .county[data-regions*=",${key},"] {
 
 const entryCountWithGeo = entries.filter((e) => !e.pattern_only).length;
 const msasWithCoverage = entriesByCbsa.size;
-const totalMsas = new Set(
-	counties.filter((c) => c.cbsa_type === "MSA").map((c) => c.cbsa_code),
-).size;
 const regionsWithCoverage = entriesByRegion.size;
 
 const compactEntries = entries.map((e) => ({
@@ -458,6 +459,20 @@ const regionNameMap: Record<string, string> = Object.fromEntries(
 	Object.entries(zoneDefs as Record<string, { name: string }>).map(
 		([key, v]) => [key, v.name],
 	),
+);
+
+// FIPS → "County Name, ST" and CBSA → "Name" lookups for client-side tooltips.
+// Keeps the raw numeric codes (FIPS, CBSA) out of the rendered tooltip text;
+// the codes remain only as data attributes for JS element resolution.
+const countyNameMap: Record<string, string> = Object.fromEntries(
+	counties.map((c) => [c.fips, `${c.county}, ${c.state}`]),
+);
+const cbsaNameMap: Record<string, string> = Object.fromEntries(
+	counties
+		.filter((c): c is County & { cbsa_code: string; cbsa_name: string } =>
+			Boolean(c.cbsa_code && c.cbsa_name),
+		)
+		.map((c) => [c.cbsa_code, c.cbsa_name]),
 );
 
 // Sorted view + tag set for the listing PostFinder rendered below the atlas.
@@ -608,10 +623,9 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 			Atlas
 		</h1>
 		<p class="text-fg-dim text-[15px] mb-2">
-			{entryCountWithGeo} entries across {msasWithCoverage} of {totalMsas}
-			MSAs plus {regionsWithCoverage} cultural zones. Hover any county for
-			detail, click to list dishes; switch to the zones layer to highlight
-			cross-CBSA corridors.
+			{entryCountWithGeo} entries across {msasWithCoverage} MSAs plus {regionsWithCoverage}
+			cultural zones. Hover any county for detail, click to list dishes;
+			switch to the zones layer to highlight cross-CBSA corridors.
 		</p>
 		<p class="text-fg-faint text-[13px]">
 			MSA boundaries follow the OMB July 2023 delineations. MSAs coloured by
@@ -796,6 +810,8 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 
 	<script type="application/json" data-entries set:html={JSON.stringify(compactEntries)}></script>
 	<script type="application/json" data-region-names set:html={JSON.stringify(regionNameMap)}></script>
+	<script type="application/json" data-county-names set:html={JSON.stringify(countyNameMap)}></script>
+	<script type="application/json" data-cbsa-names set:html={JSON.stringify(cbsaNameMap)}></script>
 	<script type="application/json" data-division-names set:html={JSON.stringify(DIVISION_NAMES)}></script>
 	<script type="application/json" data-entry-links set:html={JSON.stringify(entryLinkMap)}></script>
 	<script type="application/json" data-cbsa-posts set:html={JSON.stringify(cbsaPostMap)}></script>
@@ -839,9 +855,9 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 		cursor: pointer;
 		transition: opacity 80ms ease;
 	}
-	/* MSAs + divisions layer: MSA county → assigned hex (per-MSA CSS rules emitted
-	   server-side); non-MSA + μSA county → Census division pastel. No fading based
-	   on entry coverage — every county at full opacity in its proper colour. */
+	/* MSAs + divisions layer: only MSAs with entries get their assigned hex, and
+	   only divisions with entries get their pastel. Uncovered MSAs and divisions
+	   inherit the base bg-alt fill from .county above. */
 	svg[data-layer="coverage"] .county {
 		fill-opacity: 1;
 	}
@@ -937,6 +953,18 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 	);
 	const divisionNames: Record<string, string> = divisionNamesEl
 		? JSON.parse(divisionNamesEl.textContent ?? "{}")
+		: {};
+	const countyNamesEl = document.querySelector<HTMLScriptElement>(
+		"[data-county-names]",
+	);
+	const countyNames: Record<string, string> = countyNamesEl
+		? JSON.parse(countyNamesEl.textContent ?? "{}")
+		: {};
+	const cbsaNamesEl = document.querySelector<HTMLScriptElement>(
+		"[data-cbsa-names]",
+	);
+	const cbsaNames: Record<string, string> = cbsaNamesEl
+		? JSON.parse(cbsaNamesEl.textContent ?? "{}")
 		: {};
 	const entryLinksEl = document.querySelector<HTMLScriptElement>(
 		"[data-entry-links]",
@@ -1043,14 +1071,12 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 		if (!tooltip) return;
 		const fips = path.dataset.fips ?? "";
 		const cbsa = path.dataset.cbsa ?? "";
-		const cbsaType = path.dataset.cbsaType ?? "";
 		const regions = (path.dataset.regions ?? "").split(",").filter(Boolean);
 		const division = path.dataset.division ?? "";
 		const ents = entriesForCounty(path);
-		const cbsaEntries = cbsa ? entriesByCbsa.get(cbsa) : undefined;
-		const cbsaLabel = cbsa
-			? `${cbsaType} ${cbsa}${cbsaEntries?.[0]?.cbsaName ? " · " + cbsaEntries[0].cbsaName : ""}`
-			: "non-CBSA";
+		const countyName = countyNames[fips] ?? "";
+		const cbsaName = cbsa ? cbsaNames[cbsa] : "";
+		const cbsaLabel = cbsaName || (cbsa ? "" : "non-CBSA");
 		const regionLabel = regions.length
 			? `Regions: ${regions.map(displayRegion).join(", ")}`
 			: "";
@@ -1061,8 +1087,8 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 			? `<div class="mt-1"><strong>${ents.length}</strong> ${ents.length === 1 ? "entry" : "entries"}: ${ents.slice(0, 3).map((e) => e.dish).join(", ")}${ents.length > 3 ? "…" : ""}</div>`
 			: '<div class="small mt-1">No entries here</div>';
 		tooltip.innerHTML = `
-			<div><strong>FIPS ${fips}</strong></div>
-			<div class="small">${cbsaLabel}</div>
+			<div><strong>${countyName}</strong></div>
+			${cbsaLabel ? `<div class="small">${cbsaLabel}</div>` : ""}
 			${divisionLabel ? `<div class="small">${divisionLabel}</div>` : ""}
 			${regionLabel ? `<div class="small">${regionLabel}</div>` : ""}
 			${entryLines}
@@ -1086,20 +1112,21 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 		const cbsaType = path.dataset.cbsaType ?? "";
 		const regions = (path.dataset.regions ?? "").split(",").filter(Boolean);
 		const ents = entriesForCounty(path);
-		const cbsaName = entriesByCbsa.get(cbsa)?.[0]?.cbsaName;
+		const cbsaName = cbsa ? cbsaNames[cbsa] : "";
+		const countyName = countyNames[fips] ?? "";
 		const division = path.dataset.division ?? "";
 		const divisionName = division ? divisionNames[division] || division : "";
 		const isMsa = cbsaType === "MSA";
 		// Title precedence: MSA name > named region > division (for non-MSA
 		// counties, the division is the canonical home for diffuse patterns) >
-		// FIPS fallback.
+		// county-name fallback.
 		const titleText = isMsa
-			? cbsaName ?? `FIPS ${fips}`
+			? cbsaName || countyName || fips
 			: regions[0]
 				? displayRegion(regions[0])
 				: divisionName
 					? `${divisionName} (non-MSA)`
-					: `FIPS ${fips}`;
+					: countyName || fips;
 		// Title link: MSA post > named-region post > division non-MSA post.
 		let titleHref: string | null = null;
 		if (isMsa && cbsa && cbsaPosts[cbsa]) titleHref = `/forage/${cbsaPosts[cbsa]}/`;
@@ -1119,12 +1146,12 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 			? `<a href="${titleHref}" class="hover:text-accent underline-offset-4 hover:underline">${escape(titleText)}</a>`
 			: escape(titleText);
 		const metaParts: string[] = [];
-		if (cbsaType && cbsa)
-			metaParts.push(`${cbsaType} ${cbsa}${cbsaName ? " · " + cbsaName : ""}`);
+		if (cbsaType && cbsaName && cbsaName !== titleText) metaParts.push(`${cbsaType} · ${cbsaName}`);
+		else if (cbsaType) metaParts.push(cbsaType);
 		if (division) metaParts.push(`Division: ${divisionNames[division] || division}`);
 		if (regions.length)
 			metaParts.push(`Regions: ${regions.map(displayRegion).join(", ")}`);
-		metaParts.push(`FIPS ${fips}`);
+		if (countyName && countyName !== titleText) metaParts.push(countyName);
 		detailMeta.textContent = metaParts.join(" · ");
 		detailList.innerHTML = ents.length
 			? ents
