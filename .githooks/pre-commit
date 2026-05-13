@@ -1,31 +1,60 @@
 #!/bin/bash
 # Pre-commit hook: stamp `publishDate` on staged content files with the
 # current local datetime (ISO 8601 with timezone offset). Frontmatter is
-# the source of truth for "last modified," so every commit that touches a
-# post or forage entry bumps the date.
+# the source of truth for "last modified," so commits that touch a post
+# or forage entry bump the date — UNLESS the only staged change in that
+# file is to the publishDate line itself, in which case the author's
+# manual override is preserved.
 #
 # Install: `git config core.hooksPath .githooks`
 #
-# Skip with `git commit --no-verify` if you want to commit edits without
-# bumping the date (e.g. trivial formatting passes you don't want to
-# surface as "freshly updated").
+# Skip with `git commit --no-verify` to commit without any stamping
+# (e.g. a deliberate format pass you don't want to surface as fresh).
 
 set -euo pipefail
 
 now=$(date +"%Y-%m-%dT%H:%M:%S%:z")
 
+# Should we auto-stamp publishDate on $1? Returns 0 (stamp) iff:
+#   (1) the staged diff has changes outside the publishDate line, AND
+#   (2) the staged diff does NOT contain a `+publishDate:` line — i.e.,
+#       the author hasn't already explicitly set publishDate in this
+#       same commit (manual override / deliberate backdate).
+should_stamp() {
+	local f="$1"
+	local diff
+	diff=$(git diff --cached --unified=0 -- "$f")
+	if printf '%s\n' "$diff" | grep -qE '^\+publishDate:'; then
+		return 1
+	fi
+	local rest
+	rest=$(printf '%s\n' "$diff" \
+		| grep -E '^[+-]' \
+		| grep -vE '^[+-]{3}' \
+		| grep -vE '^[+-]publishDate:' \
+		|| true)
+	[ -n "$rest" ]
+}
+
 changed=0
+preserved=0
 while IFS= read -r f; do
 	[ -f "$f" ] || continue
-	# Only rewrite if a publishDate line already exists. New files without
-	# one are left for the author to fill in.
-	if grep -q "^publishDate:" "$f"; then
+	if ! grep -q "^publishDate:" "$f"; then
+		continue  # No publishDate line to stamp; leave alone.
+	fi
+	if should_stamp "$f"; then
 		sed -i -E "s|^publishDate:.*$|publishDate: \"$now\"|" "$f"
 		git add "$f"
 		changed=$((changed + 1))
+	else
+		preserved=$((preserved + 1))
 	fi
 done < <(git diff --cached --name-only --diff-filter=ACM | grep -E "^src/content/(posts|forage)/.*\.(md|mdx)$" || true)
 
 if [ "$changed" -gt 0 ]; then
 	echo "pre-commit: stamped publishDate=$now on $changed content file(s)"
+fi
+if [ "$preserved" -gt 0 ]; then
+	echo "pre-commit: preserved manual publishDate on $preserved file(s) (no body change)"
 fi
