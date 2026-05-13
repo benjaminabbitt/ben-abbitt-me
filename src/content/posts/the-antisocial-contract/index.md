@@ -1,7 +1,7 @@
 ---
 title: "Antisocial Contract: The Argument"
 description: "Exclusionary identity is the primary mechanism by which human rationality is selectively disabled in domains where it matters most."
-publishDate: "10 Apr 2026"
+publishDate: "2026-05-03T19:42:55-05:00"
 tags: ["antisocial-contract"]
 marginalia: "The shadow of Rousseau's bargain: what we surrender to belong, and what it costs when scaled past the village."
 ---

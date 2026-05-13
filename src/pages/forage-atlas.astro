@@ -6,7 +6,6 @@ import GithubSlugger from "github-slugger";
 import { feature, mesh } from "topojson-client";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
 import PostFinder from "@/components/PostFinder.astro";
-import { effectiveUpdateDate } from "@/lib/post-dates";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
 import countiesData from "../../subprojects/modern_forage/geography/counties.json";
@@ -478,10 +477,9 @@ const cbsaNameMap: Record<string, string> = Object.fromEntries(
 // Sorted view + tag set for the listing PostFinder rendered below the atlas.
 const sortedForage = [...foragePosts]
 	.sort((a, b) => {
-		const da = effectiveUpdateDate(a).valueOf();
-		const db = effectiveUpdateDate(b).valueOf();
-		if (db !== da) return db - da;
-		return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+		const diff = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+		if (diff !== 0) return diff;
+		return a.data.title.localeCompare(b.data.title);
 	});
 const forageTagSlugs = new Set<string>(knownTags);
 for (const p of sortedForage) for (const t of p.data.tags) forageTagSlugs.add(tagSlug(t));

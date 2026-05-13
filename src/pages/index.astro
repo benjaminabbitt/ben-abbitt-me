@@ -2,16 +2,14 @@
 import { getCollection } from "astro:content";
 import PostFinder from "@/components/PostFinder.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
-import { effectiveUpdateDate } from "@/lib/post-dates";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
 
 const all = await getCollection("posts", ({ data }) => data.visibility === "published");
 const sorted = [...all].sort((a, b) => {
-	const da = effectiveUpdateDate(a).valueOf();
-	const db = effectiveUpdateDate(b).valueOf();
-	if (db !== da) return db - da;
-	return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+	const diff = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+	if (diff !== 0) return diff;
+	return a.data.title.localeCompare(b.data.title);
 });
 
 const allTagSlugs = new Set<string>(knownTags);

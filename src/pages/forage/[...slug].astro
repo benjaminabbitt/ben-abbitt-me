@@ -21,7 +21,7 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 const words = countWords(post.body ?? "");
 const minutes = readMinutes(words);
-const date = post.data.publishDate.toISOString().slice(0, 10);
+const date = post.data.publishDate.toLocaleDateString("sv-SE", { timeZone: "America/Chicago" });
 ---
 
 <PageLayout

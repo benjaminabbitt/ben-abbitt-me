@@ -1,7 +1,7 @@
 ---
 title: "Antisocial Contract: Logical Leaps Audit"
 description: "Classification of every inferential step in The Antisocial Contract as direct, supported inference, or leap."
-publishDate: "10 Apr 2026"
+publishDate: "2026-05-03T19:42:55-05:00"
 tags: ["antisocial-contract", "politics", "psychology", "identity"]
 marginalia: "Grading my own homework. Every inferential step in the argument, sorted by how much it really rests on the cited sources."
 ---

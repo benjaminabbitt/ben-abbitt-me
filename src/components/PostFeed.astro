@@ -25,16 +25,41 @@ function postHref(p: AnyPost): string {
 ---
 
 <MarginaliaLayout defaultText="Hover a post to read the margin note.">
-	<div class="flex flex-col">
+	<div class="flex flex-col" data-feed>
 		<div
 			class="grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
 		>
-			<span>date</span><span>title</span><span>words · read</span>
+			<button
+				type="button"
+				data-sort-by="date"
+				class="text-left hover:text-accent transition-colors flex items-baseline gap-1 cursor-pointer uppercase tracking-[0.1em]"
+				aria-label="Sort by date"
+			>
+				date <span data-sort-indicator="date" aria-hidden="true" />
+			</button>
+			<button
+				type="button"
+				data-sort-by="title"
+				class="text-left hover:text-accent transition-colors flex items-baseline gap-1 cursor-pointer uppercase tracking-[0.1em]"
+				aria-label="Sort by title"
+			>
+				title <span data-sort-indicator="title" aria-hidden="true" />
+			</button>
+			<button
+				type="button"
+				data-sort-by="words"
+				class="text-right hover:text-accent transition-colors flex items-baseline gap-1 justify-end cursor-pointer uppercase tracking-[0.1em]"
+				aria-label="Sort by word count"
+			>
+				words · read <span data-sort-indicator="words" aria-hidden="true" />
+			</button>
 		</div>
 		{
 			entries.map((p) => {
 				const words = countWords(p.body ?? "");
-				const date = p.data.publishDate.toISOString().slice(0, 10);
+				const date = p.data.publishDate.toLocaleDateString("sv-SE", {
+					timeZone: "America/Chicago",
+				});
 				const minutes = readMinutes(words);
 				const excerpt = renderExcerpt(p.data, p.body);
 				return (
@@ -42,6 +67,10 @@ function postHref(p: AnyPost): string {
 						class="group relative grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3.5 -mx-2.5 border-b border-rule items-baseline transition-colors duration-100 hover:bg-bg-alt"
 						data-marginalia={p.data.marginalia ?? ""}
 						data-post-id={p.id}
+						data-row
+						data-sort-date={p.data.publishDate.valueOf()}
+						data-sort-title={p.data.title.toLowerCase()}
+						data-sort-words={words}
 					>
 						<span class="font-mono text-[11.5px] text-fg-dim">{date}</span>
 						<span class="flex flex-col gap-1 min-w-0">
@@ -78,3 +107,62 @@ function postHref(p: AnyPost): string {
 		}
 	</div>
 </MarginaliaLayout>
+
+<script>
+	// Click the date / title / words header to sort the feed. Toggle direction
+	// on re-click. Filtering (PostFinder) sets `hidden` on rows independently;
+	// reordering preserves it.
+	(() => {
+		const feed = document.querySelector<HTMLElement>("[data-feed]");
+		if (!feed) return;
+		const rows = Array.from(feed.querySelectorAll<HTMLElement>("[data-row]"));
+		if (!rows.length) return;
+
+		let currentKey: "date" | "title" | "words" = "date";
+		let currentDir: "asc" | "desc" = "desc";
+
+		const readKey = (row: HTMLElement, key: typeof currentKey): string =>
+			row.dataset[`sort${key[0]!.toUpperCase()}${key.slice(1)}`] ?? "";
+
+		function applySort() {
+			const sorted = [...rows].sort((a, b) => {
+				const va = readKey(a, currentKey);
+				const vb = readKey(b, currentKey);
+				const cmp =
+					currentKey === "title"
+						? va.localeCompare(vb)
+						: Number(va) - Number(vb);
+				return currentDir === "asc" ? cmp : -cmp;
+			});
+			for (const r of sorted) feed?.appendChild(r);
+			updateIndicators();
+		}
+
+		function updateIndicators() {
+			for (const ind of feed!.querySelectorAll<HTMLElement>(
+				"[data-sort-indicator]",
+			)) {
+				const k = ind.getAttribute("data-sort-indicator");
+				ind.textContent =
+					k === currentKey ? (currentDir === "asc" ? "↑" : "↓") : "";
+			}
+		}
+
+		for (const btn of feed.querySelectorAll<HTMLButtonElement>(
+			"[data-sort-by]",
+		)) {
+			btn.addEventListener("click", () => {
+				const k = btn.getAttribute("data-sort-by") as typeof currentKey | null;
+				if (!k) return;
+				if (k === currentKey) {
+					currentDir = currentDir === "asc" ? "desc" : "asc";
+				} else {
+					currentKey = k;
+					currentDir = k === "title" ? "asc" : "desc";
+				}
+				applySort();
+			});
+		}
+		updateIndicators();
+	})();
+</script>

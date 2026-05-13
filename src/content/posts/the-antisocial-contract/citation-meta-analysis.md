@@ -1,7 +1,7 @@
 ---
 title: "Antisocial Contract: Citation Meta-Analysis"
 description: "Verification status, standing, and links for every citation across The Antisocial Contract series."
-publishDate: "10 Apr 2026"
+publishDate: "2026-05-03T19:42:55-05:00"
 tags: ["antisocial-contract", "politics", "psychology", "identity"]
 marginalia: "Showing my work. Every citation across the series, with verification status and a link to where the claim actually lives."
 ---
