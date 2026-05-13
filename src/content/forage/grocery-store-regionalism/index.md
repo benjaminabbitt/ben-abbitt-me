@@ -5,7 +5,7 @@ publishDate: "3 May 2026"
 tags: ["modern-forage", "food", "culture"]
 marginalia: "Vernors and Cheerwine and Moxie. Dorothy Lynch and Mayfair and Akron White French. The dishes get the press, but the condiments do the cultural work."
 excerpt: "Seven beverages and sixteen condiments, each invisible inside its region and unknown outside it. The hardest containment to spot, because nobody thinks of their dressing as regional."
-unlisted: true
+visibility: draft
 ---
 
 > **Draft.** This pattern post is still being expanded as new entries surface across the survey. The pattern is worth noting; the entries listed below are not final.

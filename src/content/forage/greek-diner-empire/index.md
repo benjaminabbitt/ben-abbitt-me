@@ -5,7 +5,7 @@ publishDate: "3 May 2026"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "When the same immigrant wave drops the same template into six US cities, you get six dishes that look unrelated until you read them side by side."
 excerpt: "Birmingham hot dogs, Jackson MS comeback sauce, Detroit/Flint Coneys, NY System wieners, Paterson Texas wieners, Toledo's Tony Packo's. The structural argument in one essay."
-unlisted: true
+visibility: draft
 geo:
   pattern: true
 ---

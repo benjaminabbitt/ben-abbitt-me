@@ -21,7 +21,7 @@ const postLikeSchema = ({ image }: { image: () => z.ZodType }) =>
 				src: image(),
 			})
 			.optional(),
-		draft: z.boolean().default(false),
+		visibility: z.enum(["published", "draft", "hide"]).default("published"),
 		ogImage: z.string().optional(),
 		tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
 		publishDate: z
@@ -33,7 +33,6 @@ const postLikeSchema = ({ image }: { image: () => z.ZodType }) =>
 			.optional()
 			.transform((str) => (str ? new Date(str) : undefined)),
 		pinned: z.boolean().default(false),
-		unlisted: z.boolean().default(false),
 		marginalia: z.string().optional(),
 		excerpt: z.string().optional(),
 		/**

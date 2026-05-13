@@ -117,7 +117,7 @@ function extractDishHeadings(body: string): DishHeading[] {
 	return out;
 }
 
-const foragePosts = await getCollection("forage", ({ data }) => !data.draft);
+const foragePosts = await getCollection("forage", ({ data }) => data.visibility === "published");
 
 function deriveEntries(): Entry[] {
 	const out: Entry[] = [];
@@ -462,7 +462,6 @@ const regionNameMap: Record<string, string> = Object.fromEntries(
 
 // Sorted view + tag set for the listing PostFinder rendered below the atlas.
 const sortedForage = [...foragePosts]
-	.filter((p) => !p.data.unlisted)
 	.sort((a, b) => {
 		const da = effectiveUpdateDate(a).valueOf();
 		const db = effectiveUpdateDate(b).valueOf();

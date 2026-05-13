@@ -7,7 +7,7 @@ import { countWords, readMinutes } from "@/theme/lib/readTime";
 import { tagHref } from "@/theme/lib/tags";
 
 export async function getStaticPaths() {
-	const all = await getCollection("posts", ({ data }) => !data.draft);
+	const all = await getCollection("posts", ({ data }) => data.visibility !== "hide");
 	return all.map((post) => ({
 		params: { slug: post.id },
 		props: { post },
@@ -28,6 +28,7 @@ const date = post.data.publishDate.toISOString().slice(0, 10);
 	current="index"
 	title={`${post.data.title} · Reduction`}
 	description={post.data.description}
+	noindex={post.data.visibility === "draft"}
 >
 	<article class="max-w-[680px] mx-auto">
 		<header class="mb-10">

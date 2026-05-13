@@ -8,11 +8,12 @@ interface Props {
 	title?: string | undefined;
 	description?: string | undefined;
 	current?: Section | undefined;
+	noindex?: boolean | undefined;
 }
-const { title, description, current } = Astro.props;
+const { title, description, current, noindex } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={noindex}>
 	<div class="max-w-[1040px] mx-auto px-5 sm:px-8 pb-15 sm:pb-20">
 		<SiteHeader current={current} />
 		<main>

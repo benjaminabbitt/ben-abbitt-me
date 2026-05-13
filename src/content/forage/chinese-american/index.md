@@ -5,7 +5,7 @@ publishDate: "3 May 2026"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "Cantonese cooking adapted to Ozarks chicken-fried steak, Detroit gravy, Mexican-laborer palates in Wyoming, and Korean-Chinese wings on Lawrence Avenue."
 excerptTemplate: "Springfield cashew chicken, the St. Paul sandwich, Rock Springs chili meat, Detroit almond boneless chicken, NOLA yakamein, Chicago lollipop wings, and the Wrigleyville Akutagawa. {Count} dishes, same template."
-unlisted: true
+visibility: draft
 geo:
   pattern: true
 ---

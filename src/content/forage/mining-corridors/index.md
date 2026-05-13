@@ -5,7 +5,7 @@ publishDate: "3 May 2026"
 tags: ["modern-forage", "food", "culture", "immigrant-foodways"]
 marginalia: "The Cornish came for tin and copper. The Basques came for sheep. Both produced food traditions locked to where the work was, not where the people are."
 excerpt: "Eleven Cornish-mining pasty communities from the UP to Bisbee. Three Basque sheepherder boarding-house cities from Boise to Bakersfield. The same containment story, traced along two extractive industries."
-unlisted: true
+visibility: draft
 geo:
   pattern: true
 ---
