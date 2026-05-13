@@ -1277,6 +1277,7 @@ const regionPostMap: Record<string, { postSlug: string; anchor?: string }> = {
 
 	detailClose?.addEventListener("click", () => {
 		detailPanel?.setAttribute("hidden", "");
+		if (lockedRegion) toggleLockRegion(lockedRegion);
 	});
 
 	function setLayer(layer: string) {
