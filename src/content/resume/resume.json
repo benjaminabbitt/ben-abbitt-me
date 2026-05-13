@@ -4,7 +4,7 @@
 		"email": "benjamin.abbitt@gmail.com",
 		"linkedin": "https://www.linkedin.com/in/benjaminabbitt",
 		"github": "https://github.com/benjaminabbitt",
-		"location": "Dallas, TX"
+		"location": "St. Louis, MO"
 	},
 	"interests": [
 		"probability & stats",
@@ -84,7 +84,7 @@
 			"title": "Application / Cloud / DevOps Architect",
 			"domain": "Architecture · rescue work",
 			"bullets": [
-				"Built a vertical-slice generator (microservice + frontend) — slice setup from weeks to minutes.",
+				"Built a vertical-slice generator (microservice + frontend) — slice setup from weeks (largely approvals and provisioning queues) to minutes.",
 				"Containerized a 20-year-old tax-prep app suite — dev setup from a week+ to hours.",
 				"Rescued a two-months-late online-ordering app; re-architected off a global mutable store, shipped on time.",
 				"Diagnosed a Hibernate misconfiguration on a project inherited from another consulting firm — the entire database was being loaded into the application's memory; fixed it."
