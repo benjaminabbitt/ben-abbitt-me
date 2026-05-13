@@ -1,0 +1,104 @@
+---
+title: "Two Booleans Are an Enum in Disguise"
+description: "Boolean fields in business code rarely stay binary. The visibility refactor on this site is a recent example of a pattern that shows up everywhere."
+publishDate: "2026-05-13T17:30:00-05:00"
+tags: ["software-architecture", "patterns"]
+marginalia: "Booleans encode questions. Business domains have named states. Every domain boolean wants a sibling boolean, and every pair of booleans wants to be an enum."
+visibility: draft
+---
+
+Boolean fields in business code are usually the wrong shape. They look like the right shape on day one because day one only has two states. Then a third state arrives, the second boolean shows up, and the domain ends up as a Cartesian product of yes/no axes, half of which are illegal and the other half of which require comments to explain.
+
+This is not an absolute. In performance-critical code, bit-packed booleans are the right tool: hot loops over millions of rows, columnar storage, embedded systems, cache-line accounting. Business logic almost never lives there, and the cost of an enum over a boolean everywhere else is bytes.
+
+## The Example I Just Lived
+
+Last week this site had two boolean fields on every post: `draft` and `unlisted`. Together they were trying to encode the post's lifecycle state.
+
+| `draft` | `unlisted` | Behavior |
+|---------|-----------|---------|
+| `false` | `false`   | Built, listed in the feed, indexed |
+| `false` | `true`    | Built, URL-accessible, not in the feed |
+| `true`  | `false`   | Not built at all |
+| `true`  | `true`    | Same as `draft=true` alone; `unlisted` is dead weight |
+
+The fourth row is the giveaway. The combination has no independent meaning. It is what happens when you let two booleans coexist on a field that wanted one enum.
+
+The names were lying too. In editorial English, a "draft" is a piece you are sharing with reviewers before it is public: built, URL-accessible, not in the feed. That is exactly what the old `unlisted=true` did. The old `draft=true` meant "do not build a page at all," which is what most teams would call "hidden." The booleans forced the field names to describe the value rather than the state.
+
+The refactor collapsed both fields into a single enum.
+
+```typescript
+visibility: z.enum(["published", "draft", "hide"]).default("published")
+```
+
+Three named states. No illegal combinations. Each call site switches on a value instead of a pair of values. The names line up with editorial English: `draft` means draft, `hide` means hide. Adding a fourth state ("scheduled" for time-gated posts) means adding one variant and following the compiler.
+
+Boolean count went from two to zero. Named state count went from three to three, with the redundant combination gone. The schema got smaller and the semantics got bigger.
+
+## Why Booleans Rot
+
+**They encode the question, not the answer.** `isDraft` is a yes-or-no about one criterion. Business states are not criteria; they are named conditions. "Draft" is not "is this thing currently in a particular state of being drafty?" It is "this thing is in the Draft phase of its lifecycle." A boolean flattens that into a checkbox.
+
+**They breed siblings.** The first boolean is fine. Then the domain gets richer, a second boolean appears, and every read site must check both. Three booleans means eight combinations and an open question about which ones are legal. Five booleans is unreadable.
+
+**Their names age badly.** `isActive` is clear in v1. After `isSuspended`, `isDeleted`, and `isPending` arrive, "active" stops meaning "the user can log in" and starts meaning "not in any of the four other states the codebase has accreted." Each new boolean reduces the precision of the original.
+
+**The compiler cannot help.** A `switch` on an enum can be exhaustive. A pair of booleans cannot. Adding a third boolean adds branches the compiler will never warn you missed.
+
+**Combinatorial states leak.** `draft=true, unlisted=true` had no independent meaning on this site, but the type system allowed it. It sat there waiting for a contributor to set it and discover whatever the page-builder happened to do. The bug is not that the behavior was wrong; the bug is that nothing made the combination illegal.
+
+## Why Enums Age Well
+
+A tagged union (Rust's `enum`, TypeScript's string-literal unions, Java's `enum`, Go's `const`/`iota` behind a sealed wrapper, Python's `enum.Enum`) gives you four things at once:
+
+1. **Named states.** "Draft" reads as itself. `draft=true` reads as itself plus the contract.
+2. **Exhaustiveness.** The compiler or linter tells you when a match is incomplete.
+3. **Atomic evolution.** Adding a state is one variant. Removing a state requires a migration, which is the right amount of friction.
+4. **Cheap storage.** A four-variant enum is a string column with a `CHECK` constraint or a native database `ENUM` type. The cost over a boolean is bytes, not orders of magnitude.
+
+The cost differential is the whole reason this pattern stays underused. Booleans feel free. Enums feel like ceremony. In application code the ceremony costs roughly nothing and pays back the first time the domain grows.
+
+## The Performance Carve-Out
+
+Booleans pack densely and compare instantly. A million-row bitmap with one flag each is 125 KB. The same data in a one-byte enum column is 1 MB. The same in a four-byte enum is 4 MB. In hot loops, on tight data structures, on the kind of code where you care about cache lines, this matters.
+
+Cases where the boolean is genuinely right:
+
+- **Feature flags.** On or off, evaluated millions of times per request, no third state.
+- **Bit-packed permission masks.** `READ | WRITE | EXEC` are genuinely orthogonal axes; bit flags express that exactly.
+- **Performance-critical row metadata.** Storage engines, columnar databases, anything counting bytes per row.
+- **Truly binary physical state.** `is_open` on a circuit breaker. `is_dirty` on a buffer page.
+
+The test is whether the underlying domain is genuinely binary, genuinely orthogonal to other axes, and in a place where the difference between one bit and one byte is load-bearing. Application-layer status fields almost never pass any of those.
+
+## How to See the Pattern Before It Costs You
+
+Smells that say "this should have been an enum":
+
+- The field name starts with `is_`, `has_`, or `was_` and refers to a *state* the business cares about (lifecycle, status, role).
+- A second related boolean already exists, or is about to.
+- The truth table for the combined booleans has more rows than the business has named states.
+- Code reads `if (a && !b)` to mean a specific state, and the mapping lives in a comment instead of the type.
+- A TODO says "what does it mean when both are true?"
+- The boolean's negation reads worse than the positive (`!isUnlisted` versus `visibility === "published"`).
+
+A timestamp is often the next refinement past an enum: `published_at: Timestamp | null` carries more information than `is_published`, and `state` plus `state_changed_at` carries more than either alone. The progression boolean → enum → enum-with-timestamp tracks how much the domain wants to remember.
+
+## The Counterarguments
+
+**"Two booleans is just easier."** Easier for the first commit. Not easier on the third state, where the cost transfers to every consumer of the field and every reviewer of the diff.
+
+**"Enums are harder to evolve."** Inverted. Adding a variant is one localized change the compiler tracks. Adding a third boolean is a schema change plus a re-examination of every existing call site to confirm what the new combination means.
+
+**"Storage cost."** Real in storage engines, largely meaningless in application data. If you cannot afford a byte per row in your business table, you have a different problem.
+
+**"Booleans are universal; enums vary by language."** Every language used for business code in the last fifteen years has tagged unions, class-based enums, or string-literal types. The portability argument is not real.
+
+## The Takeaway
+
+Booleans encode questions. Business domains have named states. Every boolean in a business model is one product requirement away from needing a sibling boolean, and every pair of booleans is one team discussion away from becoming an enum.
+
+Reach for the enum first. Keep the boolean for the places where it is genuinely right: orthogonal axes, performance-critical paths, and the rare field that is truly binary and will stay that way.
+
+If you find yourself writing the second boolean, you are not adding a feature. You are postponing a refactor.
