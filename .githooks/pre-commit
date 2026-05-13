@@ -1,0 +1,31 @@
+#!/bin/bash
+# Pre-commit hook: stamp `publishDate` on staged content files with the
+# current local datetime (ISO 8601 with timezone offset). Frontmatter is
+# the source of truth for "last modified," so every commit that touches a
+# post or forage entry bumps the date.
+#
+# Install: `git config core.hooksPath .githooks`
+#
+# Skip with `git commit --no-verify` if you want to commit edits without
+# bumping the date (e.g. trivial formatting passes you don't want to
+# surface as "freshly updated").
+
+set -euo pipefail
+
+now=$(date +"%Y-%m-%dT%H:%M:%S%:z")
+
+changed=0
+while IFS= read -r f; do
+	[ -f "$f" ] || continue
+	# Only rewrite if a publishDate line already exists. New files without
+	# one are left for the author to fill in.
+	if grep -q "^publishDate:" "$f"; then
+		sed -i -E "s|^publishDate:.*$|publishDate: \"$now\"|" "$f"
+		git add "$f"
+		changed=$((changed + 1))
+	fi
+done < <(git diff --cached --name-only --diff-filter=ACM | grep -E "^src/content/(posts|forage)/.*\.(md|mdx)$" || true)
+
+if [ "$changed" -gt 0 ]; then
+	echo "pre-commit: stamped publishDate=$now on $changed content file(s)"
+fi
