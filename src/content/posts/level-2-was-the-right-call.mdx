@@ -1,0 +1,93 @@
+---
+title: "Level 2 Was the Right Call"
+description: "Claude acknowledged an architectural shortcut after pushback. The asymmetry that matters: code is local; seams are not."
+publishDate: "2026-05-13"
+tags: ["llm", "architecture", "workflow"]
+marginalia: "Claude defaulted to the easy option, then admitted the harder one was right when pushed. The asymmetry between code and seams is why HITL architects exist."
+draft: false
+---
+
+> "So I think Level 2 is honestly the right call, and I was undervaluing it because it sounded like more work than Level 1."
+
+Claude Opus 4.7 said this **after I pushed back** on its first suggestion. The model had been ready to put a structured dataset in a binary JSON column and move on. Level 1 was the shortcut: dump the JSON in a blob and call it done. Level 2 was the work: explode the JSON into normalized tables with foreign keys.
+
+The harder option only got named once I named it.
+
+Both options work. One of them keeps working.
+
+## What Just Happened
+
+The interesting thing is not that the AI took the shortcut. The interesting thing is what the AI said *when challenged*: that it had been undervaluing the right answer **because the right answer sounded like more work**.
+
+That is the model describing its own bias in plain terms, on the record. It described the bias only after a human surfaced it. That is the whole story in two sentences. The model only confessed under cross-examination.
+
+## Receipts
+
+The pattern repeated mid-spike. Claude wrote the prototype using `database/sql` with `?` placeholders. Raw SQL, no type checking. The project's standard is sqlc-generated typed queries against a Postgres schema. I called it out. Claude responded:
+
+> "Fair callout — the spike's `database/sql` with `?` placeholders isn't type-safe."
+
+The model rewrote the spike to generate real sqlc artifacts for both Level 2 and Level 3. That is where the precise numbers come from. After simulating three Tiptap evolutions (image, task list, highlight mark):
+
+- Level 2: 5 sqlc-generated query functions, +28 lines of hand-written delta per evolution
+- Level 3: 25 sqlc-generated query functions, +249 lines of hand-written delta per evolution
+
+I had Claude prototype Level 3 specifically because I suspected the bias ran in both directions: not just toward the JSON-blob shortcut, but also toward over-correction once challenged. Level 3 was the over-correction: fully normalize every Tiptap node kind into its own table, every mark kind into its own table. It carries a 5x function-count ratio and 9x hand-written delta over Level 2 for marginal benefit. Both extremes were worse than the middle.
+
+The bias has two directions. Left toward the shortcut, right toward the overcorrection. The middle was the answer, and finding it required pushing both ways.
+
+## Code Is Local. Architecture Is Not.
+
+A bad function is a local problem. You find it in code review, or you find it when it breaks, and you replace it. The cost is bounded by the function's blast radius.
+
+A bad seam is structural. Every consumer of that data, forever, pays the cost of the JSON-in-a-column decision. Every query writes through a parser. Every schema change rewrites a hand-rolled migration. Every analyst learns the JSON dialect. The cost of L1 is paid at runtime, on every read, by everyone downstream.
+
+Normalization pays its cost at author-time, once. Denormalization pays its cost in-code, every time it executes.
+
+This is why architectural shortcuts are worse than implementation shortcuts. Code you can rewrite in a weekend. Seams you live with for years.
+
+## The Cost of a Wrong Seam, at Scale
+
+Wikimedia has been trying to bridge prose articles and structured data [since 2020](https://meta.wikimedia.org/wiki/Abstract_Wikipedia). The infrastructure layer, [Wikifunctions](https://www.wikifunctions.org/), shipped in 2023 and now hosts [3,000+ community-built functions](https://www.wikifunctions.org/wiki/Wikifunctions:Status_updates/2025-09-12) across 124 supported Wiktionary languages. The prose layer, Abstract Wikipedia, would render Wikidata's typed claims as natural language in 300 languages. It [entered preliminary beta in March 2026](https://www.wikifunctions.org/wiki/Wikifunctions:Status_updates/2026-03-19), six years after conception. Integration with the language Wikipedias is, in the team's own words, "not yet built." They are "very intentionally keeping a low profile" because it "is not yet quite ready for a wider audience."
+
+A [January 2023 audit by four Google Fellows](https://en.wikipedia.org/wiki/Wikipedia:Wikipedia_Signpost/2023-01-01/Technology_report) called the project at "substantial risk of failure", not because the goal is wrong but because the technical seam (a novel programming language, a complex object model, and an unbuilt dependency layer) is genuinely hard to design once and live with forever. The Foundation rejected the recommendations. Three years later, the seam still has not shipped.
+
+That is a working seam-decision in the wild, with a well-funded team, over half a decade. The infrastructure underneath it succeeded. The seam itself did not. The cost of getting it wrong is years of stalled work even when everything else goes right.
+
+When Claude proposes putting a structured claim graph in a JSON column "for now," it is suggesting a small version of the same risk. The cost is not in week one. It is in year three when you need to query the graph at scale.
+
+Wikimedia has a six-year head start on noticing they got the seam wrong. Most teams do not.
+
+## The Comprehension Gap
+
+There is research now on what happens when humans review AI-generated code at AI speed.
+
+In a randomized controlled trial of 52 software engineers learning a new library, the AI-assisted group completed tasks at the same speed as the control group but scored 17% lower on a follow-up comprehension quiz ([Osmani, 2026](https://addyosmani.com/blog/comprehension-debt/)). Other work splits AI usage by mode and finds that developers who use AI for delegation ("just write this for me") score below 40% on comprehension tests, while developers who use AI for inquiry ("walk me through the tradeoffs") score above 65% ([Servly, 2025](https://medium.com/@servlyapp/faster-but-fragile-the-comprehension-gap-in-ai-development-69e8d048dcdf)).
+
+The volume problem is structural. A junior engineer with an AI can produce code faster than a senior engineer can critically audit it. The feedback loop that protected codebases (senior review of junior output) breaks at the speed AI now writes.
+
+This is the comprehension debt accumulating in a normal week of normal work.
+
+## HITL for Architects, Specifically
+
+HITL for code is a review queue. Techniques like the [illuminated code walkthrough](/posts/deterministic-systems-non-deterministic-tools/) speed it up and make it thorough. HITL for architecture is a different shape: catching the Level 1 versus Level 2 decision **before the implementation exists**, not after.
+
+This is the work in [Plan, Review, Execute](/posts/plan-review-execute/). Force a pause between deciding and doing. For code, the pause catches "you used bcrypt and we are on Argon2." For architecture, it catches "you put the JSON in a column."
+
+The catch has to happen at the seam level, not the diff level. Reading the resulting code does not save you from the wrong seam. The seam is invisible in the diff. It only becomes visible when something downstream needs to query, or version, or join, or extend the data.
+
+AI should not choose your architecture. Your architecture should choose how you use AI.
+
+## The Conflict of Interest
+
+I am a solution architect arguing that solution architects matter. The bias is obvious and I will not pretend it is not there.
+
+But notice the structure of what happened. The AI did not catch itself. A human caught it. Once the human named the bias, the AI agreed it was the right call. If the bias were not real, the AI would have defended Level 1. It did not. That is a model under cross-examination admitting the shortcut was wrong.
+
+## You Can Build a Mess Very Fast Now
+
+The AI is faster than it has ever been. The output is more confident than it has ever been. The downstream cost of an architectural shortcut is the same as it has always been.
+
+Level 1 sounds like less work. Level 1 is more work, paid in installments, by everyone who comes after.
+
+The AI did not catch itself. Someone caught it. That is the job.
