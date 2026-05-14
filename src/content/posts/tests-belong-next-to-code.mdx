@@ -1,7 +1,7 @@
 ---
 title: "Tests Belong Next to the Code They Test"
 description: "Tests should live next to the code they test, in the same directory but a separate file. Not inline. Not in a parallel tree."
-publishDate: "2026-03-03"
+publishDate: "2026-05-13T20:58:59-05:00"
 tags: ["testing", "patterns", "tools", "software-architecture"]
 marginalia: "Tests live in the same directory as the code they test. Not inline, not in a parallel tree, next door."
 ---
@@ -139,7 +139,7 @@ This gives us:
 - Production files focused on implementation
 - Test files skippable when reading for understanding
 - Conditional compilation via `#[cfg(test)]`
-- Clean mutation testing workflow
+- Clean [mutation testing](/posts/mutation-testing-validates-llm-tests/) workflow
 
 **Mutation testing benefits:** Separate files pair well with tools like [cargo-mutants](https://mutants.rs/). If a mutation survives (accidentally gets committed), it's in `correlation.rs`; the test file is untouched. Revert the production file, keep the tests. With inline tests, reverting means losing both mutated code and test improvements.
 
