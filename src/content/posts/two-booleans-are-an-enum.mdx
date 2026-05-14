@@ -1,10 +1,10 @@
 ---
 title: "Two Booleans Are an Enum in Disguise"
 description: "Boolean fields in business code rarely stay binary. The visibility refactor on this site is a recent example of a pattern that shows up everywhere."
-publishDate: "2026-05-13T17:30:00-05:00"
+publishDate: "2026-05-18T17:30:00-05:00"
 tags: ["software-architecture", "patterns"]
 marginalia: "Booleans encode questions. Business domains have named states. Every domain boolean wants a sibling boolean, and every pair of booleans wants to be an enum."
-visibility: draft
+visibility: scheduled
 ---
 
 Boolean fields in business code are usually the wrong shape. They look like the right shape on day one because day one only has two states. Then a third state arrives, the second boolean shows up, and the domain ends up as a Cartesian product of yes/no axes, half of which are illegal and the other half of which require comments to explain.

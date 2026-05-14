@@ -32,6 +32,7 @@ const {
 const manifest = entries.map((p) => ({
 	id: p.id,
 	tags: p.data.tags.map(tagSlug),
+	publishedAt: p.data.publishDate.valueOf(),
 	text: [p.data.title, renderExcerpt(p.data, p.body), p.data.description]
 		.filter(Boolean)
 		.join(" ")
@@ -90,6 +91,13 @@ const noun = entries.length === 1 ? "post" : "posts";
 		>
 			clear
 		</button>
+		<a
+			href="/posts/the-url-is-the-query/"
+			class="font-mono text-[10.5px] text-fg-faint hover:text-accent shrink-0 tracking-[0.04em]"
+			title="How the tag query language works"
+		>
+			syntax ↗
+		</a>
 	</div>
 	<div
 		class="px-5 py-2 border-t border-rule/60 font-mono text-[10.5px] text-fg-faint tracking-[0.04em]"

@@ -1,10 +1,10 @@
 ---
 title: "SQL Is the DSL"
 description: "ORMs hide the wrong thing. SQL was already the language built for relational data. Generate code from SQL, not SQL from code."
-publishDate: "2026-05-13T17:05:00-05:00"
+publishDate: "2026-05-17T17:05:00-05:00"
 tags: ["software-architecture", "tools", "patterns"]
 marginalia: "ORMs invert the boundary. SQL was already the DSL for relational data. The tools that age well let SQL be the source of truth and generate the types around it."
-visibility: draft
+visibility: scheduled
 ---
 
 SQL is the language built for relational data. ORMs hide it. That is the whole complaint.
@@ -15,7 +15,7 @@ The trade ORMs ask you to make is: give up the language designed for relational 
 
 SQL is a domain-specific language for relations. Set operations, joins, aggregations, window functions, recursive queries, `MERGE`, `LATERAL`, `FOR UPDATE SKIP LOCKED`. Five decades of accumulated expressivity. Every major database speaks a dialect tuned to its storage model.
 
-If a colleague asked you to invent a language for relational data and you came up with anything other than SQL, you would be reinventing SQL badly.
+If a colleague set out to invent a language for relational data, anything that ended up working would be a close approximation of SQL.
 
 The reason ORMs exist is not that SQL is bad at expressing queries. It is that SQL is bad at being a return type in a host language. You write a query, you get rows, and then you need to convert those rows into something your application code can hold. That conversion is the problem ORMs were meant to solve.
 
@@ -25,13 +25,13 @@ ORMs solved it by hiding SQL. That was the wrong turn. They lost the essence of 
 
 **Object-relational impedance mismatch is real.** Objects have identity, encapsulation, and inheritance. Relations have keys, projection, and joins. The shapes do not align. ORMs paper over the gap with proxies, sessions, dirty tracking, cascading saves, and lazy initialization. Each of those is a leak waiting for production.
 
-**The lowest common denominator wins.** Hibernate, Doctrine, Entity Framework, Active Record all target the intersection of dialects. You lose CTEs as first-class. You lose `RETURNING`. You lose `ON CONFLICT DO UPDATE`. You lose partial indexes. You lose `LATERAL`. The features you actually want for non-trivial work are the ones the ORM does worst.
+**The lowest common denominator wins.** Hibernate, Doctrine, Entity Framework, Active Record all target the intersection of dialects. You lose CTEs as first-class ([Hibernate added them in version 6.2, in 2023](https://in.relation.to/2023/02/20/hibernate-orm-62-ctes/), more than twenty years after SQL:1999 standardized the `WITH` clause). You lose `RETURNING`. You lose `ON CONFLICT DO UPDATE`. You lose partial indexes. You lose `LATERAL`. When you reach for any of these, you drop to a native query and abandon the type safety the ORM was supposed to provide. The features you actually want for non-trivial work are the ones the ORM does worst.
 
 **N+1 is the default.** Iterating an `Order`'s `lineItems` looks like a property access. It executes a query. A loop over orders executes one query, then N more. The ORM did exactly what you told it; you just did not realize what you told it. Fixing it means dropping into ORM-specific eager-load hints (`JOIN FETCH`, `Include`, `with_related`) that are a worse version of the SQL you would have written.
 
 **Performance debugging requires reading the generated SQL anyway.** Every Hibernate shop has a `show_sql` flag for the same reason. The abstraction fails exactly where you need it most: when the query plan matters.
 
-**The schema lives in two places.** Migrations create the database. Annotated entities re-describe it for the ORM. The two drift. JPA's `ddl-auto` was the formal admission that the ORM's view of the schema and the database's actual schema can disagree.
+**The schema lives in two places.** Migrations create the database. Annotated entities re-describe it for the ORM. The two drift. Hibernate's [`hbm2ddl.auto`](https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/appendices/Configurations.html) setting (exposed as `spring.jpa.hibernate.ddl-auto` in Spring) is the formal admission: `validate` fails application startup when the entity mappings and the live database disagree, `update` tries to alter the database to match the entities (which production deployments avoid, because the ORM does not know about your indexes, partitions, triggers, or constraints), and most teams land on `validate` or `none` and accept the gap. The whole setting exists to manage divergence between two views of the same schema.
 
 **Caching reintroduces a problem the database already solved.** First-level and second-level caches exist because object identity needs to survive across a session. The database has its own buffer pool and a working consistency model. Now you have two caches and a coherency contract between them.
 
@@ -82,9 +82,9 @@ ctx.select(ORDERS.ID, ORDERS.PLACED_AT, ITEMS.SKU, ITEMS.QUANTITY)
    .fetch();
 ```
 
-The DSL is SQL with parentheses moved. If the database drops `ORDERS.PLACED_AT`, the Java does not compile. Window functions, CTEs, vendor-specific syntax: all expressible because the generator targets the real dialect of the real database.
+The DSL is SQL with parentheses moved. If the database drops `ORDERS.PLACED_AT`, the Java does not compile. [Window functions](https://www.jooq.org/doc/latest/manual/sql-building/column-expressions/window-functions/), [CTEs](https://www.jooq.org/doc/latest/manual/sql-building/sql-statements/with-clause/), vendor-specific syntax: all expressible because the generator targets the real dialect of the real database.
 
-[Ecto](https://hexdocs.pm/ecto/) in Elixir occupies similar territory: a query DSL that surfaces relational primitives instead of pretending they are object navigation. SQLAlchemy Core (without the ORM layer on top) is the same pattern in Python. [Diesel](https://diesel.rs/) in Rust is mostly there, with some macro tax to pay.
+Other languages have their own takes on this shape, and the picks below are what I would reach for in each. In Go, [Jet](https://github.com/go-jet/jet) is the closer match for SQL-as-native-functions and the better default; sqlc earns its place only when your query catalog is genuinely static. In Rust, [Diesel](https://diesel.rs/) is the strictest jOOQ analogue out there and the right starting point, with [sea-query](https://github.com/SeaQL/sea-query) reserved for the cases where you actually need a dynamic-query escape hatch. In Python, SQLAlchemy Core specifically (not the ORM layered on top) is the closest equivalent, and 2.x typing makes it sharper than it used to be; [PyPika](https://github.com/kayak/pypika) is a reasonable fallback when you only want the builder without schema codegen. [Ecto](https://hexdocs.pm/ecto/) in Elixir surfaces relational primitives instead of pretending they are object navigation, and remains the default I would pick in that ecosystem.
 
 ### The Common Move
 
@@ -96,7 +96,7 @@ You keep the expressivity of SQL. You keep the type safety of the host language.
 
 **"ORMs make you database-agnostic."** Real applications run on one database. Postgres has `JSONB` operators MySQL does not have. MySQL has fulltext semantics Postgres does not have. SQLite has neither. Production code uses the features of the database it runs on. The portability promise survives only as long as you avoid using your database, which is an odd reason to choose a database.
 
-**"ORMs eliminate boilerplate."** So do code generators. sqlc emits exactly the row-mapping code you would have written, every time the SQL changes, with no human in the loop. jOOQ emits the metamodel. The boilerplate case for ORMs only stands if you ignore the tools that eliminate boilerplate without hiding SQL.
+**"ORMs eliminate boilerplate."** They eliminate it by eliminating functionality. The boilerplate that disappears is the work of mapping SQL features into the host language; the features disappear with it. sqlc and jOOQ eliminate the same boilerplate the opposite way: they let SQL do what SQL was designed to do, then map the results *into* the host type system. The direction is the whole disagreement. Hibernate and friends take *OO* models and try to project them onto SQL, which is lossy because relations express things objects do not. jOOQ and friends take SQL and project it *into* OO, which is what type systems are for.
 
 **"ORMs prevent SQL injection."** Parameterized queries prevent SQL injection. Both sqlc and jOOQ parameterize by default. So does `database/sql` and JDBC underneath. ORMs are one of many ways to bind parameters; they are not load-bearing for safety.
 
@@ -114,7 +114,7 @@ In sqlc-shaped tools, your migrations own the schema and your `.sql` files own t
 
 In jOOQ-shaped tools, your migrations own the schema. The query is written in a DSL that mirrors SQL, type-checked against generated metadata. The database is the source of truth.
 
-Diesel, Prisma, SQLAlchemy Core, Ecto sit at varying points on this spectrum. The closer the tool stays to SQL semantics and lets the database own the schema, the better the tool tends to age.
+Jet, Diesel, SQLAlchemy Core, and Ecto sit on the right end of this spectrum, and they are the tools I would reach for in their respective ecosystems. The closer the tool stays to SQL semantics and lets the database own the schema, the better the tool tends to age.
 
 ## What ORMs Were Right About
 

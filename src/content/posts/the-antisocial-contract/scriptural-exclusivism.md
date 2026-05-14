@@ -1,9 +1,10 @@
 ---
 title: "Antisocial Contract: Scriptural Exclusivism"
 description: "Testing whether the degree of exclusivist content in founding texts predicts historical association with violent intergroup conflict."
-publishDate: "2026-04-28T08:32:46-05:00"
+publishDate: "2026-05-13T20:27:34-05:00"
 tags: ["antisocial-contract", "politics", "psychology", "identity"]
 marginalia: "If exclusivism is structural rather than cultural, it should be measurable in the founding texts themselves. Here's how I'd test it."
+visibility: draft
 ---
 ## The Hypothesis
 

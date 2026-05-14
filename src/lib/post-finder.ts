@@ -9,7 +9,12 @@
 
 import { evaluate, parse } from "@/lib/tagfs";
 
-type ManifestItem = { id: string; tags: string[]; text: string };
+type ManifestItem = {
+	id: string;
+	tags: string[];
+	publishedAt: number;
+	text: string;
+};
 
 type ParsedInput = {
 	segments: string[];
@@ -128,10 +133,7 @@ function writeURLState(segments: string[], search: string): void {
 	window.history.replaceState(null, "", url.toString());
 }
 
-function renderActive(
-	tokens: ParsedInput["activeTokens"],
-	listEl: HTMLElement,
-): void {
+function renderActive(tokens: ParsedInput["activeTokens"], listEl: HTMLElement): void {
 	listEl.textContent = "";
 	const parts: string[] = [];
 	for (const tok of tokens) {
@@ -144,9 +146,7 @@ function renderActive(
 }
 
 export function initPostFinder(): void {
-	const manifestEl = document.querySelector<HTMLScriptElement>(
-		"[data-q-manifest]",
-	);
+	const manifestEl = document.querySelector<HTMLScriptElement>("[data-q-manifest]");
 	const tagsEl = document.querySelector<HTMLScriptElement>("[data-q-tags]");
 	if (!manifestEl || !tagsEl) {
 		throw new Error("PostFinder is missing its manifest");
@@ -202,10 +202,16 @@ export function initPostFinder(): void {
 			}
 		}
 
+		// Drop entries whose publishDate is still in the future per the client
+		// clock. `scheduled` posts ship in the manifest so they can flip in
+		// without a rebuild; the build doesn't know the visitor's current time.
+		const now = Date.now();
+		for (const m of manifest) {
+			if (m.publishedAt > now) matchedIds.delete(m.id);
+		}
+
 		let visibleCount = 0;
-		const rows = document.querySelectorAll<HTMLElement>(
-			"[data-q-feed] [data-post-id]",
-		);
+		const rows = document.querySelectorAll<HTMLElement>("[data-q-feed] [data-post-id]");
 		for (const row of rows) {
 			const id = row.dataset.postId ?? "";
 			if (matchedIds.has(id)) {
@@ -224,9 +230,7 @@ export function initPostFinder(): void {
 		const feedLabel = document.querySelector<HTMLElement>("[data-q-feed-label]");
 		const clearBtn = document.querySelector<HTMLElement>("[data-q-clear]");
 		const activeWrap = document.querySelector<HTMLElement>("[data-q-active]");
-		const activeList = document.querySelector<HTMLElement>(
-			"[data-q-active-list]",
-		);
+		const activeList = document.querySelector<HTMLElement>("[data-q-active-list]");
 
 		if (heroEl) {
 			if (filtered) heroEl.setAttribute("hidden", "");
@@ -269,13 +273,9 @@ export function initPostFinder(): void {
 
 		// Tag chips: highlight active tags
 		const activeTagSet = new Set(
-			segments
-				.filter((s) => allTagSet.has(s.toLowerCase()))
-				.map((s) => s.toLowerCase()),
+			segments.filter((s) => allTagSet.has(s.toLowerCase())).map((s) => s.toLowerCase()),
 		);
-		for (const btn of document.querySelectorAll<HTMLButtonElement>(
-			"[data-q-tag]",
-		)) {
+		for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-q-tag]")) {
 			const t = btn.dataset.qTag ?? "";
 			if (activeTagSet.has(t)) {
 				btn.classList.add("text-accent");
@@ -322,18 +322,14 @@ export function initPostFinder(): void {
 	}
 
 	// Click a tag chip → append (or remove if already present) #tag in the input
-	for (const btn of document.querySelectorAll<HTMLButtonElement>(
-		"[data-q-tag]",
-	)) {
+	for (const btn of document.querySelectorAll<HTMLButtonElement>("[data-q-tag]")) {
 		btn.addEventListener("click", () => {
 			if (!inputEl) return;
 			const tag = btn.dataset.qTag ?? "";
 			if (!tag) return;
 			const current = inputEl.value;
 			const tokens = current.trim().split(/\s+/).filter(Boolean);
-			const presentIdx = tokens.findIndex(
-				(t) => t.toLowerCase() === `#${tag}`,
-			);
+			const presentIdx = tokens.findIndex((t) => t.toLowerCase() === `#${tag}`);
 			if (presentIdx >= 0) {
 				tokens.splice(presentIdx, 1);
 			} else {

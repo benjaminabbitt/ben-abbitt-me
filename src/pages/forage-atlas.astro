@@ -1,16 +1,17 @@
 ---
 import { getCollection } from "astro:content";
-import countiesTopo from "us-atlas/counties-albers-10m.json";
 import { geoPath } from "d3-geo";
 import GithubSlugger from "github-slugger";
 import { feature, mesh } from "topojson-client";
-import PageLayout from "@/theme/layouts/PageLayout.astro";
+import type { GeometryCollection, Topology } from "topojson-specification";
+import countiesTopo from "us-atlas/counties-albers-10m.json";
 import PostFinder from "@/components/PostFinder.astro";
+import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
+import cbsaColors from "../../subprojects/modern_forage/geography/cbsa-colors.json";
 import countiesData from "../../subprojects/modern_forage/geography/counties.json";
 import zoneDefs from "../../subprojects/modern_forage/geography/zones.json";
-import cbsaColors from "../../subprojects/modern_forage/geography/cbsa-colors.json";
 
 type County = {
 	fips: string;
@@ -110,13 +111,20 @@ function extractDishHeadings(body: string): DishHeading[] {
 		const depth = (m[1] ?? "").length;
 		const headingText = (m[2] ?? "").trim();
 		const dishPortion = headingText.split(/\s[—–-]\s/)[0]?.trim() ?? headingText;
-		const geoParts = headingText.split(/\s[—–-]\s/).slice(1).join(" — ").trim();
+		const geoParts = headingText
+			.split(/\s[—–-]\s/)
+			.slice(1)
+			.join(" — ")
+			.trim();
 		out.push({ dish: dishPortion, geoLabel: geoParts || null, depth });
 	}
 	return out;
 }
 
-const foragePosts = await getCollection("forage", ({ data }) => data.visibility === "published");
+const foragePosts = await getCollection(
+	"forage",
+	({ data }) => data.visibility === "published" || data.visibility === "scheduled",
+);
 
 function deriveEntries(): Entry[] {
 	const out: Entry[] = [];
@@ -193,20 +201,13 @@ for (const e of entries) {
 	}
 }
 
-const countyFeatures = feature(
-	countiesTopo as any,
-	(countiesTopo as any).objects.counties,
-);
-const stateMesh = mesh(
-	countiesTopo as any,
-	(countiesTopo as any).objects.states,
-	(a: any, b: any) => a !== b,
-);
-const nationMesh = mesh(
-	countiesTopo as any,
-	(countiesTopo as any).objects.states,
-	(a: any, b: any) => a === b,
-);
+const topo = countiesTopo as unknown as Topology;
+const countiesObj = topo.objects.counties as GeometryCollection;
+const statesObj = topo.objects.states as GeometryCollection;
+
+const countyFeatures = feature(topo, countiesObj);
+const stateMesh = mesh(topo, statesObj, (a, b) => a !== b);
+const nationMesh = mesh(topo, statesObj, (a, b) => a === b);
 
 // MSA mesh: draw an edge if the two counties are in different MSAs,
 // or if one is in an MSA and the other isn't. Don't draw between two non-MSA counties.
@@ -214,16 +215,12 @@ const msaByFips = new Map<string, string | null>();
 for (const c of counties) {
 	msaByFips.set(c.fips, c.cbsa_type === "MSA" ? c.cbsa_code : null);
 }
-const msaMesh = mesh(
-	countiesTopo as any,
-	(countiesTopo as any).objects.counties,
-	(a: any, b: any) => {
-		const ma = msaByFips.get(String(a.id)) ?? null;
-		const mb = msaByFips.get(String(b.id)) ?? null;
-		if (ma === null && mb === null) return false;
-		return ma !== mb;
-	},
-);
+const msaMesh = mesh(topo, countiesObj, (a, b) => {
+	const ma = msaByFips.get(String(a.id)) ?? null;
+	const mb = msaByFips.get(String(b.id)) ?? null;
+	if (ma === null && mb === null) return false;
+	return ma !== mb;
+});
 
 const path = geoPath();
 
@@ -258,9 +255,7 @@ for (const c of counties) {
 	}
 }
 const expandedRegionCounties: Record<string, string[]> = {};
-for (const [key, region] of Object.entries(
-	zoneDefs as Record<string, RegionDef>,
-)) {
+for (const [key, region] of Object.entries(zoneDefs as Record<string, RegionDef>)) {
 	const base = new Set(region.counties);
 	const excludeCbsas = new Set(region.exclude_cbsas ?? []);
 	const includeCbsas = new Set<string>();
@@ -287,24 +282,57 @@ for (const [key, fipsList] of Object.entries(expandedRegionCounties)) {
 }
 
 const STATE_TO_DIVISION: Record<string, string> = {
-	CT: "new_england", ME: "new_england", MA: "new_england", NH: "new_england",
-	RI: "new_england", VT: "new_england",
-	NJ: "mid_atlantic", NY: "mid_atlantic", PA: "mid_atlantic",
-	IL: "east_north_central", IN: "east_north_central", MI: "east_north_central",
-	OH: "east_north_central", WI: "east_north_central",
-	IA: "west_north_central", KS: "west_north_central", MN: "west_north_central",
-	MO: "west_north_central", NE: "west_north_central", ND: "west_north_central",
+	CT: "new_england",
+	ME: "new_england",
+	MA: "new_england",
+	NH: "new_england",
+	RI: "new_england",
+	VT: "new_england",
+	NJ: "mid_atlantic",
+	NY: "mid_atlantic",
+	PA: "mid_atlantic",
+	IL: "east_north_central",
+	IN: "east_north_central",
+	MI: "east_north_central",
+	OH: "east_north_central",
+	WI: "east_north_central",
+	IA: "west_north_central",
+	KS: "west_north_central",
+	MN: "west_north_central",
+	MO: "west_north_central",
+	NE: "west_north_central",
+	ND: "west_north_central",
 	SD: "west_north_central",
-	DE: "south_atlantic", DC: "south_atlantic", FL: "south_atlantic",
-	GA: "south_atlantic", MD: "south_atlantic", NC: "south_atlantic",
-	SC: "south_atlantic", VA: "south_atlantic", WV: "south_atlantic",
-	AL: "east_south_central", KY: "east_south_central", MS: "east_south_central",
+	DE: "south_atlantic",
+	DC: "south_atlantic",
+	FL: "south_atlantic",
+	GA: "south_atlantic",
+	MD: "south_atlantic",
+	NC: "south_atlantic",
+	SC: "south_atlantic",
+	VA: "south_atlantic",
+	WV: "south_atlantic",
+	AL: "east_south_central",
+	KY: "east_south_central",
+	MS: "east_south_central",
 	TN: "east_south_central",
-	AR: "west_south_central", LA: "west_south_central", OK: "west_south_central",
+	AR: "west_south_central",
+	LA: "west_south_central",
+	OK: "west_south_central",
 	TX: "west_south_central",
-	AZ: "mountain", CO: "mountain", ID: "mountain", MT: "mountain",
-	NV: "mountain", NM: "mountain", UT: "mountain", WY: "mountain",
-	AK: "pacific", CA: "pacific", HI: "pacific", OR: "pacific", WA: "pacific",
+	AZ: "mountain",
+	CO: "mountain",
+	ID: "mountain",
+	MT: "mountain",
+	NV: "mountain",
+	NM: "mountain",
+	UT: "mountain",
+	WY: "mountain",
+	AK: "pacific",
+	CA: "pacific",
+	HI: "pacific",
+	OR: "pacific",
+	WA: "pacific",
 };
 const DIVISION_NAMES: Record<string, string> = {
 	new_england: "New England",
@@ -334,8 +362,7 @@ const coverageCSS = [
 	...Object.entries(MSA_COLORS)
 		.filter(([code]) => entriesByCbsa.has(code))
 		.map(
-			([code, hex]) =>
-				`svg[data-layer="coverage"] .county[data-cbsa="${code}"] { fill: ${hex}; }`,
+			([code, hex]) => `svg[data-layer="coverage"] .county[data-cbsa="${code}"] { fill: ${hex}; }`,
 		),
 	...Object.entries(DIVISION_COLORS)
 		.filter(([key]) => entriesByDivision.has(key))
@@ -345,7 +372,9 @@ const coverageCSS = [
 		),
 ].join("\n");
 
-for (const f of (countyFeatures as any).features) {
+const countyFeatureCollection =
+	"features" in countyFeatures ? countyFeatures : { features: [countyFeatures] };
+for (const f of countyFeatureCollection.features) {
 	const fips = String(f.id);
 	const meta = countyById.get(fips);
 	const ents = entriesByCounty.get(fips) || [];
@@ -360,7 +389,7 @@ for (const f of (countyFeatures as any).features) {
 		cbsaType: meta?.cbsa_type ?? null,
 		rucc: meta?.rucc_code ?? null,
 		regions: regionByFips.get(fips) || [],
-		division: meta?.state ? STATE_TO_DIVISION[meta.state] ?? "" : "",
+		division: meta?.state ? (STATE_TO_DIVISION[meta.state] ?? "") : "",
 	});
 }
 
@@ -374,9 +403,9 @@ const regionOutlines: Array<{ key: string; d: string }> = [];
 for (const [regionKey, fipsList] of Object.entries(expandedRegionCounties)) {
 	const fipsSet = new Set(fipsList);
 	const regionMesh = mesh(
-		countiesTopo as any,
-		(countiesTopo as any).objects.counties,
-		(a: any, b: any) => fipsSet.has(String(a.id)) !== fipsSet.has(String(b.id)),
+		topo,
+		countiesObj,
+		(a, b) => fipsSet.has(String(a.id)) !== fipsSet.has(String(b.id)),
 	);
 	const d = path(regionMesh);
 	if (d) regionOutlines.push({ key: regionKey, d });
@@ -455,9 +484,7 @@ const namedRegionList = Object.entries(
 }));
 
 const regionNameMap: Record<string, string> = Object.fromEntries(
-	Object.entries(zoneDefs as Record<string, { name: string }>).map(
-		([key, v]) => [key, v.name],
-	),
+	Object.entries(zoneDefs as Record<string, { name: string }>).map(([key, v]) => [key, v.name]),
 );
 
 // FIPS → "County Name, ST" and CBSA → "Name" lookups for client-side tooltips.
@@ -475,12 +502,11 @@ const cbsaNameMap: Record<string, string> = Object.fromEntries(
 );
 
 // Sorted view + tag set for the listing PostFinder rendered below the atlas.
-const sortedForage = [...foragePosts]
-	.sort((a, b) => {
-		const diff = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
-		if (diff !== 0) return diff;
-		return a.data.title.localeCompare(b.data.title);
-	});
+const sortedForage = [...foragePosts].sort((a, b) => {
+	const diff = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+	if (diff !== 0) return diff;
+	return a.data.title.localeCompare(b.data.title);
+});
 const forageTagSlugs = new Set<string>(knownTags);
 for (const p of sortedForage) for (const t of p.data.tags) forageTagSlugs.add(tagSlug(t));
 const forageAllTags = [...forageTagSlugs].sort();
@@ -550,8 +576,7 @@ for (const e of entries) {
 	if (!chosen) continue;
 	entryLinkMap[e.slug] = chosen;
 	if (e.cbsa_code) {
-		if (!cbsaPostCounts.has(e.cbsa_code))
-			cbsaPostCounts.set(e.cbsa_code, new Map());
+		if (!cbsaPostCounts.has(e.cbsa_code)) cbsaPostCounts.set(e.cbsa_code, new Map());
 		const m = cbsaPostCounts.get(e.cbsa_code);
 		if (m) m.set(chosen.postSlug, (m.get(chosen.postSlug) ?? 0) + 1);
 	}

@@ -21,7 +21,7 @@ const postLikeSchema = ({ image }: { image: () => z.ZodType }) =>
 				src: image(),
 			})
 			.optional(),
-		visibility: z.enum(["published", "draft", "hide"]).default("published"),
+		visibility: z.enum(["published", "scheduled", "draft", "hide"]).default("published"),
 		ogImage: z.string().optional(),
 		tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
 		publishDate: z
@@ -62,9 +62,7 @@ const postLikeSchema = ({ image }: { image: () => z.ZodType }) =>
 				zones: z.array(z.string()).default([]),
 				division: z.string().optional(),
 				states: z.array(z.string()).default([]),
-				scope: z
-					.enum(["city_wide", "regional", "statewide", "hyperlocal"])
-					.optional(),
+				scope: z.enum(["city_wide", "regional", "statewide", "hyperlocal"]).optional(),
 				pattern: z.boolean().default(false),
 			})
 			.optional(),
@@ -85,9 +83,7 @@ const postLikeSchema = ({ image }: { image: () => z.ZodType }) =>
 					zones: z.array(z.string()).optional(),
 					division: z.string().optional(),
 					states: z.array(z.string()).optional(),
-					scope: z
-						.enum(["city_wide", "regional", "statewide", "hyperlocal"])
-						.optional(),
+					scope: z.enum(["city_wide", "regional", "statewide", "hyperlocal"]).optional(),
 					pattern: z.boolean().optional(),
 				}),
 			)

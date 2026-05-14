@@ -1,4 +1,4 @@
-import type { Root, Heading, Text } from "mdast";
+import type { Heading, Root, Text } from "mdast";
 import type { Plugin } from "unified";
 import type { VFile } from "vfile";
 

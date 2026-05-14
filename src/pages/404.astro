@@ -20,14 +20,21 @@ import PageLayout from "@/theme/layouts/PageLayout.astro";
 				window.location.replace("/forage-atlas/" + hash);
 				return;
 			}
-			// /posts/q/{segments}/ → /?p={segments}  (other tag queries land on main blog)
-			var qPrefix = "/posts/q/";
-			if (path.indexOf(qPrefix) === 0) {
-				var rest = path.slice(qPrefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
+			// Tag-query slash prefixes per collection. Each maps to its blog's
+			// PostFinder page; the segments after the prefix go into ?p=, parsed
+			// by post-finder.ts as the postfix tagfs grammar.
+			var QUERY_PREFIXES = [
+				{ prefix: "/posts/q/", target: "/" },
+				{ prefix: "/forage/q/", target: "/forage-atlas/" },
+			];
+			for (var i = 0; i < QUERY_PREFIXES.length; i++) {
+				var qp = QUERY_PREFIXES[i];
+				if (path.indexOf(qp.prefix) !== 0) continue;
+				var rest = path.slice(qp.prefix.length).replace(/^\/+/, "").replace(/\/+$/, "");
 				if (rest) {
-					window.location.replace("/?p=" + encodeURIComponent(rest) + hash);
+					window.location.replace(qp.target + "?p=" + encodeURIComponent(rest) + hash);
 				} else {
-					window.location.replace("/" + search + hash);
+					window.location.replace(qp.target + search + hash);
 				}
 				return;
 			}

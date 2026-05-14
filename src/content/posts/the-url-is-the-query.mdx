@@ -1,0 +1,80 @@
+---
+title: "The URL Is the Query"
+description: "The home page's tag query box accepts a postfix DSL. The URL accepts the same DSL. Same grammar, different surface."
+publishDate: "2026-05-13T19:30:00-05:00"
+tags: ["tools", "patterns"]
+marginalia: "The tag query box is a postfix DSL. The URL is the same DSL on a different surface. Reuse one grammar twice. Borrow it from a filesystem when you can."
+visibility: draft
+---
+
+The home page has a tag query box. It accepts:
+
+- `#food` for posts tagged `food`.
+- `#food #cocktail` for posts in both.
+- `#food|#cocktail` for posts in either.
+- `-#draft` for not.
+- `food` (no `#`) for substring search across title and excerpt.
+
+The URL accepts the same query. Two equivalent forms reach the same filter:
+
+- `/?p=food/cocktail/and`
+- `/posts/q/food/cocktail/and/`
+
+Both render the home page with `food AND cocktail` applied. The second form 404s on the server, then a tiny script on the 404 page rewrites it to the first form. The static build never has to enumerate tag URLs.
+
+## The URL forms
+
+The query box mirrors the parsed expression to the `?p=` parameter as you type:
+
+```
+input: "#food #cocktail|#beer -#draft"
+URL:   ?p=food/cocktail/beer/or/and/draft/not/and
+```
+
+`?p=` is the canonical form, parsed directly by the home page. `/posts/q/...` is the alias form: a 404 fallback redirects it to `?p=`. Both reach the same place. Bookmark either.
+
+The Modern Forage atlas uses the same machinery under its own prefix:
+
+- `/forage-atlas/?p=immigrant-community-locked`
+- `/forage/q/immigrant-community-locked/`
+
+Same grammar, different collection. One PostFinder component renders both pages; the 404 fallback handles per-collection prefix routing.
+
+## Postfix versus infix is a portability tradeoff
+
+The DSL is postfix. The query `food cocktail and draft not and` reads as:
+
+1. push `food`
+2. push `cocktail`
+3. AND (pop both, push intersection)
+4. push `draft`
+5. NOT (pop one, push complement)
+6. AND (pop both, push intersection)
+
+Result: posts tagged both `food` and `cocktail` and not `draft`. Same shape as Forth or PostScript, scoped to set algebra on a finite tag universe.
+
+The honest comparison: infix is what humans write. `(food AND cocktail) AND NOT draft` reads as natural-language English with markers. Postfix requires building a stack in your head. The interface tradeoff favors infix.
+
+What postfix buys back is *composition surface*. Two properties, in order of how much they matter here:
+
+**URI-valid composition with no escaping.** Parentheses need percent-encoding in URLs. `?p=(food%20AND%20cocktail)%20AND%20NOT%20draft` versus `?p=food/cocktail/and/draft/not/and`. The second reads like a path because it is one. Every operator sits on a directory boundary. No reserved characters, no escaping, no precedence-by-position. The URL is short, readable, copies cleanly into a chat window, and survives every URL handler in the world. Infix would force one of: an opinionated precedence (the parser hides ambiguity from the user), or parens (which means escaping, which means ugly URLs for anything compound).
+
+**No precedence to memorize.** `a AND b OR c` has two reasonable meanings in infix. Postfix has one, by construction. The grammar collapses operator precedence into the order of tokens. A reader who can count the stack can read every expression.
+
+## At this scale, mostly the URI-validity part
+
+Postfix at the *interface* layer probably does not pay for itself on a personal blog. A site with twenty tags and a visible Browse disclosure does not actually need a query language. A tag picker, a substring search, and a flat "all posts tagged X" listing would cover almost every visit. Three-tag compounds with NOT in the middle is not a regular shape of query for a blog reader.
+
+The URI-valid part is the one that pays, even at this size. Every filter the box can express has a URL. The URL is short, has no quoting, no parentheses, no encoded characters. Copy it, paste it anywhere, share it raw. The cost of the postfix evaluator is 80 lines of dependency-free TypeScript. The cost of an infix evaluator that also produced clean URLs would be more code and a stricter grammar, and probably parentheses or precedence on the user side anyway.
+
+## The grammar is borrowed
+
+This grammar is not invented for the site. It is the URL grammar of [tagfs](https://github.com/benjaminabbitt/tagfs), my cross-platform FUSE/WinFsp filesystem that mounts tags as directories. In tagfs you `cd /food/cocktail/and/` and the contents are the intersection. The same path is a valid query on this site, modulo the `/posts/q/` prefix.
+
+The reuse is the second reason postfix wins here. Both implementations are mine, so the contract stays in sync by fiat: I wrote the spec, I implement both sides. The Rust side does much more (file operations, soft delete, two-phase commits); the grammar is the only thing both have to agree on, and the spec is one paragraph.
+
+## The point
+
+Pick a notation by its interface for the common case, then check whether one property of the alternative still pays for itself. Infix wins the interface. Postfix wins URI portability. The query box translates between them so the interface stays infix-ish and the URL stays postfix-clean.
+
+That property is small. It is also load-bearing on a static site where the URL is the only piece of state the server cares about.

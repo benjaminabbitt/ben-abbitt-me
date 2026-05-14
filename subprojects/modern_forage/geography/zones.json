@@ -1,316 +1,230 @@
 {
- "upper_peninsula_michigan": {
-  "name": "Upper Peninsula",
-  "counties": [
-   "26003",
-   "26013",
-   "26033",
-   "26041",
-   "26043",
-   "26053",
-   "26061",
-   "26071",
-   "26083",
-   "26095",
-   "26097",
-   "26103",
-   "26109",
-   "26131",
-   "26153"
-  ],
-  "description": "UP Michigan, including pasty corridor, Finnish foodways, Cornish mining heritage"
- },
- "illinois_valley": {
-  "name": "Illinois Valley",
-  "counties": [
-   "17099",
-   "17175",
-   "17103",
-   "17091",
-   "17063",
-   "17155"
-  ],
-  "description": "LaSalle / Peru / Ottawa / Mendota corridor, Beef Roll diffusion zone"
- },
- "northern_illinois_outside_chicago": {
-  "name": "Northern Illinois (Outside Chicago)",
-  "counties": [
-   "17089",
-   "17097",
-   "17037",
-   "17141",
-   "17103",
-   "17099",
-   "17175",
-   "17091",
-   "17063"
-  ],
-  "description": "I-39 / I-80 corridor with college-town (DeKalb) + Illinois Valley pizzeria network",
-  "exclude_cbsas": ["16980"]
- },
- "iron_range_minnesota": {
-  "name": "Iron Range",
-  "counties": [
-   "27017",
-   "27075",
-   "27137",
-   "27061",
-   "27031",
-   "27007"
-  ],
-  "description": "Mesabi/Vermilion iron ranges, porketta and booyah belt"
- },
- "great_plains_german_russian": {
-  "name": "German-Russian Great Plains",
-  "counties": [
-   "38001",
-   "38003",
-   "38005",
-   "38007",
-   "38009",
-   "38011",
-   "38013",
-   "38015",
-   "38017",
-   "38019",
-   "38021",
-   "38023",
-   "38025",
-   "38027",
-   "38029",
-   "38031",
-   "38033",
-   "38035",
-   "38037",
-   "38039",
-   "38041",
-   "38043",
-   "38045",
-   "38047",
-   "38049",
-   "38051",
-   "38053",
-   "38055",
-   "38057",
-   "38059",
-   "38061",
-   "38063",
-   "38065",
-   "38067",
-   "38069",
-   "38071",
-   "38073",
-   "38075",
-   "38077",
-   "38079",
-   "38081",
-   "38083",
-   "38085",
-   "38087",
-   "38089",
-   "38091",
-   "38093",
-   "38095",
-   "38097",
-   "38099",
-   "38101",
-   "38103",
-   "38105",
-   "46003",
-   "46005",
-   "46007",
-   "46009",
-   "46011",
-   "46013",
-   "46015",
-   "46017",
-   "46019",
-   "46021",
-   "46023",
-   "46025",
-   "46027",
-   "46029",
-   "46031",
-   "46033",
-   "46035",
-   "46037",
-   "46039",
-   "46041",
-   "46043",
-   "46045",
-   "46047",
-   "46049",
-   "46051",
-   "46053",
-   "46055",
-   "46057",
-   "46059",
-   "46061",
-   "31001",
-   "31003",
-   "31005",
-   "31007",
-   "31009",
-   "31011",
-   "31013",
-   "31015",
-   "31017",
-   "31019",
-   "31021",
-   "31023",
-   "31025",
-   "31027",
-   "31029",
-   "31031",
-   "31033",
-   "31035",
-   "31037",
-   "31039",
-   "31041",
-   "31043",
-   "31045",
-   "31047",
-   "31049"
-  ],
-  "description": "Volga-German / Russian-German immigrant belt across ND, SD, NE"
- },
- "cornish_mining_corridor": {
-  "name": "Cornish Mining Corridor",
-  "counties": [
-   "26061",
-   "26103",
-   "26083",
-   "30093",
-   "06057",
-   "55051",
-   "07007",
-   "04003"
-  ],
-  "description": "Cornish \"Cousin Jack\" mining communities: UP MI, Butte MT, Grass Valley CA, Mineral Point WI, Globe-Miami AZ, Bisbee AZ"
- },
- "basque_corridor": {
-  "name": "Basque-American Corridor",
-  "counties": [
-   "16001",
-   "16027",
-   "32031",
-   "32007",
-   "06029"
-  ],
-  "description": "Idaho-Nevada-California Basque sheepherder boarding-house tradition"
- },
- "pa_dutch_country": {
-  "name": "Pennsylvania Dutch Country",
-  "counties": [
-   "42071",
-   "42075",
-   "42029",
-   "42041",
-   "42043",
-   "42133"
-  ],
-  "description": "PA Dutch / Plain communities, shoofly pie, Lebanon bologna"
- },
- "mississippi_delta": {
-  "name": "Mississippi Delta",
-  "counties": [
-   "28011",
-   "28021",
-   "28027",
-   "28051",
-   "28055",
-   "28063",
-   "28083",
-   "28133",
-   "28135",
-   "28151"
-  ],
-  "description": "Hot tamales, koolickles; Delta Black + Italian-American food culture"
- },
- "mining_pasty_corridor": {
-  "name": "Mining Pasty Corridor (Cornish)",
-  "counties": [
-   "26061",
-   "26103",
-   "26083",
-   "30093",
-   "06057",
-   "55051",
-   "04007",
-   "04003"
-  ],
-  "description": "Pasty distribution: UP MI, Butte MT, Grass Valley CA, Mineral Point WI, Globe-Miami AZ, Bisbee AZ"
- },
- "upstate_ny_central": {
-  "name": "Upstate NY Central",
-  "counties": [
-   "36065",
-   "36053",
-   "36043",
-   "36055",
-   "36067",
-   "36007",
-   "36055"
-  ],
-  "description": "Utica chicken riggies, Rochester garbage plate, Syracuse salt potatoes, Binghamton spiedies"
- },
- "western_pa_eastern_oh": {
-  "name": "Western PA / Eastern OH (Steel Belt)",
-  "counties": [
-   "42003",
-   "42007",
-   "42129",
-   "42125",
-   "42051",
-   "42019",
-   "42039",
-   "39085",
-   "39093",
-   "39153"
-  ],
-  "description": "Pittsburgh + Youngstown + Cleveland steel-and-coke German/Slavic food belt"
- },
- "appalachian_southern_ohio": {
-  "name": "Appalachian Southern Ohio",
-  "counties": [
-   "39009",
-   "39071",
-   "39163",
-   "39079",
-   "39105"
-  ],
-  "description": "Paw paw belt and Appalachian Ohio food traditions"
- },
- "pacific_northwest": {
-  "name": "Pacific Northwest",
-  "counties": [
-   "53033",
-   "53053",
-   "53061",
-   "41051",
-   "41005",
-   "41067"
-  ],
-  "description": "Seattle-Portland-Vancouver corridor, salmon candy / teriyaki / jojos"
- },
- "lowcountry_sc": {
-  "name": "Lowcountry South Carolina",
-  "counties": [
-   "45019",
-   "45013",
-   "45035",
-   "45049"
-  ],
-  "description": "Charleston/Beaufort/St. Helena, frogmore stew / shrimp boil / Gullah-Geechee"
- },
- "rio_grande_valley": {
-  "name": "Rio Grande Valley",
-  "counties": [
-   "48215",
-   "48061",
-   "48427",
-   "48489"
-  ],
-  "description": "South Texas border valley (Hidalgo, Cameron, Starr, Willacy); botana platter, Tex-Mex foodways across the McAllen and Brownsville-Harlingen MSAs plus the Rio Grande City and Raymondville μSAs"
- }
+	"upper_peninsula_michigan": {
+		"name": "Upper Peninsula",
+		"counties": [
+			"26003",
+			"26013",
+			"26033",
+			"26041",
+			"26043",
+			"26053",
+			"26061",
+			"26071",
+			"26083",
+			"26095",
+			"26097",
+			"26103",
+			"26109",
+			"26131",
+			"26153"
+		],
+		"description": "UP Michigan, including pasty corridor, Finnish foodways, Cornish mining heritage"
+	},
+	"illinois_valley": {
+		"name": "Illinois Valley",
+		"counties": ["17099", "17175", "17103", "17091", "17063", "17155"],
+		"description": "LaSalle / Peru / Ottawa / Mendota corridor, Beef Roll diffusion zone"
+	},
+	"northern_illinois_outside_chicago": {
+		"name": "Northern Illinois (Outside Chicago)",
+		"counties": ["17089", "17097", "17037", "17141", "17103", "17099", "17175", "17091", "17063"],
+		"description": "I-39 / I-80 corridor with college-town (DeKalb) + Illinois Valley pizzeria network",
+		"exclude_cbsas": ["16980"]
+	},
+	"iron_range_minnesota": {
+		"name": "Iron Range",
+		"counties": ["27017", "27075", "27137", "27061", "27031", "27007"],
+		"description": "Mesabi/Vermilion iron ranges, porketta and booyah belt"
+	},
+	"great_plains_german_russian": {
+		"name": "German-Russian Great Plains",
+		"counties": [
+			"38001",
+			"38003",
+			"38005",
+			"38007",
+			"38009",
+			"38011",
+			"38013",
+			"38015",
+			"38017",
+			"38019",
+			"38021",
+			"38023",
+			"38025",
+			"38027",
+			"38029",
+			"38031",
+			"38033",
+			"38035",
+			"38037",
+			"38039",
+			"38041",
+			"38043",
+			"38045",
+			"38047",
+			"38049",
+			"38051",
+			"38053",
+			"38055",
+			"38057",
+			"38059",
+			"38061",
+			"38063",
+			"38065",
+			"38067",
+			"38069",
+			"38071",
+			"38073",
+			"38075",
+			"38077",
+			"38079",
+			"38081",
+			"38083",
+			"38085",
+			"38087",
+			"38089",
+			"38091",
+			"38093",
+			"38095",
+			"38097",
+			"38099",
+			"38101",
+			"38103",
+			"38105",
+			"46003",
+			"46005",
+			"46007",
+			"46009",
+			"46011",
+			"46013",
+			"46015",
+			"46017",
+			"46019",
+			"46021",
+			"46023",
+			"46025",
+			"46027",
+			"46029",
+			"46031",
+			"46033",
+			"46035",
+			"46037",
+			"46039",
+			"46041",
+			"46043",
+			"46045",
+			"46047",
+			"46049",
+			"46051",
+			"46053",
+			"46055",
+			"46057",
+			"46059",
+			"46061",
+			"31001",
+			"31003",
+			"31005",
+			"31007",
+			"31009",
+			"31011",
+			"31013",
+			"31015",
+			"31017",
+			"31019",
+			"31021",
+			"31023",
+			"31025",
+			"31027",
+			"31029",
+			"31031",
+			"31033",
+			"31035",
+			"31037",
+			"31039",
+			"31041",
+			"31043",
+			"31045",
+			"31047",
+			"31049"
+		],
+		"description": "Volga-German / Russian-German immigrant belt across ND, SD, NE"
+	},
+	"cornish_mining_corridor": {
+		"name": "Cornish Mining Corridor",
+		"counties": ["26061", "26103", "26083", "30093", "06057", "55051", "07007", "04003"],
+		"description": "Cornish \"Cousin Jack\" mining communities: UP MI, Butte MT, Grass Valley CA, Mineral Point WI, Globe-Miami AZ, Bisbee AZ"
+	},
+	"basque_corridor": {
+		"name": "Basque-American Corridor",
+		"counties": ["16001", "16027", "32031", "32007", "06029"],
+		"description": "Idaho-Nevada-California Basque sheepherder boarding-house tradition"
+	},
+	"pa_dutch_country": {
+		"name": "Pennsylvania Dutch Country",
+		"counties": ["42071", "42075", "42029", "42041", "42043", "42133"],
+		"description": "PA Dutch / Plain communities, shoofly pie, Lebanon bologna"
+	},
+	"mississippi_delta": {
+		"name": "Mississippi Delta",
+		"counties": [
+			"28011",
+			"28021",
+			"28027",
+			"28051",
+			"28055",
+			"28063",
+			"28083",
+			"28133",
+			"28135",
+			"28151"
+		],
+		"description": "Hot tamales, koolickles; Delta Black + Italian-American food culture"
+	},
+	"mining_pasty_corridor": {
+		"name": "Mining Pasty Corridor (Cornish)",
+		"counties": ["26061", "26103", "26083", "30093", "06057", "55051", "04007", "04003"],
+		"description": "Pasty distribution: UP MI, Butte MT, Grass Valley CA, Mineral Point WI, Globe-Miami AZ, Bisbee AZ"
+	},
+	"upstate_ny_central": {
+		"name": "Upstate NY Central",
+		"counties": ["36065", "36053", "36043", "36055", "36067", "36007", "36055"],
+		"description": "Utica chicken riggies, Rochester garbage plate, Syracuse salt potatoes, Binghamton spiedies"
+	},
+	"western_pa_eastern_oh": {
+		"name": "Western PA / Eastern OH (Steel Belt)",
+		"counties": [
+			"42003",
+			"42007",
+			"42129",
+			"42125",
+			"42051",
+			"42019",
+			"42039",
+			"39085",
+			"39093",
+			"39153"
+		],
+		"description": "Pittsburgh + Youngstown + Cleveland steel-and-coke German/Slavic food belt"
+	},
+	"appalachian_southern_ohio": {
+		"name": "Appalachian Southern Ohio",
+		"counties": ["39009", "39071", "39163", "39079", "39105"],
+		"description": "Paw paw belt and Appalachian Ohio food traditions"
+	},
+	"pacific_northwest": {
+		"name": "Pacific Northwest",
+		"counties": ["53033", "53053", "53061", "41051", "41005", "41067"],
+		"description": "Seattle-Portland-Vancouver corridor, salmon candy / teriyaki / jojos"
+	},
+	"lowcountry_sc": {
+		"name": "Lowcountry South Carolina",
+		"counties": ["45019", "45013", "45035", "45049"],
+		"description": "Charleston/Beaufort/St. Helena, frogmore stew / shrimp boil / Gullah-Geechee"
+	},
+	"rio_grande_valley": {
+		"name": "Rio Grande Valley",
+		"counties": ["48215", "48061", "48427", "48489"],
+		"description": "South Texas border valley (Hidalgo, Cameron, Starr, Willacy); botana platter, Tex-Mex foodways across the McAllen and Brownsville-Harlingen MSAs plus the Rio Grande City and Raymondville μSAs"
+	}
 }

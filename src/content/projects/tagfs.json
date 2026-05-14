@@ -1,0 +1,14 @@
+{
+	"id": "tagfs",
+	"name": "tagfs",
+	"createdAt": "2025-08-28",
+	"status": "active",
+	"tagline": "Tag-based virtual filesystem with a postfix query language.",
+	"blurb": "Cross-platform FUSE/WinFsp filesystem that mounts tags as directories. AND/OR/NOT compose by walking deeper into operator subdirectories; the same postfix grammar drives the tag query box on this site.",
+	"stack": ["Rust", "FUSE", "WinFsp"],
+	"site": null,
+	"github": "https://github.com/benjaminabbitt/tagfs",
+	"extras": [],
+	"note": "The query grammar lives in src/lib/tagfs/ here, ported from the Rust implementation, so the URL syntax stays compatible.",
+	"order": 6
+}

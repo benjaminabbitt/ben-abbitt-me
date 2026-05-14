@@ -5,10 +5,27 @@
  */
 
 const WORDS = [
-	"zero", "one", "two", "three", "four", "five",
-	"six", "seven", "eight", "nine", "ten",
-	"eleven", "twelve", "thirteen", "fourteen", "fifteen",
-	"sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+	"zero",
+	"one",
+	"two",
+	"three",
+	"four",
+	"five",
+	"six",
+	"seven",
+	"eight",
+	"nine",
+	"ten",
+	"eleven",
+	"twelve",
+	"thirteen",
+	"fourteen",
+	"fifteen",
+	"sixteen",
+	"seventeen",
+	"eighteen",
+	"nineteen",
+	"twenty",
 ];
 
 /**
@@ -52,16 +69,15 @@ export function countDishesInBody(body: string | undefined | null): number {
  */
 export function renderExcerpt(
 	data: {
-		excerpt?: string;
-		excerptTemplate?: string;
-		description?: string;
-		dishCount?: number;
+		excerpt?: string | undefined;
+		excerptTemplate?: string | undefined;
+		description?: string | undefined;
+		dishCount?: number | undefined;
 	},
 	body?: string | null,
 ): string | undefined {
 	if (data.excerptTemplate) {
-		const count =
-			typeof data.dishCount === "number" ? data.dishCount : countDishesInBody(body);
+		const count = typeof data.dishCount === "number" ? data.dishCount : countDishesInBody(body);
 		return data.excerptTemplate
 			.replace(/\{count\}/g, spellCount(count))
 			.replace(/\{Count\}/g, spellCount(count, true));

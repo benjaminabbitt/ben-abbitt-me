@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
@@ -46,12 +46,11 @@ function findDraftSitemapUrls(): Set<string> {
 	return urls;
 }
 const normalizeUrl = (u: string) => u.replace(/\/$/, "");
-const draftSitemapPaths = new Set(
-	[...findDraftSitemapUrls()].map(normalizeUrl),
-);
+const draftSitemapPaths = new Set([...findDraftSitemapUrls()].map(normalizeUrl));
 
 export default defineConfig({
 	site: siteConfig.url,
+	devToolbar: { enabled: false },
 	integrations: [
 		mdx(),
 		sitemap({ filter: (page) => !draftSitemapPaths.has(normalizeUrl(page)) }),

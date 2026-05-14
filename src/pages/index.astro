@@ -5,7 +5,10 @@ import PageLayout from "@/theme/layouts/PageLayout.astro";
 import { knownTags } from "@/theme/lib/knownTags";
 import { tagSlug } from "@/theme/lib/tags";
 
-const all = await getCollection("posts", ({ data }) => data.visibility === "published");
+const all = await getCollection(
+	"posts",
+	({ data }) => data.visibility === "published" || data.visibility === "scheduled",
+);
 const sorted = [...all].sort((a, b) => {
 	const diff = b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
 	if (diff !== 0) return diff;
@@ -50,7 +53,7 @@ const interests = [
 				>social dynamics</a
 			>, and
 			<a href="/?p=culture" class="tagline-link">culture</a>. Notes from
-			Ben Abbitt.
+			<a href="/resume/" class="tagline-link">Ben Abbitt</a>.
 		</p>
 		<p class="font-serif-body text-[15px] text-fg-dim mt-4 italic">
 			<span
