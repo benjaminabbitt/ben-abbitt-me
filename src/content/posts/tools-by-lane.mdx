@@ -1,0 +1,148 @@
+---
+title: "Tools by Lane"
+description: "Each tool has a shape that fits a specific job. Resist using one tool for everything. The stack I reach for, with the lane each pick stays inside."
+publishDate: "2026-05-27T17:00:00-05:00"
+tags: ["tools", "patterns", "software-architecture"]
+marginalia: "Tools have lanes. Each category has a default. Pick by what the tool is shaped to do, not by habit or brand loyalty."
+visibility: scheduled
+---
+
+Most tool decisions go better when you pick by shape, not by familiarity. A tool that is good at X is usually good at X because it gave up on Y. The temptation is to pick the tool you already know and stretch it to cover everything in front of you. That stretch is where mismatched abstractions, escape hatches, and "we wrote a custom plugin for this" come from.
+
+Here is the stack I reach for and the lane I keep each pick inside.
+
+## Database Access: SQL, with Types Generated from It
+
+ORMs hide the language built for the data. SQL is the DSL for relations. The right move is to keep SQL as the source of truth and generate host-language types from it. [I wrote that argument in full here](/posts/sql-is-the-dsl/).
+
+Short version: tools shaped like [sqlc](https://sqlc.dev/), [jOOQ](https://www.jooq.org/), [Jet](https://github.com/go-jet/jet), [Diesel](https://diesel.rs/), SQLAlchemy Core, and [Ecto](https://hexdocs.pm/ecto/) stay close to SQL semantics and let the database own the schema. Tools shaped like Hibernate, Active Record, and Entity Framework try to own both and lose at least one of expressivity, type safety, or debuggability somewhere along the way.
+
+If you remember one thing from that post: **generate code from SQL, not SQL from code**.
+
+## Command Runners: just, Falling Back to Make
+
+[just](https://github.com/casey/just) is the default. Make is the fallback for environments where you cannot install another tool.
+
+What just gets right that Make does not:
+
+- Recipe arguments without macro acrobatics. `just deploy staging` passes `staging` to the recipe; no `MAKECMDGOALS` hacks.
+- Shell variables work the way the shell expects. `$(hostname)` is `$(hostname)`, not `$$(hostname)`.
+- No phantom file targets. `just test` is a recipe, full stop. No `.PHONY: test` ceremony.
+- Cross-platform without the BSD-make / GNU-make split. A justfile that works on Linux works on macOS works on Windows.
+- Useful error messages when a recipe fails.
+- A real module system. `mod examples "examples/justfile"` composes cleanly. Make's `include` does the wrong thing more often than the right thing.
+
+Make is still defensible in two situations: CI images where you cannot install another binary, and projects with a thirty-year history where every contributor already has a Makefile reflex. Outside those, just is the better tool for the same job.
+
+The [container overlay pattern](/posts/makefile-container-overlay-pattern/) works in either, but it works more cleanly in just because recipe arguments and modules compose without `$$`-escaping every other character.
+
+## Container Runtime: Docker Engine, No Desktop
+
+The runtime under the dev container is Docker Engine. Not Docker Desktop.
+
+On Linux, install Docker Engine from your distro's packages. That is the whole step. The daemon runs, `docker` works, you move on. Desktop adds a VM, a UI, and a license-tracking layer over the same engine; on Linux it is pure overhead.
+
+On macOS, the realistic options are [Colima](https://github.com/abiosoft/colima), [Lima](https://lima-vm.io/), or [OrbStack](https://orbstack.dev/). All run a small VM with Docker Engine inside; the local `docker` CLI talks to it the same way it would on Linux. OrbStack is the fastest and most polished. Colima is the most boring. Both are licensed in ways that suit individual developers and small teams better than Desktop does.
+
+The reason to avoid Desktop is straightforward: it [requires a paid subscription](https://docs.docker.com/subscription/desktop-license/) for any organization with more than 250 employees or more than $10M in annual revenue, the VM layer is heavier than the alternatives, and it pulls a tray icon and an update prompt into a workflow that does not benefit from either.
+
+If you want rootless containers, [rootless Docker](https://docs.docker.com/engine/security/rootless/) works fine. The daemon runs as your user, the socket lives in `$XDG_RUNTIME_DIR/docker.sock`, and `docker` behaves the way it does in the rootful case. Rootless was the headline reason to try Podman in the first place; it turns out Docker Engine already does it.
+
+### Podman: Tried, Set Aside
+
+[Podman](https://podman.io/) is the obvious-looking alternative. Daemonless, rootless by default, drop-in `docker`-compatible CLI, native Pods primitive, OCI through and through. On paper it is what you want.
+
+I ran with it through April 2026 on [angzarr](https://github.com/angzarr-io/angzarr) and went back to Docker. The drop-in compatibility is real until it isn't. Volume mount semantics under SELinux, networking under rootless, compose-tool divergence (`podman-compose` versus the `docker-compose` syntax existing files were written against), and the macOS machine bridge each had enough rough edges that the time saved on licensing was spent on workarounds.
+
+[Skaffold](https://skaffold.dev/) was the load-bearing problem. Skaffold drives the build-push-deploy inner loop against a local cluster, and Podman is not a first-class runtime: the [feature request for a Podman builder is still open](https://github.com/GoogleContainerTools/skaffold/issues/8430), the Docker socket location is assumed to be `/var/run/docker.sock` and breaks when it is not ([#7078](https://github.com/GoogleContainerTools/skaffold/issues/7078)), and the push step fails against Podman-backed local clusters with errors that the image does not exist locally despite a successful build and tag ([#6518](https://github.com/GoogleContainerTools/skaffold/issues/6518)). When Skaffold is the tool that has to work, the runtime has to be the one Skaffold expects.
+
+The conclusion is not that Podman is bad. It is that Podman is not yet a zero-friction Docker replacement for a workflow that already runs cleanly on Docker, and the gap is largest where another tool in the stack assumes the Docker daemon. Revisiting is on the list. Until the rough edges close, the lane is Docker Engine.
+
+## Dev Containers: Default On
+
+If a new contributor has to install a specific version of Node, a specific version of Postgres, a specific version of protoc, and three CLI tools before they can run the tests, the project has a reproducibility problem.
+
+Runtime managers solve part of this at the language level. [nvm](https://github.com/nvm-sh/nvm) pins Node per shell. [pyenv](https://github.com/pyenv/pyenv) and [uv](https://github.com/astral-sh/uv) handle Python; uv is the nicest of the bunch right now, fast enough that the install-and-resolve step that used to be a tea break is now instant. [rustup](https://rustup.rs/) handles Rust. [asdf](https://asdf-vm.com/) and [mise](https://mise.jdx.dev/) handle anything with a plugin. Pinned, declarative, reproducible for the language runtime.
+
+That is the part of the problem they solve. What they do not cover is the OS surface, the system libraries the runtime links against, the Postgres or Redis the project needs running, or the protoc / buf / grpcurl tooling that orbits a typical service. Dev containers take the same idea up the stack to the whole development environment.
+
+A dev container is the development equivalent of the CI image. Same toolchain, same versions, same OS surface, on every developer's machine. The friction of "works on my laptop" disappears because the laptop runs the container, not the toolchain.
+
+Concretely:
+
+- `.devcontainer/devcontainer.json` declares the image, the mounted volumes, the forwarded ports, and the extensions to install.
+- The image is built from a Dockerfile or pulled by digest. [Never `:latest`](/posts/container-versioning-no-latest/); the version is pinned and rebuildable.
+- VS Code, Cursor, JetBrains Gateway, and `devcontainer up` from the CLI all consume the same spec. The container is portable across IDEs.
+
+Pair the container with [direnv](/posts/direnv-polyglot-poly-project/) for per-project secrets, and the contract becomes: clone the repo, open the dev container, `direnv allow`, work. Onboarding goes from a page of setup steps to four lines.
+
+The [justfile container-mount pattern](/posts/makefile-container-overlay-pattern/) makes the dev container reusable from outside an editor. Run `just test` on the host and the recipe routes through the container. CI engines that can mount a workspace into an image (most modern ones) get the same reproducibility for free. The dev container stops being only an "open this in VS Code" affordance and becomes the runnable substrate the whole project uses, from the laptop to the pipeline.
+
+The lane is "make the toolchain reproducible." Dev containers are good at that and bad at being a substitute for production runtime, which is a different problem with different tools.
+
+## Languages by Lane
+
+Three default languages, three lanes.
+
+### Rust: Systems, Performance, Embedded
+
+Reach for Rust when:
+
+- The code is in a hot path where allocation matters.
+- The binary needs to run on a microcontroller with no allocator.
+- The code holds invariants the type system can prove (lifetimes, ownership, sized buffers).
+- Memory safety without a garbage collector is a hard requirement.
+
+Rust is good at this because the borrow checker enforces properties the other two languages cannot. The cost is compile times and learning curve. Pay the cost where ownership reasoning actually pays back. Do not pay it for a JSON-shuffling service that talks to a database.
+
+### Python: Tooling, Glue, AI
+
+Reach for Python when:
+
+- The job is a script, a data pipeline, or a one-off transformation.
+- The work is between two systems and the value is in the connectors, not the throughput.
+- The work involves an AI library, because every major one ships Python first and other languages second.
+- The REPL is the unit of iteration.
+
+Python is good at this because the standard library and the ecosystem are wide, the syntax is forgiving, and the type checker has caught up enough (pyright, mypy, ruff) that medium-sized codebases stay readable. The cost is performance and deployment complexity once the codebase gets big. Keep Python in the lane where iteration speed and library reach beat raw throughput.
+
+### Go: Business Logic
+
+Reach for Go when:
+
+- The code is a service that does ordinary work: receive requests, validate inputs, talk to a database, return responses.
+- The team needs the codebase to stay readable as it grows past one author.
+- The deployment target wants a static binary with a predictable runtime.
+- Concurrency lives at the goroutine-and-channel level, not the allocator level.
+
+Go is good at this because it is boring on purpose. The language committee actively resists features that would make a clever programmer look smart at the expense of the next reader. Six months later you can still read what your past self wrote. The cost is verbosity around generics, error handling, and anything that wants to be polymorphic. Pay that cost. It buys long-term readability that the alternatives charge more for.
+
+## The Lanes as a Table
+
+| Lane | Default |
+|------|---------|
+| Database access | sqlc / jOOQ / Diesel / Ecto over an ORM |
+| Command runner | just, fall back to Make |
+| Container runtime | Docker Engine; OrbStack or Colima on macOS; not Desktop, not Podman yet |
+| Reproducible dev env | Dev container plus direnv |
+| Systems / performance / embedded | Rust |
+| Tooling / glue / AI | Python |
+| Business logic | Go |
+
+Each row is a default, not an absolute. The point is that the default exists. When you start a new project, the first question is which lane the project is in. The second is whether anything about the project actually justifies leaving the lane.
+
+## The Counterargument: Polyglot Tax
+
+The honest pushback on a lane-based stack is that you end up running three languages, two build systems, and a database codegen step in a single repository. The cognitive surface grows with the count of tools.
+
+Two responses:
+
+**Cognitive surface from the right tools is cheaper than from the wrong tools.** A Python script that does a Python job is mentally cheaper than a Go service that does a Python job badly because someone wanted "one language for everything." The cost of the second tool is paid once, when you learn it. The cost of stretching one tool past its lane is paid every time someone reads the code.
+
+**Per-directory tooling absorbs most of the tax.** With direnv per project, a justfile per project, and a dev container as the wrapper, the polyglot footprint is contained at the workspace level. The contributor sees the tool the directory needs; the rest stays out of the way.
+
+## The Takeaway
+
+Pick tools by what they are shaped to do. Resist the pull to make one tool cover every lane. The "one tool everywhere" stack is comfortable for the author and expensive for everyone who reads the code later.
+
+Defaults are not laws. They are starting positions you should leave only when the project gives you a specific reason. Most projects do not.
