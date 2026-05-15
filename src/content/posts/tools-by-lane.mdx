@@ -1,7 +1,7 @@
 ---
 title: "Tools by Lane"
 description: "Each tool has a shape that fits a specific job. Resist using one tool for everything. The stack I reach for, with the lane each pick stays inside."
-publishDate: "2026-05-27T17:00:00-05:00"
+publishDate: "2026-05-15T13:49:03-05:00"
 tags: ["tools", "patterns", "software-architecture"]
 marginalia: "Tools have lanes. Each category has a default. Pick by what the tool is shaped to do, not by habit or brand loyalty."
 visibility: scheduled
@@ -52,7 +52,7 @@ If you want rootless containers, [rootless Docker](https://docs.docker.com/engin
 
 [Podman](https://podman.io/) is the obvious-looking alternative. Daemonless, rootless by default, drop-in `docker`-compatible CLI, native Pods primitive, OCI through and through. On paper it is what you want.
 
-I ran with it through April 2026 on [angzarr](https://github.com/angzarr-io/angzarr) and went back to Docker. The drop-in compatibility is real until it isn't. Volume mount semantics under SELinux, networking under rootless, compose-tool divergence (`podman-compose` versus the `docker-compose` syntax existing files were written against), and the macOS machine bridge each had enough rough edges that the time saved on licensing was spent on workarounds.
+I ran with it through April 2026 on [angzarr](https://angzarr.io) and went back to Docker. The drop-in compatibility is real until it isn't. Volume mount semantics under SELinux, networking under rootless, compose-tool divergence (`podman-compose` versus the `docker-compose` syntax existing files were written against), and the macOS machine bridge each had enough rough edges that the time saved on licensing was spent on workarounds.
 
 [Skaffold](https://skaffold.dev/) was the load-bearing problem. Skaffold drives the build-push-deploy inner loop against a local cluster, and Podman is not a first-class runtime: the [feature request for a Podman builder is still open](https://github.com/GoogleContainerTools/skaffold/issues/8430), the Docker socket location is assumed to be `/var/run/docker.sock` and breaks when it is not ([#7078](https://github.com/GoogleContainerTools/skaffold/issues/7078)), and the push step fails against Podman-backed local clusters with errors that the image does not exist locally despite a successful build and tag ([#6518](https://github.com/GoogleContainerTools/skaffold/issues/6518)). When Skaffold is the tool that has to work, the runtime has to be the one Skaffold expects.
 

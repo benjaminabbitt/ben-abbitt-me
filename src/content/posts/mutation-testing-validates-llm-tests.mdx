@@ -1,7 +1,7 @@
 ---
 title: "Mutation Testing: The Deterministic Arbiter of LLM-Generated Tests"
 description: "Passing tests aren't proof that tests are good. Mutation testing is a deterministic tool that validates whether your tests actually test anything."
-publishDate: "2026-03-18"
+publishDate: "2026-05-15T13:49:03-05:00"
 tags: ["llm", "testing", "workflow"]
 marginalia: "Passing tests aren't proof that tests are good. Mutation testing is the deterministic check on whether your LLM's tests actually test anything."
 ---
@@ -110,7 +110,7 @@ This is a deterministic checkpoint in a non-deterministic workflow. The LLM migh
 
 ## Practical Application
 
-Mutation testing works best when business logic is isolated from infrastructure. That's a core design principle of [Angzarr](/): aggregates, sagas, and projectors contain pure business logic with no database calls, no network I/O, no framework dependencies. The coordinator handles infrastructure; your code handles decisions.
+Mutation testing works best when business logic is isolated from infrastructure. That's a core design principle of [Angzarr](https://angzarr.io): aggregates, sagas, and projectors contain pure business logic with no database calls, no network I/O, no framework dependencies. The coordinator handles infrastructure; your code handles decisions.
 
 This isolation makes code easier to test—and easier to test *meaningfully*. When a function takes state and returns events, every branch is reachable without mocking. Mutation testing thrives in this environment.
 
