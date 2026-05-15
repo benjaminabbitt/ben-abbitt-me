@@ -1,0 +1,56 @@
+---
+title: "Is This a Standard?"
+description: "Claude built a custom ProtoDescriptorService for an Angzarr coordinator. gRPC Server Reflection has covered that ground for years and was already wired in the same project two milestones back. The fix was one question."
+publishDate: "2026-05-15T14:00:00-05:00"
+tags: ["llm", "software-architecture", "patterns", "workflow"]
+marginalia: "When an AI is about to write infrastructure, the cheapest review move is to ask whether the thing already has a name. If it does, you have almost certainly already wired it in once."
+visibility: draft
+---
+
+Today's incident, edited for length:
+
+> **Me:** is a proto descriptor service a standard that we should use?
+>
+> **Me:** if not, we should consider pulling it out. It feels like it should be.
+>
+> **Claude:** You're right. That's exactly what gRPC Server Reflection is for. `grpc.reflection.v1.ServerReflection` already exposes `ListServices`, `FileByFilename`, `FileContainingSymbol`, the canonical mechanism for "tell me what protos this server speaks." We wired reflection in P0.2 already; `ProtoDescriptorService` was reinventing it. Pulling it out.
+
+The thing being built was a service that returned proto descriptors so clients could discover what RPCs and message types a server exposes. That problem has had a canonical solution for years. The standard is gRPC Server Reflection. It is a real proto file shipped by every gRPC implementation, with a CLI ([`grpcurl`](https://github.com/fullstorydev/grpcurl)) and an admin UI ([`grpcui`](https://github.com/fullstorydev/grpcui)) that already speak it. In the same codebase, reflection had been wired into every coordinator two milestones earlier. The AI did not search for the standard, did not check the project's own earlier work, and produced a parallel custom service with overlapping semantics.
+
+This is a recurring shape. The cheapest review move when an AI is about to write infrastructure is to ask one sentence:
+
+> Is this a standard?
+
+If the answer is yes, the second question is almost always:
+
+> Did we already wire it in?
+
+The combination catches the bulk of AI-introduced reinventions. Server reflection, OpenTelemetry, JWT, OAuth 2.0 Device Authorization Grant, the JSON Schema metaschema, the Kubernetes AdmissionReview API, Conventional Commits parsing. These are the categories where an AI will happily reimplement what already exists if you do not interrupt.
+
+The reason the question works is that AIs are pattern matchers over their training corpus, not over your project. They have seen a thousand examples of "service that lists what a server does" and can produce another one. They have also seen `grpc.reflection.v1.ServerReflection` a thousand times, but the prompt was about your problem, not about the standard. The model picks the local construction it can write end-to-end over the standard it would have to look up. The way out is to make the standard explicit in the conversation: name the category, ask whether the category is solved.
+
+## The deeper failure
+
+The local-construction tendency is one half of this. The other half is that the AI did not check what was already in the project. Reflection was already on. Every [Angzarr](https://angzarr.io) coordinator boots with `grpc.reflection.v1.ServerReflection` registered, wired as a feature of the P0.2 milestone. `grpcurl localhost:9000 list` works against any of them today. The AI building `ProtoDescriptorService` had access to the codebase, the milestone notes, and the bootstrap code, and it still produced a parallel mechanism.
+
+This part is less about the model and more about how AI agents accumulate context across sessions. The model that wrote `ProtoDescriptorService` was not the model that wired reflection in P0.2. The first session ended, the second session started fresh, and the prior decision did not propagate. The project's own history is not, by default, in the working context of the next session.
+
+The mitigation that works is structural, not prompt-engineering. The project should make its standard-protocols decisions discoverable. Either as a short architectural-decisions file the AI reads on every session, or as a `make doctor` style command that the AI is taught to run, or, most reliably, as comments at the registration site:
+
+```go
+// reflection.Register: the canonical "what does this server speak"
+// mechanism. Do not add a parallel descriptor service; ask reflection.
+// Wired in P0.2.
+reflection.Register(grpcServer)
+```
+
+Load-bearing comments are the most reliable because they live in the file the AI is likely to touch. They do not depend on the AI remembering to consult an external document, and they show up next to the call that triggers the temptation to reinvent.
+
+## The shorter version
+
+When an AI volunteers to write infrastructure code, ask two questions in this order:
+
+1. Is this a standard?
+2. Did we already wire it in?
+
+You will be right more than half the time and the AI will admit it cheerfully. The cleanup is almost always smaller than the original write.
