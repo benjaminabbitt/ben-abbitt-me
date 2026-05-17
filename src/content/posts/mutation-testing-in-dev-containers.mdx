@@ -1,0 +1,64 @@
+---
+title: "Mutation Testing Belongs in a Dev Container"
+description: "Mutation tools rewrite your source, run your tests, then put it back. When they crash, the rewrites stay. Run them on a container's ephemeral layer and the cleanup is the container exiting."
+publishDate: "2026-05-17T11:00:00-05:00"
+tags: ["testing", "tools", "containers", "patterns"]
+marginalia: "Mutation tools edit your source on purpose. Make their scratch space ephemeral so when they crash, the crash takes the mess with it."
+visibility: draft
+---
+
+Mutation testing tools work by editing your source code on purpose: flip a `>` to a `>=`, change a `+` to a `-`, replace a return value, rerun the test suite, restore the original. The restoration step is what makes the technique survivable. When that step does not happen, you find out by looking at `git status` and seeing your own files modified in ways you did not write.
+
+The restore step does not happen when the tool is killed mid-mutation. SIGKILL from the OOM killer. A panic in the test harness. A `Ctrl-C` you sent because the run was taking too long. A flaky test that hung past the timeout and got the tool wedged. A power loss. In every case the mutated copy of `src/whatever.rs` is sitting in your working tree, the original lives only in the tool's scratch directory if you are lucky, and now your next `cargo test` is testing a broken version of the code you thought you were editing.
+
+This was a recurring annoyance in [Angzarr](https://angzarr.io). Across the seven client languages (Rust, Go, Python, Java, C#, C++, TypeScript) each language ships its own mutation tooling (`cargo-mutants`, `ooze`, `mutmut`, Pitest, Stryker.NET, a homegrown C++ harness, Stryker), and each one leaves its own flavor of mess when it dies mid-run. Cargo mutants drops a `mutants.out/` next to the manifest and, on a hard crash, the mutated source in place. Mutmut maintains a `.mutmut-cache` and, when interrupted, leaves the last mutation applied. Pitest scribbles into a `target/pit-reports/` and a backup directory of pre-mutation bytecode that is not always backed out cleanly. The specifics vary, the failure mode is the same: scratch state and mutated source end up on the developer's host filesystem and stay there.
+
+## The dev container is already ephemeral
+
+Dev containers solve the dependency side of mutation testing first. The Rust toolchain, `cargo-mutants`, the matching test framework, the right libc, all baked into an image. That is the table stakes use. The interesting property for this post is the second one: the writable layer of a running container is overlay storage that dies when the container does.
+
+If the mutation tool's scratch directory lives on that overlay layer instead of on a bind mount from the host, then a tool crash, a wedged test, or a `docker kill` produces the same outcome as a clean exit: the container goes away, the overlay goes with it, and the host filesystem is untouched. The cleanup is not a step you have to remember. It is a property of where the work happened.
+
+Concretely, in a justfile that delegates to a container:
+
+```bash
+just _container mutation-test
+```
+
+`_container` runs the recipe inside a fresh container with the source bind-mounted read-only and the scratch space pointed at a tmpfs or the container's own writable layer. The mutation tool reads from the bind mount and writes its mutated copies into the ephemeral layer. The tests run against the mutated copies. The kill-rate report is the one artifact you care about; it gets written to a small bind-mounted results directory or printed and captured. The mutated source never touches your tree.
+
+The DEVCONTAINER detection pattern from the [makefile container overlay post](/posts/makefile-container-overlay-pattern/) keeps the single entrypoint. Inside the container the `DEVCONTAINER=true` env var is set and `just mutation-test` runs the recipe directly. From the host the same command spins up a container and runs it there. The developer types the same thing in both places.
+
+## Why the host filesystem is the wrong place
+
+Mutation testing is unusual among build steps in that the *intended* behavior is to write broken source. A linter never wants to leave broken source. A formatter never wants to leave broken source. A compiler never wants to leave broken source. Mutation testing wants to leave broken source for the duration of one test run, and then put it back. That window is short but real, and the contract with the developer is "you will not notice this happened." The contract breaks the first time the tool dies inside the window.
+
+The bind mount makes the broken-source window observable to everything else on the host. Your editor's file watcher picks up the modification and re-lints. Your language server reindexes. Your test-on-save loop, if you have one, runs the mutated version. Your background `cargo check` rebuilds against it. None of that is wrong behavior from those tools. They are reacting correctly to a file that did, in fact, change on disk. The mutation tool just promised it would change back, and that promise is conditional on the tool not crashing.
+
+Moving the scratch into the container's ephemeral layer cuts the promise out of the loop. The host file does not change at all. The mutated copy exists only inside the container's view of the world, where the only consumer is the test runner the mutation tool spawned. When the test runner is done, or the container is killed, the mutated copy is collected with the rest of the writable layer.
+
+## Source control already covers this, sort of
+
+The honest counter is that git already gives you a recovery mechanism. A sane mutation testing setup operates inside a clean working tree, and when the tool crashes mid-run you can `git status` to see what got left behind and `git restore .` to wipe it. The mutation tool's scratch directories (`mutants.out/`, `.mutmut-cache`, `target/pit-reports/`) should already be in `.gitignore` so they do not get accidentally committed. That is the baseline a competent setup hits.
+
+The problem with the baseline is that it requires the developer to do the right thing every time the tool dies in a way they did not predict. Run `git status`. Notice the unexpected modifications. Recognize them as mutation leftovers and not your own in-progress work. Run `git restore .` without accidentally clobbering something you actually wanted. Do this consistently across long sessions, in front of impatient deadlines, on a Friday afternoon.
+
+Developers do not do this consistently. People do not do this consistently. This is not a character flaw to be trained away with documentation and post-incident "be more careful" reminders. It is a property of how attention works. If the tooling requires a manual cleanup step at exactly the moment when the developer's attention is on whatever failed and whatever is next, the step gets skipped, and the mutated file sits in the tree until the next `git status` surfaces it, often at the worst possible moment (a hurried commit, a rebase, a PR review that flags lines the author did not write).
+
+The design rule this points at is older than any specific tool:
+
+> Build tools such that the easy thing to do is the right thing to do.
+
+For mutation testing that means automation in both directions. Gitignored so leftovers cannot be committed even if the developer does not look. Ephemeral so leftovers cannot persist long enough to *be* committed. Either alone is incomplete: gitignored-but-persistent leftovers still confuse the local build and the language server; ephemeral-but-not-gitignored leftovers can still slip in if the cleanup boundary is wrong. Both together remove the failure mode without depending on the developer noticing anything, which is the only kind of removal that holds up over thousands of runs by tired humans.
+
+The container layer is the part that turns "the developer remembered to clean up" into "the cleanup happened because the process exited." That is the property worth paying for: the easy path (do nothing, let the container die) is the same as the correct path (no mutated source on the host).
+
+## What this is not
+
+This is not a replacement for the deterministic-arbiter argument from [the earlier post on mutation testing](/posts/mutation-testing-validates-llm-tests/). Mutation testing is still the thing that tells you whether your tests constrain behavior. This is a packaging improvement: it makes mutation testing safe to run on a developer's workstation without leaving radioactive files behind when the run goes wrong. CI was already isolated; CI runs in a container that gets thrown away. The local developer experience was the gap.
+
+It also does not protect you from a mutation tool that writes outside its declared scratch directory. `mutmut` writes to `.mutmut-cache` in the project root by default; if you only mount the source files read-only and leave the project root writable for that cache, the cache survives the container. That can be deliberate (you want the incremental cache across runs) or accidental (you wanted everything ephemeral and forgot). The pattern is "make the writable surface explicit," not "everything is magically clean."
+
+## The shorter version
+
+Mutation testing tools write to your source on purpose and clean up on success. They do not clean up on every failure mode that exists. The fix is to put the scratch where cleanup is automatic regardless of how the tool exits, which is a container's ephemeral writable layer. The dependency side of dev containers is already a good reason to use them for polyglot tooling. The ephemeral-fs side is the reason to put mutation testing specifically inside one.
