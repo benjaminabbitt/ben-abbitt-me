@@ -27,7 +27,7 @@ function postHref(p: AnyPost): string {
 <MarginaliaLayout defaultText="Hover a post to read the margin note.">
 	<div class="flex flex-col" data-feed>
 		<div
-			class="grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
+			class="flex sm:grid sm:grid-cols-[100px_1fr_auto] gap-3 sm:gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
 		>
 			<button
 				type="button"
@@ -48,10 +48,10 @@ function postHref(p: AnyPost): string {
 			<button
 				type="button"
 				data-sort-by="words"
-				class="text-right hover:text-accent transition-colors flex items-baseline gap-1 justify-end cursor-pointer uppercase tracking-[0.1em]"
+				class="text-right hover:text-accent transition-colors flex items-baseline gap-1 justify-end cursor-pointer uppercase tracking-[0.1em] ml-auto sm:ml-0"
 				aria-label="Sort by word count"
 			>
-				words · read <span data-sort-indicator="words" aria-hidden="true" />
+				<span class="hidden sm:inline">words · </span>read <span data-sort-indicator="words" aria-hidden="true" />
 			</button>
 		</div>
 		{
@@ -64,7 +64,7 @@ function postHref(p: AnyPost): string {
 				const excerpt = renderExcerpt(p.data, p.body);
 				return (
 					<div
-						class="group relative grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3.5 -mx-2.5 border-b border-rule items-baseline transition-colors duration-100 hover:bg-bg-alt"
+						class="group relative flex flex-col gap-1.5 sm:grid sm:grid-cols-[100px_1fr_auto] sm:gap-[18px] sm:items-baseline px-2.5 py-3.5 -mx-2.5 border-b border-rule transition-colors duration-100 hover:bg-bg-alt"
 						data-marginalia={p.data.marginalia ?? ""}
 						data-post-id={p.id}
 						data-row
@@ -72,11 +72,16 @@ function postHref(p: AnyPost): string {
 						data-sort-title={p.data.title.toLowerCase()}
 						data-sort-words={words}
 					>
-						<span class="font-mono text-[11.5px] text-fg-dim">{date}</span>
+						<span class="font-mono text-[10.5px] sm:text-[11.5px] text-fg-faint sm:text-fg-dim tracking-[0.02em] sm:tracking-normal">
+							{date}<span class="sm:hidden">
+								<span class="mx-1.5 text-fg-faint">·</span>{fmtWords(words)} words
+								<span class="mx-1.5 text-fg-faint">·</span>{minutes} min
+							</span>
+						</span>
 						<span class="flex flex-col gap-1 min-w-0">
 							<a
 								href={postHref(p)}
-								class="font-serif font-medium text-[19px] tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent before:absolute before:inset-0 before:content-['']"
+								class="font-serif font-medium text-[20px] sm:text-[19px] leading-[1.18] sm:leading-normal tracking-[-0.01em] text-fg transition-colors duration-150 group-hover:text-accent before:absolute before:inset-0 before:content-['']"
 							>
 								{p.data.title}
 							</a>
@@ -98,7 +103,7 @@ function postHref(p: AnyPost): string {
 								</span>
 							)}
 						</span>
-						<span class="font-mono text-[10.5px] text-fg-faint whitespace-nowrap">
+						<span class="font-mono text-[10.5px] text-fg-faint whitespace-nowrap hidden sm:inline">
 							{fmtWords(words)} words · {minutes} min
 						</span>
 					</div>
