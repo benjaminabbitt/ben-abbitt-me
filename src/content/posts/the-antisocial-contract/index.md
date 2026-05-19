@@ -5,6 +5,14 @@ publishDate: "2026-04-28T08:32:46-05:00"
 tags: ["antisocial-contract"]
 marginalia: "The shadow of Rousseau's bargain: what we surrender to belong, and what it costs when scaled past the village."
 ---
+## TL;DR
+
+People trade independent judgment for belonging. Once that trade is made, the group's contested beliefs become *sacred*: questioning them triggers threat responses instead of thinking, and offering reasons or money to soften them makes people angrier, not more flexible. Intelligence doesn't help — it gets repurposed to defend the sacred belief more cleverly. Leaders get trapped too, because the constituency that internalized the message will replace anyone who tries to walk it back. The groups that play this hardest win local fights against the groups that don't — and in winning, they tear down the shared institutions that make any of them viable. This is the **antisocial contract**: an unspoken bargain that buys you a place in a tribe at the price of your ability to reason in exactly the domains where reasoning matters most.
+
+> **Want the plain-language version?** A shorter, less academic overview without the case studies and references lives at [The Antisocial Contract: Simple Version](/posts/the-antisocial-contract/simple-version/).
+
+---
+
 ## Thesis
 
 People trade independent judgment for belonging. That trade disables rationality in exactly the domains where it matters most: intergroup conflict, resource allocation, and peace negotiation.
@@ -190,6 +198,8 @@ Secular values (human life, health, nature, human rights) produce the same moral
 
 ## Case Study 1: The Cold War (1947–1991)
 
+Two superpowers, each convinced the other was a civilizational threat, spent forty-five years escalating weapons capable of ending civilization — while their best analysts produced confident, technical descriptions of an enemy that did not exist in the shape they were drawing. Bomber gaps. Missile gaps. Domino theory. None of it survived contact with declassified evidence. All of it was treated as obvious at the time, by intelligent people working in good faith. The framework predicts exactly this.
+
 The Cold War is the cleanest test of the framework because it involves two explicitly secular ideologies (Marxism-Leninism and liberal democratic capitalism) producing the same domain-specific rationality suppression documented in the religious sacred-values literature. If the mechanism were religion-specific, it should not appear here. It does.
 
 ### Sacralization of secular ideology
@@ -217,6 +227,8 @@ The mechanism operates identically in non-democratic systems. Soviet leadership 
 ---
 
 ## Case Study 2: MAGA and Western Right-Wing Populism (2015–Present)
+
+A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor, swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the Affordable Care Act in greater numbers when they were told fellow Republicans endorsed it — even though the policy's content did not change. This is sacralization in real time, in a population, on a stopwatch. The framework explains why an issue moved 31 points without any of the underlying facts moving at all.
 
 Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates the framework's prediction that religion's identity architecture can persist and function *after the religious belief itself has receded*.
 

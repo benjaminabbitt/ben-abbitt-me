@@ -5,11 +5,19 @@ publishDate: "2026-04-28T08:32:46-05:00"
 tags: ["antisocial-contract", "politics", "psychology", "identity"]
 marginalia: "The same argument in plainer language, for when the academic version is more friction than the idea is worth."
 ---
+## TL;DR
+
+People trade independent judgment for belonging. Once that trade is made, the group's contested beliefs become *sacred*: questioning them triggers threat responses instead of thinking, and offering reasons or money to soften them makes people angrier, not more flexible. Intelligence doesn't help — it gets repurposed to defend the sacred belief more cleverly. Leaders get trapped too, because the constituency that internalized the message will replace anyone who tries to walk it back. The groups that play this hardest win local fights against the groups that don't — and in winning, they tear down the shared institutions that make any of them viable. This is the **antisocial contract**: an unspoken bargain that buys you a place in a tribe at the price of your ability to reason in exactly the domains where reasoning matters most.
+
+> **Want the full argument?** Case studies (Cold War, Yugoslavia, MAGA, personality cults, failed states), neural evidence, and the complete reference list are in [The Antisocial Contract](/posts/the-antisocial-contract/) (the long version).
+
+---
+
 ## The Big Idea
 
-People naturally sort themselves into groups. Once you're in a group, your brain starts doing something sneaky: it makes you like your group more and trust other groups less. This happens automatically, even when the groups are made up for no real reason.
+You've watched this happen. A friend who used to be reasonable hardens into a partisan. A coworker who was funny becomes a brand. A country that seemed unified starts tearing itself apart. Each time, the same trick is running underneath: your brain quietly decides which side you're on, then recruits your reasoning, your memory, and your sense of fairness to defend that side.
 
-This isn't always bad. Liking your team can make you work harder together. But sometimes this "us vs. them" thinking gets so strong that it makes smart people do dumb things — and it's really hard to stop once it starts.
+This isn't always bad. Liking your team can make you work harder together. But once it goes too far, smart people start doing stupid things — confidently, and in groups. And here's the part that's hardest to accept: it works on you too. It works *better* the smarter you are.
 
 ---
 
@@ -17,7 +25,7 @@ This isn't always bad. Liking your team can make you work harder together. But s
 
 ### Step 1: Making Teams
 
-If you split people into teams — even by something silly like flipping a coin — they immediately start favoring their own team. Scientists tested this. People gave more points to their own team members even when they'd never met them and the teams meant nothing.
+If you split people into teams — even by something silly like flipping a coin — they immediately start favoring their own team. Scientists tested this. People gave more points to their own team members even when they'd never met them and the teams meant nothing ([Tajfel et al., 1971](/posts/the-antisocial-contract/#ref-tajfel-1971)).
 
 Your brain is built to do this. It's not something you choose.
 
@@ -29,7 +37,7 @@ When a group feels important, it gets harder to leave. It becomes part of who yo
 
 ### Step 3: The Team Becomes Part of You
 
-Sometimes people get so attached to their group that they can't tell the difference between "someone insulted my group" and "someone insulted me." It feels the same.
+Sometimes people get so attached to their group that they can't tell the difference between "someone insulted my group" and "someone insulted me." It feels the same. Psychologists call this *identity fusion*, and they've measured it directly: when fusion is high, attacks on the group register in the brain the same way attacks on the self do ([Swann et al., 2012](/posts/the-antisocial-contract/#ref-swann-2012)).
 
 When this happens, any criticism of the group feels like a personal attack. Your brain switches from "let me think about this" to "I need to defend myself."
 
@@ -39,7 +47,7 @@ Here's where it gets weird.
 
 Once something becomes really important to your group's identity, your brain stops treating it like a normal idea. It becomes *sacred* — not in a religious way necessarily, but in a "you can't question this" way.
 
-Scientists did an experiment: they offered people money to change their minds about things they cared deeply about. Instead of thinking "hmm, how much money would make this worth it?" — which is how we normally think — people got *angrier*. Offering money made them *more* stubborn, not less.
+Scientists did an experiment: they offered people money to change their minds about things they cared deeply about. Instead of thinking "hmm, how much money would make this worth it?" — which is how we normally think — people got *angrier*. Offering money made them *more* stubborn, not less ([Ginges et al., 2007](/posts/the-antisocial-contract/#ref-ginges-2007); [Atran & Ginges, 2012](/posts/the-antisocial-contract/#ref-atran-ginges-2012)).
 
 It's like their brains said: "This isn't for sale, and how dare you ask."
 
@@ -47,7 +55,7 @@ It's like their brains said: "This isn't for sale, and how dare you ask."
 
 Here's the really surprising part: being smart doesn't protect you from this.
 
-In fact, smarter people are sometimes *better* at defending beliefs they already have. Their brain uses all its horsepower to find clever reasons why they're right — not to figure out if they're actually right.
+In fact, smarter people are sometimes *better* at defending beliefs they already have. Their brain uses all its horsepower to find clever reasons why they're right — not to figure out if they're actually right ([Bayrak et al., 2025](/posts/the-antisocial-contract/#ref-bayrak-2025)).
 
 It's like having a powerful car engine but the steering wheel is stuck. You go faster in the wrong direction.
 
@@ -55,9 +63,9 @@ It's like having a powerful car engine but the steering wheel is stuck. You go f
 
 Once a whole group believes something is sacred, nobody can back down — even the leaders.
 
-Imagine a game where everyone in your class agreed that the blue team is bad. Even if you (the team captain) realize the blue team isn't actually bad, you can't say so. Your own teammates would get mad at you and pick a new captain who hates the blue team more.
+Imagine a game where everyone on the Unicorns team agreed that the Dragons team is bad. Even if you (the Unicorns captain) realize the Dragons aren't actually bad, you can't say so. Your own teammates would get mad at you and pick a new captain who hates the Dragons more.
 
-This happens with politicians all the time. They sometimes know they should compromise, but they can't — because their supporters would replace them with someone who won't.
+This happens with politicians all the time. They sometimes know they should compromise, but they can't — because their supporters would replace them with someone who won't. Interviews with Israeli and Palestinian leaders found exactly this pattern: leaders understood symbolic concessions as a path to negotiation, but their constituencies' sacred commitments made those concessions politically suicidal ([Atran et al., 2007](/posts/the-antisocial-contract/#ref-atran-2007)).
 
 ---
 
@@ -71,7 +79,7 @@ Groups that are really tight and really suspicious of outsiders tend to:
 - Have more kids who stay in the group
 - Beat groups that are more relaxed and open
 
-So groups that think this way *win* against groups that don't.
+So groups that think this way *win* against groups that don't ([Iannaccone, 1994](/posts/the-antisocial-contract/#ref-iannaccone-1994); [Norenzayan, 2013](/posts/the-antisocial-contract/#ref-norenzayan-2013)).
 
 ### But Here's the Problem
 
@@ -85,7 +93,7 @@ But if *every* team starts doing this, nobody can use the park anymore. Fights b
 
 **What's good for one team is bad for everybody.**
 
-A scientist named E.O. Wilson said it like this: "Selfish people beat generous people. But groups of generous people beat groups of selfish people."
+A scientist named E.O. Wilson said it like this: "Selfish individuals beat altruistic individuals. But groups of altruistic individuals beat groups of selfish individuals." (See the [multilevel selection section of the full version](/posts/the-antisocial-contract/#the-multilevel-selection-trap) for the supporting evidence.)
 
 The version for our problem: "Open-minded groups lose to closed-minded groups. But communities full of open-minded groups do better than communities full of closed-minded groups."
 
@@ -109,43 +117,44 @@ This is why some politicians attack international organizations, courts, or even
 
 ### When Countries Fall Apart
 
-Yugoslavia was a country made of different groups (Serbs, Croats, Bosniaks). For a long time, a strong government kept them from fighting. When that government fell apart, leaders started telling each group that the other groups were dangerous enemies.
+In 1990, families in Sarajevo went to each other's weddings. They were Serb, Croat, Muslim, and the labels didn't carry much weight. By 1995, those same neighbors were stockpiling weapons against each other, and over 100,000 people were dead.
 
-Within a few years, neighbors who had lived together peacefully were killing each other. Over 100,000 people died.
+Yugoslavia wasn't destroyed by ancient hatreds erupting from the soil. It was destroyed in about three years, by a small number of politicians who figured out that if you keep telling people the other group is coming to kill them, eventually they will believe you — and act on it. The hatred came *after* the speeches, not before ([Gagnon, 2004](/posts/the-antisocial-contract/#ref-gagnon-2004); [Malešević, 2024](/posts/the-antisocial-contract/#ref-malesevic-2024)).
 
-The groups weren't ancient enemies. Leaders made them into enemies because it helped those leaders get power.
+The mechanism wasn't tribal memory. It was a working brain doing exactly what a working brain does once someone hands it a "them."
 
 ### When Smart People Believe Silly Things
 
-During the Cold War, America and the Soviet Union both thought they were the good guys and the other side was evil. Scientists on both sides used their big brains to explain why their side was right — not to figure out what was actually true.
+In 1948, Soviet biology officially declared Mendel's genetics a Western fraud. Geneticists who disagreed lost their jobs, or worse. Crops failed. Famines followed. Meanwhile in America, J. Robert Oppenheimer — the physicist who built the atomic bomb — was stripped of his clearance for the crime of expressing doubt about building a bigger one.
 
-American scientists helped build nuclear weapons while Soviet scientists defended fake biology theories that their leader liked. Both groups were smart. Both groups used their smarts to defend their team, not to find truth.
+Both sides had genius-level scientists. Both produced confident, technical, well-argued nonsense on the questions where their team's identity was at stake. The Soviets did it about wheat. The Americans did it about how many missiles the Soviets had — they kept inventing gaps that didn't exist. The shared pattern: when a question is bound to who you are, your intelligence stops working for you and starts working for the team ([Schrecker, 1998](/posts/the-antisocial-contract/#ref-schrecker-1998); [Soyfer, 1994](/posts/the-antisocial-contract/#ref-soyfer-1994)).
 
 ### When Slogans Beat Policies
 
-In America, most people (76%) supported the idea of moving police money to better training and mental health help. But when the same idea was called "Defund the Police," only 21% supported it.
+In the summer of 2020, two pollsters asked Americans about the same idea, worded two ways. As a policy — "move money to better training, homelessness programs, and mental health" — 76% said yes. As a slogan — "Defund the Police" — only 21% said yes. The exact same policy, described differently, lost a majority and gained a backlash ([Saletan, 2020](/posts/the-antisocial-contract/#ref-saletan-2020)).
 
 Same idea. Different team signal. Totally different reaction.
 
-Once "Defund the Police" became a team slogan, people who invented it couldn't take it back — even when they saw it was hurting their own goals. The words had become sacred to some supporters.
+Here's the trap that closed: the people who invented the slogan could see the polling, could see the elections it was losing them, could see the harm to their own goals — and still couldn't drop it. By then it had become sacred to enough of their own supporters that walking it back was treated as betrayal. A three-word phrase was now in charge of a policy agenda that polled 17 points better without it.
 
 ---
 
 ## Why This Matters
 
-This isn't about one group being bad. The same trick happens everywhere:
-- Religious groups
-- Political parties
-- Countries
-- Even sports fans
+This isn't a story about one group being bad. The same trick runs underneath religious schisms, partisan politics, national rivalries, even sports fandom. The content changes; the mechanism doesn't.
 
-The pattern is:
-1. Make a team
-2. Team becomes important to who you are
-3. Team ideas become untouchable
-4. Smart thinking gets used to defend, not question
-5. Leaders get trapped by their followers
-6. Everybody loses (except the team that happened to be on top when everything broke)
+What you stand to lose to it:
+- The ability to tell whether you believe something because it's *true* or because it's *yours*.
+- Friendships, family relationships, and working partnerships that don't survive the sorting.
+- A country, eventually — if the sort goes deep enough and the referees get torn down.
+
+The full pattern, in six steps:
+1. Make a team.
+2. The team becomes important to who you are.
+3. The team's ideas become untouchable.
+4. Smart thinking gets used to defend the ideas, not question them.
+5. Leaders get trapped by their followers.
+6. Everybody loses — except the team that happened to be on top when it all broke.
 
 ---
 
@@ -169,18 +178,18 @@ Some ideas that might help:
 
 ## The Bottom Line
 
-Your brain is built to join teams and fight for them. This helped your ancestors survive.
+Your brain is built to join teams and fight for them. This kept your ancestors alive in a world of a few hundred people. We don't live in that world anymore.
 
-But now we live in a world where we need to cooperate with millions of people we'll never meet. The old team-fighting instinct causes more problems than it solves.
+Now we have to cooperate with millions of people we'll never meet. The old team-fighting instinct, scaled up, doesn't protect us — it eats the things that do: laws, elections, courts, science, neighbors.
 
-The groups that are best at the team-fighting game tend to win. But when everyone plays that game, the whole world loses.
+The hard part is that the groups that *win* the team-fighting game are precisely the ones that play it hardest. So the mechanism doesn't get smarter on its own. It gets sharper.
 
-Understanding this is the first step toward not being tricked by it.
+The only thing it can't survive is being seen clearly. When you can name what's happening to you — when "they want to silence us" registers in your head as a *move* in a known game rather than the truth about the world — the trick starts losing power. Not all at once. But it starts.
+
+That's the work. Notice when your team has just handed you a sacred belief. Ask whether you'd hold it if the other team held it first. Stay friends with people the team tells you to hate. Defend the referees, especially when they're calling fouls on your side.
+
+None of this is easy. All of it is cheaper than the alternative.
 
 ---
 
-*This is a simplified version of "The Antisocial Contract." The full version has all the scientific sources and more detail.*
-
----
-
-*This is a simplified version of "[The Antisocial Contract](/posts/the-antisocial-contract/)." The full version has all the scientific sources and more detail.*
+*This is a simplified version of "[The Antisocial Contract](/posts/the-antisocial-contract/)." The full version has the complete argument, additional case studies, and the full reference list.*
