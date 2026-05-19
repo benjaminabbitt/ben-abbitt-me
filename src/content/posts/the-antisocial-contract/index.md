@@ -226,23 +226,23 @@ The mechanism operates identically in non-democratic systems. Soviet leadership 
 
 ---
 
-## Case Study 2: MAGA and Western Right-Wing Populism (2015–Present)
+## Case Study 2: Obama as Sacred Villain (2008–2016)
 
 A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor, swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the Affordable Care Act in greater numbers when they were told fellow Republicans endorsed it — even though the policy's content did not change. This is sacralization in real time, in a population, on a stopwatch. The framework explains why an issue moved 31 points without any of the underlying facts moving at all.
 
-Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates the framework's prediction that religion's identity architecture can persist and function *after the religious belief itself has receded*.
+The label that produced the swing was "Obamacare." The eight years of the Obama presidency (2009–2017) constitute the cleanest documented case of *constructing* a sacred villain in modern American politics. The mechanism's components — identity-protective cognition, the backfire effect, sacralized boundary-drawing, and the democratic trap — are all visible because they ran on television, in real time, with polling data on every step. The MAGA movement documented in the next case study did not invent this architecture. It inherited and occupied it.
 
-### Religion as identity without belief
+### Birtherism: sacred belief untouched by evidence
 
-Based on 116 interviews with populist leaders, mainstream politicians, and faith leaders in the U.S., Germany, and France, Cremer established the central finding: right-wing populists use Christianity as a cultural identity marker of the "pure people" against external "others" while often remaining disconnected from Christian values, beliefs, and institutions ([Cremer, 2023](#ref-cremer-2023)).
+In April 2011, Donald Trump — then a reality television host who had donated to Hillary Clinton's previous campaigns and registered as a Democrat as recently as 2001 — went on the morning shows and demanded that Barack Obama produce his birth certificate. When Obama did so on April 27, 2011, Trump took credit and did not stop. He was rewarded, five years later, with the Republican presidential nomination.
 
-The delivery mechanism (Christianity) is being used without the payload (Christian theology). The exclusionary identity structure persists after secularization has emptied the religious content. Secularization has removed traditional sources of collective identity, and right-wing populism fills the vacancy with a religiously-coded but theologically empty identity structure.
+The factual claim was empirically dead the moment the long-form certificate appeared. Republican belief that Obama was foreign-born did not fall to zero; it remained elevated through his presidency, and elements of the broader "Obama is not what he says he is" framework (secret Muslim, secret socialist, secret Kenyan) persisted in Republican polling well into 2016. The factual claim was over. The identity marker was just starting.
 
-### Material incentives backfire
+The mechanism: continuing to hold the belief *after* the certificate was released marked the holder as more committed than the casual partisan. The cost of holding a refuted belief became the proof of loyalty. This is the sacred-values backfire in its most documented form — material evidence does not weaken sacred belief; it converts the belief from a factual claim into a loyalty test.
 
-Ethnographic research found that MAGA participation cannot be reduced to economic self-interest. Participants expressed their need for status and suspicion of those they believed held power and used it to denigrate them ([Koenig et al., 2025](#ref-koenig-2025)).
+### Obamacare: identical policy, opposite reactions
 
-**The ACA/Obamacare/Romneycare case** demonstrates the sacred-values mechanism in particularly stark form because the *same policy* produces dramatically different reactions based solely on partisan labeling. The policy itself originated in Republican think tanks.
+The Affordable Care Act demonstrates the sacred-values mechanism in particularly stark form because the *same policy* produces dramatically different reactions based solely on partisan labeling. The policy itself originated in Republican think tanks.
 
 The individual mandate was first proposed by the Heritage Foundation ([Butler, 1989](#ref-butler-1989)) and co-sponsored by 19 Republican senators including Dole, Grassley, and Hatch in the HEART Act (1993). Romney implemented the Heritage-derived model in Massachusetts (2006). Romney himself acknowledged: "Without Romneycare, I don't think we would have Obamacare."
 
@@ -254,7 +254,55 @@ Yet framing experiments show:
 
 Cognitive dissonance experiments confirm that attitudes are identity-based, not policy-based: Republican support for ACA increased when participants imagined fellow Republicans endorsing it ([Cooper et al., 2019](#ref-cooper-2019)).
 
-A policy invented by the Heritage Foundation, co-sponsored by 19 Republican senators, and implemented by a Republican governor produces 20-31 point swings in Republican approval based solely on whether it carries a Democratic president's name.
+A policy invented by the Heritage Foundation, co-sponsored by 19 Republican senators, and implemented by a Republican governor produces 20–31 point swings in Republican approval based solely on whether it carries a Democratic president's name. The variable is not the policy. It is the name.
+
+### The Garland blockade: procedural sacralization
+
+On February 13, 2016, Justice Antonin Scalia died. Within hours, Senate Majority Leader Mitch McConnell announced that the Senate would not consider any nominee Obama put forward, regardless of identity or qualifications. On March 16, 2016, Obama nominated Merrick Garland — a moderate jurist whom Republican senators, including Hatch, had previously praised as a consensus figure. The Senate held no hearings, no committee votes, no floor consideration for 293 days. The nomination expired when the new Congress convened on January 3, 2017. There was no clear precedent in modern Supreme Court history for a Senate refusing even to hold hearings on a nominee.
+
+The procedural innovation required the constituency to treat it as legitimate. They did. The same constituency now treats the *reverse* procedure (confirming nominees in an election year when the controlling party holds the Senate) as also legitimate, as demonstrated by the Barrett confirmation in October 2020 — 30 days before the election, with early voting already underway. The principle was never the principle. The principle was *whatever blocks the out-group.* Procedural neutrality has been sacralized in one direction and desacralized in the other, on the same population, within four years.
+
+### Blame-for-everything: attribution as identity-routing
+
+A diagnostic feature of sacralized in-group/out-group thinking is the routing of bad outcomes through a single out-group leader, regardless of plausible causal connection. Obama was held responsible by majorities of Republican voters for:
+
+- Gas price increases (governed by global oil markets, OPEC supply decisions, and Federal Reserve policy)
+- ISIS territorial expansion (which followed from Iraqi state failures discussed in the failed-states case study)
+- NFL players' kneeling protests (which began in August 2016, with no Obama-era policy lever)
+- The 2008 financial crisis (which originated before he took office)
+- Hurricane response failures (a pattern replayed identically against the next administration under Hurricane Maria)
+
+The list is illustrative, not exhaustive. The diagnostic is not that any one attribution is unique — every administration is blamed for things outside its control. It is that the *full set* of complaints converged on a single villain whose existence was the organizing principle of the identity, rather than on a policy actor whose decisions were the variable. The attribution pattern was identity-routing, not causal reasoning.
+
+### McConnell's trap: instrumental deployment becomes institutional capture
+
+In October 2010 Mitch McConnell told *National Journal*: "The single most important thing we want to achieve is for President Obama to be a one-term president." The candor was unusual; the strategy was textbook three-phase exclusionary mobilization. McConnell calculated that organizing the Republican Senate caucus around sacralized opposition to a single villain would deliver electoral results. It did, in 2010 and 2014.
+
+But once the constituency adopted the sacralization, the leadership lost the ability to walk it back. By 2013 the *constituency* was enforcing unanimity on leadership, not the other way around. The October 2013 government shutdown over ACA defunding was driven by House Republicans whose primary electorates would punish anything else, including Speaker Boehner, who lost his speakership in 2015 partly over insufficient combativeness. McConnell himself by 2015–16 was triangulating not against Democrats but against members of his own caucus who considered him insufficiently committed.
+
+This is Phase 2 of the three-phase pattern documented later in this argument: instrumental deployment exceeded by constituency sacralization, with the leader trapped by the success of his own framing. The mechanism McConnell deployed in 2010 was operating on him by 2015.
+
+### Why this matters for the framework
+
+The Obama-hate period is the precondition for MAGA. The sacred-villain identity, the willingness to hold empirically refuted beliefs as loyalty markers, the procedural sacralization, the all-bad-things-route-through-one-person attribution pattern — these were the architecture into which Donald Trump stepped in 2015. He did not build them. He identified the constituency that wanted an explicit champion and named himself that champion. The framework predicts that once exclusionary identity architecture is in place, a charismatic actor will discover and occupy it. The next case study documents the occupation.
+
+---
+
+## Case Study 3: MAGA and Western Right-Wing Populism (2015–Present)
+
+On August 8, 2022, the FBI executed a search warrant at Mar-a-Lago. Within days, Trump's primary polling lead expanded, Republican fundraising for him surged, and senators who had been quietly distancing themselves rushed to publicly reaffirm loyalty. A federal law-enforcement action that, in almost any other partisan context, would have been read as evidence of guilt was instead assimilated to the sacred identity as proof of persecution. The corresponding inward purge was already in progress: of the ten House Republicans who voted to impeach Donald Trump for the January 6th Capitol attack on January 13, 2021, eight were out of Congress within two years — four defeated in primaries by Trump-endorsed challengers, four retired under credible threat of one. Liz Cheney, daughter of a Republican Vice President and the third-ranking House Republican, lost her Wyoming primary 28.9% to 66.3%. Her challenger's central qualification was that she had not cast the impeachment vote. Between 2020 and 2024 the Republican policy platform did not move materially. What moved was the in-group boundary: personal loyalty to one man became the sacred marker of belonging, and impeachment was the heresy. The framework predicts both halves — external challenges to a sacred identity strengthen it; internal defectors are purged. Ordinary partisan-coalition models predict neither.
+
+Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates the framework's prediction that religion's identity architecture can persist and function *after the religious belief itself has receded*.
+
+### Religion as identity without belief
+
+Based on 116 interviews with populist leaders, mainstream politicians, and faith leaders in the U.S., Germany, and France, Cremer established the central finding: right-wing populists use Christianity as a cultural identity marker of the "pure people" against external "others" while often remaining disconnected from Christian values, beliefs, and institutions ([Cremer, 2023](#ref-cremer-2023)).
+
+The delivery mechanism (Christianity) is being used without the payload (Christian theology). The exclusionary identity structure persists after secularization has emptied the religious content. Secularization has removed traditional sources of collective identity, and right-wing populism fills the vacancy with a religiously-coded but theologically empty identity structure.
+
+### Status, not material interest
+
+Ethnographic research found that MAGA participation cannot be reduced to economic self-interest. Participants expressed their need for status and suspicion of those they believed held power and used it to denigrate them ([Koenig et al., 2025](#ref-koenig-2025)). The constituency Trump activated in 2015 was not new. It was the constituency Case Study 2 documented coalescing around Obama-hate. By 2015 it was looking for an explicit champion, and the Trump primary candidacy provided one.
 
 ### Identity fusion with political leaders
 
@@ -272,11 +320,30 @@ The same mechanism appears across Western populism regardless of national contex
 
 ### The democratic trap in real-time
 
-Republican politicians who privately recognize the irrationality of election denial cannot publicly concede without losing primary elections. Multiple Republican leaders privately condemned the January 6th attack while publicly defending or minimizing it. Leaders who broke with that narrative (Liz Cheney, Adam Kinzinger) were electorally destroyed by their own party. This is the democratic trap in its purest form.
+Republican politicians who privately recognize the irrationality of election denial cannot publicly concede without losing primary elections. Multiple Republican leaders privately condemned the January 6th attack while publicly defending or minimizing it.
+
+The fate of the ten House Republicans who voted to impeach Trump on January 13, 2021 documents the mechanism in operation:
+
+| Member | District | Outcome | Date |
+|---|---|---|---|
+| Tom Rice | SC-7 | Lost primary to Trump-endorsed challenger | June 14, 2022 |
+| Peter Meijer | MI-3 | Lost primary to Trump-endorsed challenger | August 2, 2022 |
+| Jaime Herrera Beutler | WA-3 | Lost top-two primary | August 2, 2022 |
+| Liz Cheney | WY-AL | Lost primary 28.9% – 66.3% to Hageman | August 16, 2022 |
+| Anthony Gonzalez | OH-16 | Retired; cited Trump pressure | Announced Sept 2021 |
+| John Katko | NY-24 | Retired | Announced Jan 2022 |
+| Adam Kinzinger | IL-16 | Retired | Announced Oct 2021 |
+| Fred Upton | MI-6 | Retired | Announced April 2022 |
+| Dan Newhouse | WA-4 | Survived via top-two primary | Re-elected 2022 |
+| David Valadao | CA-22 | Survived via top-two primary | Re-elected 2022 |
+
+Eight of ten exited Congress within two years. The two survivors were both in jungle-primary states, where general-election crossover voters can outweigh primary-electorate penalties. In conventional closed-primary Republican districts, the penalty was 100%.
+
+This is the democratic trap in its purest form. Selection pressure runs in the wrong direction: the constituency punishes leaders who break with the sacred commitment, and the resulting cohort is more committed than the population that elected them. The same effect was documented in Atran's interviews with Israeli and Palestinian leaders ([Atran et al., 2007](#ref-atran-2007)) — here operating through American primary elections rather than constituency demonstrations.
 
 ---
 
-## Case Study 3: Cult of Personality Dictatorships
+## Case Study 4: Cult of Personality Dictatorships
 
 Cult-of-personality dictatorships represent the most extreme test of the exclusionary identity framework because they construct sacralized identity systems *de novo*, without inheriting religious infrastructure. Where religion takes centuries to build its exclusionary identity architecture, personality cults compress the same process into years or decades, making the mechanism's components visible in a way that gradual religious evolution obscures.
 
@@ -356,7 +423,7 @@ North Korea demonstrates this most clearly: the 1990s famine was reframed as the
 
 ---
 
-## Case Study 4: Failed States
+## Case Study 5: Failed States
 
 Failed states test a critical prediction: if exclusionary identity is the cognitive default and cooperative structures are overlays that suppress but do not eliminate it, then removing the overlay should produce rapid reversion to exclusionary identity, and the speed of reversion should be proportional to the absence of alternative binding structures.
 

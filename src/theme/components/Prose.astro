@@ -58,6 +58,7 @@
 	.prose :global(a) {
 		color: var(--color-accent);
 		border-bottom: 1px solid color-mix(in oklab, var(--color-accent) 40%, transparent);
+		overflow-wrap: anywhere;
 	}
 	.prose :global(a:hover) { border-bottom-color: var(--color-accent); }
 	.prose :global(ul), .prose :global(ol) {
@@ -100,7 +101,10 @@
 		border-radius: 4px;
 	}
 	.prose :global(table) {
-		width: 100%;
+		display: block;
+		max-width: 100%;
+		width: max-content;
+		overflow-x: auto;
 		border-collapse: collapse;
 		margin: 1.5em 0;
 		font-size: 15px;
