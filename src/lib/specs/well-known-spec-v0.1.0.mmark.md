@@ -47,11 +47,19 @@ This document proposes such a pattern: /.well-known/spec/{name}/v{x.y.z}.{ext} i
 
 The convention is format-agnostic. A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, or anything else textual addressable as a single file at the canonical URL. The convention is about where specs live and how they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; well-known-spec itself does not.
 
-Why /.well-known/? Roy Fielding's objection to the contribute.json proposal -- that reserving a universal location for this purpose does not make sense when clients could fetch a linked document from a homepage -- applies to any well-known proposal and must be answered. The answer for well-known-spec:
+Why /.well-known/? Roy Fielding's objection to the contribute.json proposal is the standing precedent every new well-known proposal must answer. Fielding wrote: "reserving a universal location for this purpose doesn't make any sense. ... In this case, the client already knows the home page of an open source project. There is no reason for that client not to GET the homepage." He offered three architectural alternatives: a JSON-LD island in the homepage, an HTML profile, or a <link rel> from the homepage. The thread never resolved, and contribute.json was never registered. The answer for well-known-spec:
 
 A consumer that needs to validate against, or interoperate with, a specification an origin publishes typically has only the origin URL. It has no homepage to crawl (machines do not crawl), no out-of-band registry to consult (none exists for site-local and community-local specs by definition), and no link relation to follow (the spec document is not linked from arbitrary HTML pages; it is the contract the origin publishes for tooling consumption). Without a well-known location, the consumer has no path from https://example.com/ to "the foo spec example.com publishes" except by guessing -- /openapi.json, /api-docs, /foo.json, /spec/foo, etc. -- which is the exact problem this convention exists to solve.
 
 A well-known URL provides an unguessable-becomes-knowable contract: a consumer that knows only the origin and the spec name can construct the canonical URL deterministically. This is the discoverability property well-known URIs exist to provide, and it is the same property /.well-known/openid-configuration, /.well-known/security.txt, and /.well-known/api-catalog rely on. The objection that "you could just link to it" applies in a browser-driven world; it does not apply in a machine-driven world where the consumer has only an origin and a name.
+
+Fielding's three alternatives -- JSON-LD in the homepage, HTML profile, <link rel> -- fail this convention's requirements on inspection:
+
+* JSON-LD in the homepage requires the consumer to fetch and parse the homepage (often megabytes of HTML, frequently behind a paywall or login) to extract one structured-data island. It assumes a single canonical document per spec; this convention requires multiple versions to coexist as separately-addressable, immutable, version-pinned URLs. A homepage cannot carry that; embedding multiple versions of the same spec in one HTML document either inflates the document indefinitely or requires re-implementing a directory inside the document, which is the convention you are trying to avoid.
+* HTML profiles identify the kind of document, not the document. They are a type discriminator, not an identifier. They cannot enumerate the specs an origin publishes.
+* <link rel> from the homepage is one indirection deeper than the bare URL but has the same fatal property: it requires fetching the homepage, and the homepage cannot enumerate multiple coexisting versions of a spec without becoming a directory in disguise.
+
+The version-coexistence requirement is the structural difference. contribute.json was a single document; well-known-spec publishes a tree where each leaf is independently immutable, hashable, and version-pinned. No homepage-embedded mechanism satisfies that without re-implementing a sub-namespace under a different name. The convention exists because the alternatives Fielding proposed for contribute.json are not satisfiable for this case.
 
 The gap is already implied by adjacent standards. Several IETF and industry standards reference "where the spec for this API lives" without defining where that is, leaving each publisher to pick a path. RFC 9727 (api-catalog) defines a discovery root that enumerates an origin's API definitions and links to them -- but the linkset entries point at publisher-chosen URLs, and the RFC does not define a convention for versioning, immutability, or path structure of the referenced documents. The OpenAPI Initiative has been explicitly debating a well-known location for OpenAPI documents since 2019 (OpenAPI issue #1851) without resolution. AsyncAPI, JSON Schema ($id URIs), and similar specifications face the same gap: they describe what a specification document looks like and what it identifies, but they do not say where to put it.
 
@@ -184,11 +192,11 @@ This origin-binding rule is what makes the open {name} namespace safe. There is 
 
 This convention treats /.well-known/spec/ as a structured path with three segments after the prefix. Client behavior is determined entirely by exact URL match; this section makes the semantics explicit so implementers and reviewers do not have to infer them.
 
-Path structure. A spec document is addressable only at the full canonical URL of the form /.well-known/spec/{name}/v{x.y.z}.{ext}. The segments are:
+Path structure. The convention defines three path levels:
 
-* /.well-known/spec/ -- the convention root. A request to this exact path is NOT REQUIRED to return any meaningful response; a host MAY return 404, MAY return an index document for human navigation, and MAY return a 403. No client behavior depends on what is served here.
-* /.well-known/spec/{name}/ -- the per-spec directory. As above: NOT REQUIRED to return anything meaningful. A client MUST NOT construct or rely on a request to this path; the directory exists only as a URL-path organizational device.
-* /.well-known/spec/{name}/v{x.y.z}.{ext} -- the only URL with normative semantics. A client requesting this exact path either receives the spec document at exactly that version and format, or receives 404.
+* /.well-known/spec/ -- the convention root. SHOULD return a directory listing of spec names published at this origin, content-negotiated per the Accept request header. See bare-suffix-behavior below.
+* /.well-known/spec/{name}/ -- the per-spec directory. SHOULD return a directory listing of versions and formats of {name} published at this origin, content-negotiated per the Accept request header. See bare-suffix-behavior below.
+* /.well-known/spec/{name}/v{x.y.z}.{ext} -- the canonical leaf URL. A client requesting this exact path either receives the spec document at exactly that version and format, or receives 404. The leaf URL is NOT content-negotiated; the {ext} is the format selector.
 
 No path traversal beyond the leaf. This convention does not define semantics for any path under /.well-known/spec/{name}/v{x.y.z}.{ext} -- i.e., paths with additional segments appended. Hosts MAY serve content at deeper paths for unrelated purposes; clients MUST NOT interpret deeper paths as part of this convention.
 
@@ -198,9 +206,44 @@ No format negotiation via the Accept header. Format selection in this convention
 
 No version selection via "latest" or any other alias. The {x.y.z} segment MUST be a literal semver string. There is no alias, no symbolic name (latest, stable, current), and no redirect from an unversioned URL to a versioned one. A client that wants the latest published version of a spec MUST obtain that information out of band (for example, from an api-catalog entry). This convention does not provide a mechanism for asking "what is the newest foo." That question belongs to discovery layers above this convention.
 
-Cache and Cache-Control. The canonical versioned URL is immutable and SHOULD be served with Cache-Control: public, max-age=31536000, immutable. The "directory" paths (the convention root and the per-spec directory) have no caching guidance because they have no normative semantics.
+Cache and Cache-Control. The canonical versioned URL is immutable and SHOULD be served with Cache-Control: public, max-age=31536000, immutable. The directory paths (bare-suffix-behavior, below) are mutable in the natural sense -- they reflect what the origin currently publishes -- and SHOULD use short max-age values (Cache-Control: public, max-age=300, or no-cache) so consumers see updates promptly.
 
-No automatic listings. Hosts MUST NOT auto-generate directory listings at /.well-known/spec/ or /.well-known/spec/{name}/ and represent them as conformant artifacts of this convention. A host MAY serve an index document for human discoverability, but such an index is informational only and MUST NOT be interpreted by clients as authoritative over which specs and versions a host publishes. The authoritative answer to "does this host publish foo v0.1.0 in JSON?" is the response to a request for the exact canonical URL.
+### Bare-Suffix Behavior {#bare-suffix-behavior}
+
+The convention root /.well-known/spec/ and the per-spec directory /.well-known/spec/{name}/ SHOULD return directory listings of what the origin publishes, content-negotiated via the Accept request header.
+
+This is a deliberate departure from the leaf-URL rule (where format selection is via {ext} and Accept is ignored). The directory paths are discovery surfaces, not version-pinned artifacts: their content reflects the origin's current publication state and is expected to change as new specs and versions are published. Content negotiation is the standard HTTP mechanism for this case, and it composes with existing tooling (curl, browsers, language HTTP libraries) without requiring extension-suffix knowledge.
+
+Convention root: /.well-known/spec/. A request to this path SHOULD return an enumeration of the spec names this origin publishes. Required formats:
+
+* Accept: application/json -- a JSON array of objects, each with name and optionally description, latest, links. SHOULD be supported.
+* Accept: text/html -- HTML directory listing for human navigation. MAY be supported.
+* Accept: text/plain -- plain text, one name per line. MAY be supported.
+
+A host that publishes anything at /.well-known/spec/ MUST publish the application/json form. A host that publishes no specs MAY return 404 or an empty JSON array at this path; either is conformant.
+
+Per-spec directory: /.well-known/spec/{name}/. A request to this path SHOULD return an enumeration of the versions and formats this origin publishes for {name}. The same Accept table applies. The JSON form SHOULD include, for each version, the version string, the available {ext} formats, and the canonical URLs.
+
+Listings are advisory, not authoritative. A consumer that wants to know whether a specific version is published MUST request its canonical leaf URL and rely on the response code, not on the directory listing. The directory is a discovery aid; the leaf is the contract. A divergence between them is a misconfiguration the consumer cannot detect from the directory alone.
+
+Bare suffix when nothing is published. A host that has not published any specs MAY return 404 at /.well-known/spec/. A host that publishes specs SHOULD enumerate them; auto-generated filesystem directory listings (Apache's mod_autoindex, nginx autoindex) are NOT RECOMMENDED because they conflate convention-defined entries with arbitrary filesystem contents. Generate the listing intentionally.
+
+## Name Allocation: Reverse-DNS Required
+
+The {name} segment of the canonical URL MUST be in reverse-DNS form, based on a domain name owned or controlled by the publisher. This requirement is modelled directly on the appspecific precedent (the only general-purpose open sub-namespace operator the IANA well-known URIs registry has approved).
+
+The naming rule:
+
+* Format. {name} MUST consist of one or more labels separated by ".", ordered from least-specific to most-specific (the reverse of conventional DNS order). Example: a publisher controlling example.com publishes specs under com.example.{spec-name}.
+* DNS ownership. The publisher MUST own or control the DNS name being reversed. Publishing under com.competitor.foo while not controlling competitor.com is a contract violation; the rule exists to prevent it.
+* Character set. {name} MUST match the pattern ^\[a-z\]\[a-z0-9-\]\*(\.\[a-z0-9\]\[a-z0-9-\]\*)\*$ -- lowercase ASCII, period-separated labels, kebab-case within labels. This is more restrictive than DNS (which permits uppercase and a wider character set) because spec names appear in URLs and tooling that may not be case-tolerant.
+* No bare common-word names. A {name} like openapi, spec, agent, deployment-version, or any single-label common-word string is NOT permitted under this convention. The rule that prevents collision is the reverse-DNS rule; common-word names defeat it by construction.
+
+The rule exists for one reason: a sub-namespace operator that does not prevent leaf collisions does not survive Designated Expert review. The reverse-DNS rule borrows the structural discipline of appspecific directly: each publisher's leaf-name space is namespaced to the DNS that publisher controls, so two publishers cannot collide at the same leaf by construction.
+
+Specs without controlling DNS. A publisher experimenting with this convention before obtaining a domain MAY use the IANA-reserved com.example.{name} form (per [@RFC2606]). This is a placeholder for genuinely experimental use; specs intended to be referenced by anyone other than the author SHOULD use a real reverse-DNS form. The cost of obtaining a domain is small; the cost of consumers pinning to a placeholder com.example.foo and discovering later that ten unrelated specs use the same name is large.
+
+Migration. A publisher that owns multiple domains MAY publish the same spec under multiple reverse-DNS names. Each canonical URL is a separate spec identity per the canonical-identifier rule; the contents at the same name+version+ext MUST be consistent per the multi-format rule. A publisher migrating to a new domain SHOULD publish the spec under the new reverse-DNS name and leave the old URL in place for the lifetime of pinned references.
 
 # Spec Document Format
 
@@ -356,14 +399,16 @@ The canonical identifier of a spec is the triple (origin, name, version). A cons
 
 # Discoverability
 
-This convention is discoverable in the way [@RFC8615] intends. A consumer aware of well-known-spec and the name of a spec they want can:
+This convention is discoverable in the way [@RFC8615] intends. A consumer aware of well-known-spec has two discovery paths:
+
+Targeted lookup. A consumer that knows the spec name and version can:
 
 1. Probe `https://{host}/.well-known/spec/{name}/v{x.y.z}.{ext}` for a specific version (with the extension the publisher uses for that spec's format).
 2. Receive a 404 if the host has not published that version of the spec.
 
 The 404 is informative. It says "this host does not publish this spec," and the consumer can proceed accordingly.
 
-This convention does NOT specify a discovery endpoint listing all specs a host publishes. A host that wants to advertise its full spec catalog MAY publish a manifest at /.well-known/specs.json or some similar location, but the format and existence of such a manifest are out of scope for this version of well-known-spec. Future versions MAY add this.
+Enumeration. A consumer that does not know what an origin publishes can request the convention root or per-spec directory and receive a directory listing per bare-suffix-behavior. This composes with RFC 9727 api-catalog: an origin that publishes api-catalog SHOULD include cross-links between its api-catalog entries and the relevant /.well-known/spec/{name}/v{x.y.z}.{ext} URLs, with the api-catalog acting as the higher-level discovery layer that points into this convention's published artifacts.
 
 Crawlers and search engines generally do not index /.well-known/ paths by default. Hosts that want their spec documents to be discoverable to general search MAY explicitly link them from publicly-indexable pages.
 
@@ -372,6 +417,14 @@ Crawlers and search engines generally do not index /.well-known/ paths by defaul
 This convention, as currently published, is not fully conformant with [@!RFC8615]'s registration requirements. RFC 8615 Section 3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The "spec" suffix used by this convention is unregistered as of v0.1.0-alpha.1.
 
 The authors fully intend to file provisional registration of "spec" as a well-known URI suffix via Expert Review per RFC 8615 Section 3 before this spec is published as a stable v1.0.0. Registration is on the roadmap, not contingent on adoption growth -- the spec will not be marked stable while it remains unregistered. Until that filing, this places the convention in the same category as a substantial fraction of /.well-known/ usage in the wild: practical, recognizable, technically unregistered.
+
+Change controller and discussion venue. The change controller for the proposed registration is the author of this document, Ben Abbitt (ben@abbitt.me), as an individual contributor. The change controller is not the IETF; the convention is not WG output. Public discussion of this convention happens at:
+
+* GitHub Discussions on the source repository: github.com/benjaminabbitt/ben-abbitt-me/discussions
+* Comments and review on the Internet-Draft, once filed, will appear on the IETF datatracker at the draft's stable URL.
+* Pre-submission technical review and registration request: wellknown-uri-review@ietf.org (the mailing list of record per RFC 8615 Section 3.1).
+
+Implementers and reviewers wanting to engage with the convention before formal registration SHOULD use the GitHub Discussions venue; the IETF list is reserved for the formal registration request and any pre-submission early review the DE invites.
 
 The convention treats the segment immediately after "spec" (the spec name, e.g. "deployment-version") as a sub-path under the registered suffix, not as its own registered suffix. RFC 8615's ABNF allows multi-segment URLs under a registered prefix (existing precedent: /.well-known/acme-challenge/{token} from [@RFC8555]). Registration of "spec" would therefore suffice for any number of specs published under it.
 
@@ -395,6 +448,18 @@ A rename does not require a new version of this convention. The convention is ab
 
 The authors expect to file the registration request using the suffix "spec" and to engage in DE-mediated renaming if the request runs into the "single common words" rule.
 
+## Promotion to Permanent Status
+
+The initial registration request will seek "provisional" status. draft-nottingham-rfc8615bis-02 Section 3.2 provides that provisional registrations can be promoted to permanent if in broad use, or removed if not in broad use one year or more after registration. The "tpcd" entry in the current registry is a precedent for active pruning: a provisional registration may be deprecated or removed if the evidence of adoption does not materialize.
+
+To mitigate one-year deprecation risk and to give the DE a clean evaluation point, the authors pre-commit to the following evidence criteria for promotion to permanent status, evaluable one year after the initial provisional registration:
+
+* At least three independent implementations publishing under the convention. Independent means controlled by distinct entities and not derived from the reference implementation. The implementations need not be production systems; experimental, internal, and demonstration deployments count, provided each is reachable at a stable URL.
+* At least one cross-origin consumer: an implementation that fetches and validates against a spec published at a different origin than its own, and that records (origin, name, version) as a pin per the canonical-identifier rule.
+* At least one composable adjacency: an implementation that links a well-known-spec artifact from a different /.well-known/ resource (an api-catalog linkset entry, a deployment-version manifest's links array, or equivalent) demonstrating that the convention composes with adjacent discovery layers.
+
+If the criteria are not met at the one-year evaluation, the authors will request that the registration be marked provisional-not-yet-promoted rather than removed, accompanied by an updated I-D revision documenting why and what remains in progress. The criteria are best-effort, not contractual; the DE retains final discretion under RFC 8615 Section 3 and the rfc8615bis-02 successor text.
+
 # Reference Implementation
 
 The publishing host ben.abbitt.me is a working implementation of well-known-spec v0.1.0-alpha.1. The live artifacts on that host demonstrate multi-format coexistence (see [@multiple-formats-at-the-same-version]):
@@ -417,6 +482,17 @@ A separate spec (deployment-version) is published under the same convention at /
   </front>
   <seriesInfo name="BCP" value="14"/>
   <seriesInfo name="RFC" value="2119"/>
+</reference>
+
+<reference anchor="RFC2606" target="https://datatracker.ietf.org/doc/html/rfc2606">
+  <front>
+    <title>Reserved Top Level DNS Names</title>
+    <author initials="D." surname="Eastlake" fullname="Donald Eastlake"/>
+    <author initials="A." surname="Panitz" fullname="Aliza Panitz"/>
+    <date year="1999" month="June"/>
+  </front>
+  <seriesInfo name="BCP" value="32"/>
+  <seriesInfo name="RFC" value="2606"/>
 </reference>
 
 <reference anchor="RFC3986" target="https://datatracker.ietf.org/doc/html/rfc3986">
