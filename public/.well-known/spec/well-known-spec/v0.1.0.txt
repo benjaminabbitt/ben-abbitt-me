@@ -31,24 +31,24 @@ Table of Contents
    4.  URL Convention  . . . . . . . . . . . . . . . . . . . . . . .   3
      4.1.  Canonical Versioned URL . . . . . . . . . . . . . . . . .   3
      4.2.  Cache-Control . . . . . . . . . . . . . . . . . . . . . .   4
-     4.3.  Hash Sidecar (Optional) . . . . . . . . . . . . . . . . .   4
-     4.4.  Multiple Formats at the Same Version  . . . . . . . . . .   5
+     4.3.  Hash Sidecar (Optional) . . . . . . . . . . . . . . . . .   5
+     4.4.  Multiple Formats at the Same Version  . . . . . . . . . .   6
    5.  Spec Document Format  . . . . . . . . . . . . . . . . . . . .   6
-     5.1.  Choosing a Format . . . . . . . . . . . . . . . . . . . .   6
-     5.2.  File Extension and Content-Type . . . . . . . . . . . . .   7
+     5.1.  Choosing a Format . . . . . . . . . . . . . . . . . . . .   7
+     5.2.  File Extension and Content-Type . . . . . . . . . . . . .   8
      5.3.  Identity Declaration  . . . . . . . . . . . . . . . . . .   8
      5.4.  Companion Format-Specific Specs . . . . . . . . . . . . .   9
      5.5.  What This Convention Does Not Require . . . . . . . . . .   9
-   6.  Validation  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   7.  Versioning of This Spec . . . . . . . . . . . . . . . . . . .  10
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   9.  Discoverability . . . . . . . . . . . . . . . . . . . . . . .  11
+   6.  Validation  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   7.  Versioning of This Spec . . . . . . . . . . . . . . . . . . .  11
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   9.  Discoverability . . . . . . . . . . . . . . . . . . . . . . .  12
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-   11. Reference Implementation  . . . . . . . . . . . . . . . . . .  12
+   11. Reference Implementation  . . . . . . . . . . . . . . . . . .  13
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Example Spec Document  . . . . . . . . . . . . . . .  13
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
+   Appendix A.  Example Spec Document  . . . . . . . . . . . . . . .  14
    Appendix B.  Implementation Patterns  . . . . . . . . . . . . . .  14
 
 
@@ -60,9 +60,9 @@ Abbitt                        Informational                     [Page 1]
 
      B.1.  Astro static endpoint . . . . . . . . . . . . . . . . . .  14
      B.2.  nginx static  . . . . . . . . . . . . . . . . . . . . . .  14
-     B.3.  GitHub Pages and other static hosts . . . . . . . . . . .  14
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  14
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
+     B.3.  GitHub Pages and other static hosts . . . . . . . . . . .  15
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  15
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -177,7 +177,12 @@ Abbitt                        Informational                     [Page 3]
    *  {name} is the spec name.  It MUST match the pattern
       ^[a-z][a-z0-9-]*$ (lowercase kebab-case, starting with a letter).
    *  {x.y.z} is the spec version, a Semantic Versioning 2.0.0 string.
-      The leading "v" is REQUIRED.
+      The leading "v" is REQUIRED.  Pre-release suffixes are valid:
+      v1.0.1-DRAFT-1, v2.0.0-rc.1, v0.2.0-alpha.3.  Build metadata (the
+      "+meta" suffix) uses "+" which is reserved in URL paths per
+      [RFC3986] and SHOULD be omitted from canonical URLs; encode the
+      equivalent information in the pre-release identifier or in the
+      document body instead.
    *  {ext} is the file extension matching the document's served
       Content-Type (see Section 5.2).
 
@@ -209,14 +214,9 @@ Abbitt                        Informational                     [Page 3]
    Control max-age; the content is immutable.  RECOMMENDED: Cache-
    Control: public, max-age=31536000, immutable (one year, immutable).
 
-4.3.  Hash Sidecar (Optional)
 
-   A publisher MAY publish a SHA-256 hash sidecar alongside a spec
-   document, following the Apache-style sidecar convention widely used
-   by package mirrors (Maven, PyPI mirrors, Apache release archives).
-   The sidecar URL is the spec URL with .sha256 appended:
 
-   /.well-known/spec/{name}/v{x.y.z}.{ext}.sha256
+
 
 
 
@@ -225,6 +225,15 @@ Abbitt                        Informational                     [Page 4]
 
                              well-known-spec                    May 2026
 
+
+4.3.  Hash Sidecar (Optional)
+
+   A publisher MAY publish a SHA-256 hash sidecar alongside a spec
+   document, following the Apache-style sidecar convention widely used
+   by package mirrors (Maven, PyPI mirrors, Apache release archives).
+   The sidecar URL is the spec URL with .sha256 appended:
+
+   /.well-known/spec/{name}/v{x.y.z}.{ext}.sha256
 
    The sidecar's content MUST be the hex-encoded SHA-256 digest of the
    spec document, optionally followed by whitespace and the filename,
@@ -266,21 +275,18 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  v0.1.0.txt
    (out of scope for this version) would be needed for that threat
    model.
 
-4.4.  Multiple Formats at the Same Version
-
-   Different file extensions of the same spec -- at the same {name} and
-   same {x.y.z} -- MAY coexist as separate canonical URLs.  A publisher
-   MAY publish, simultaneously:
-
-
-
-
 
 
 Abbitt                        Informational                     [Page 5]
 
                              well-known-spec                    May 2026
 
+
+4.4.  Multiple Formats at the Same Version
+
+   Different file extensions of the same spec -- at the same {name} and
+   same {x.y.z} -- MAY coexist as separate canonical URLs.  A publisher
+   MAY publish, simultaneously:
 
 /.well-known/spec/foo/v0.1.0.md       (RFC-style Markdown narrative, with reasoning)
 /.well-known/spec/foo/v0.1.0.txt      (pixel-perfect IETF plain text)
@@ -323,12 +329,6 @@ Abbitt                        Informational                     [Page 5]
    format.  A spec document MAY be in any format addressable as a single
    file at the canonical URL.
 
-5.1.  Choosing a Format
-
-   A spec SHOULD use an existing specification format when one is
-   established for the use case the spec describes.  The format choice
-   follows the shape of the thing being specified.
-
 
 
 
@@ -337,6 +337,12 @@ Abbitt                        Informational                     [Page 6]
 
                              well-known-spec                    May 2026
 
+
+5.1.  Choosing a Format
+
+   A spec SHOULD use an existing specification format when one is
+   established for the use case the spec describes.  The format choice
+   follows the shape of the thing being specified.
 
    For specs that describe data shapes, message structures, or service
    surfaces, format-specific specification languages already exist and
@@ -378,6 +384,16 @@ Abbitt                        Informational                     [Page 6]
    spec document raises the cost of inspection, diff, code review, and
    porting between hosts without offering compensating benefits.
 
+
+
+
+
+
+Abbitt                        Informational                     [Page 7]
+
+                             well-known-spec                    May 2026
+
+
    The convention does not enforce these choices.  A publisher MAY use
    any format they prefer; the SHOULD reflects practical advice for
    adoption, tooling support, and readability.
@@ -386,13 +402,6 @@ Abbitt                        Informational                     [Page 6]
 
    The {ext} segment of the canonical URL MUST match the served Content-
    Type.  Common pairings:
-
-
-
-Abbitt                        Informational                     [Page 7]
-
-                             well-known-spec                    May 2026
-
 
    +==============+===========+=======================================+
    | Format       | Extension | Content-Type                          |
@@ -433,15 +442,6 @@ Abbitt                        Informational                     [Page 7]
 
    *  JSON Schema -- the $id field carries the canonical URL; title
       carries the name and version.
-   *  OpenAPI -- info.title and info.version; canonical URL via an
-      extension field like info.x-canonical-url (no standard field
-      exists for this).
-   *  Markdown -- YAML front-matter with name, version, canonical_url
-      keys; or the first heading.
-   *  HTML -- <link rel="canonical" href="...">, <title>, and a meta tag
-      for the version.
-
-
 
 
 
@@ -449,6 +449,14 @@ Abbitt                        Informational                     [Page 8]
 
                              well-known-spec                    May 2026
 
+
+   *  OpenAPI -- info.title and info.version; canonical URL via an
+      extension field like info.x-canonical-url (no standard field
+      exists for this).
+   *  Markdown -- YAML front-matter with name, version, canonical_url
+      keys; or the first heading.
+   *  HTML -- <link rel="canonical" href="...">, <title>, and a meta tag
+      for the version.
 
    This is a SHOULD, not a MUST.  The canonical URL is always the URL
    itself, regardless of whether the document internally references it.
@@ -477,9 +485,36 @@ Abbitt                        Informational                     [Page 8]
       narrative companion document).
 
    The status (draft / stable / deprecated) is implicit in the semver of
-   the canonical URL: 0.x.y is draft by convention; 1.0.0 and later are
-   stable; deprecation is communicated by publishing a new MAJOR version
-   and by out-of-band announcement (release notes, changelog).
+   the canonical URL.  Two distinct signals indicate draft-ness, either
+   of which is sufficient:
+
+   *  MAJOR version 0 (0.x.y) is draft by semver convention: anything
+      MAY change in the next 0.x.y release.
+   *  A semver pre-release suffix indicates the document is a pre-
+      release of the version it qualifies, regardless of MAJOR.
+      v1.0.1-DRAFT-1 is draft 1 of v1.0.1; subsequent drafts of the same
+      target version are v1.0.1-DRAFT-2, v1.0.1-DRAFT-3, etc.  When
+      v1.0.1 is published without a suffix, it is the stable release of
+      that version and the preceding -DRAFT-N drafts are superseded.
+      Conventional pre-release identifiers (-alpha.1, -beta.2, -rc.1)
+      work the same way.
+
+
+
+Abbitt                        Informational                     [Page 9]
+
+                             well-known-spec                    May 2026
+
+
+   Both signals indicate draft-ness.  A version like v0.2.0-DRAFT-1 is
+   draft on two counts (MAJOR 0 AND pre-release suffix); both are
+   normative draft indicators.
+
+   A version with neither MAJOR 0 nor a pre-release suffix (e.g. v1.0.0,
+   v2.3.1) is a stable release.
+
+   Deprecation is communicated by publishing a new MAJOR version and by
+   out-of-band announcement (release notes, changelog).
 
    The deliberate minimalism reflects that the value of well-known-spec
    is in the URL convention and the versioning rules, both of which are
@@ -498,14 +533,6 @@ Abbitt                        Informational                     [Page 8]
       language SDKs.
    *  XSD, RELAX NG, Avro, GraphQL SDL, SHACL -- each has its own
       validators.
-
-
-
-Abbitt                        Informational                     [Page 9]
-
-                             well-known-spec                    May 2026
-
-
    *  Markdown, HTML, plain text, and other narrative formats have no
       standard machine validation; they are validated by reading.
 
@@ -524,6 +551,16 @@ Abbitt                        Informational                     [Page 9]
    Multiple hosts MAY publish their own copies of well-known-spec or any
    other spec.  Hosts SHOULD use the same content for the same version;
    this is by convention, not by enforcement.
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 10]
+
+                             well-known-spec                    May 2026
+
 
 7.  Versioning of This Spec
 
@@ -547,21 +584,6 @@ Abbitt                        Informational                     [Page 9]
 
    The security surface of this convention is small.
 
-
-
-
-
-
-
-
-
-
-
-Abbitt                        Informational                    [Page 10]
-
-                             well-known-spec                    May 2026
-
-
    Publishing spec documents at predictable URLs is a discoverability
    feature, not a security concern.  The spec documents themselves carry
    no operational data -- they describe formats, protocols, or
@@ -583,6 +605,18 @@ Abbitt                        Informational                    [Page 10]
    remote URL SHOULD use HTTPS.  Every reference under this convention
    pins to a specific version (the canonical versioned URL), which is
    the right default for reproducible validation.
+
+
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 11]
+
+                             well-known-spec                    May 2026
+
 
 9.  Discoverability
 
@@ -611,13 +645,6 @@ Abbitt                        Informational                    [Page 10]
    discoverable to general search MAY explicitly link them from
    publicly-indexable pages.
 
-
-
-Abbitt                        Informational                    [Page 11]
-
-                             well-known-spec                    May 2026
-
-
 10.  IANA Considerations
 
    This convention, as currently published, is not fully conformant with
@@ -639,6 +666,13 @@ Abbitt                        Informational                    [Page 11]
    /.well-known/acme-challenge/{token} from [RFC8555]).  Registration of
    "spec" would therefore suffice for any number of specs published
    under it.
+
+
+
+Abbitt                        Informational                    [Page 12]
+
+                             well-known-spec                    May 2026
+
 
    Adopters concerned about strict RFC 8615 conformance SHOULD await
    registration; alternatively they MAY deploy a host-specific variant
@@ -665,15 +699,6 @@ Abbitt                        Informational                    [Page 11]
       spec/ (https://ben.abbitt.me/posts/well-known-spec/) -- rendered
       via the site's Astro layout.
 
-
-
-
-
-Abbitt                        Informational                    [Page 12]
-
-                             well-known-spec                    May 2026
-
-
    All three URLs serve the same normative content as required by
    Section 4.4.  Differences are presentational only.
 
@@ -689,6 +714,21 @@ Abbitt                        Informational                    [Page 12]
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997,
               <https://datatracker.ietf.org/doc/html/rfc2119>.
+
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, January 2005,
+              <https://datatracker.ietf.org/doc/html/rfc3986>.
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 13]
+
+                             well-known-spec                    May 2026
+
 
    [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
               Specifications: ABNF", STD 68, RFC 5234, January 2008,
@@ -722,14 +762,6 @@ Appendix A.  Example Spec Document
    The narrative companion is at https://ben.abbitt.me/posts/deployment-
    version/ (https://ben.abbitt.me/posts/deployment-version/).
 
-
-
-
-Abbitt                        Informational                    [Page 13]
-
-                             well-known-spec                    May 2026
-
-
 Appendix B.  Implementation Patterns
 
 B.1.  Astro static endpoint
@@ -745,6 +777,14 @@ B.1.  Astro static endpoint
    returns the post body raw as text/markdown.
 
 B.2.  nginx static
+
+
+
+
+Abbitt                        Informational                    [Page 14]
+
+                             well-known-spec                    May 2026
+
 
    location /.well-known/spec/my-spec/v0.1.0.txt {
      add_header Content-Type "text/plain";
@@ -781,4 +821,20 @@ Author's Address
 
 
 
-Abbitt                        Informational                    [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 15]

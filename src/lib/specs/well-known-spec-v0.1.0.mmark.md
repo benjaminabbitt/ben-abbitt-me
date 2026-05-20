@@ -77,7 +77,7 @@ where:
 
 * {host} is the publishing origin (scheme, host, and optional port per [@!RFC6454]).
 * {name} is the spec name. It MUST match the pattern `^[a-z][a-z0-9-]*$` (lowercase kebab-case, starting with a letter).
-* {x.y.z} is the spec version, a Semantic Versioning 2.0.0 string. The leading "v" is REQUIRED.
+* {x.y.z} is the spec version, a Semantic Versioning 2.0.0 string. The leading "v" is REQUIRED. Pre-release suffixes are valid: v1.0.1-DRAFT-1, v2.0.0-rc.1, v0.2.0-alpha.3. Build metadata (the "+meta" suffix) uses "+" which is reserved in URL paths per [@!RFC3986] and SHOULD be omitted from canonical URLs; encode the equivalent information in the pre-release identifier or in the document body instead.
 * {ext} is the file extension matching the document's served Content-Type (see [@file-extension-and-content-type]).
 
 The canonical URL MUST be served with a Content-Type appropriate to the document's format.
@@ -197,7 +197,16 @@ A conforming spec document is NOT REQUIRED to:
 * Reference a particular IANA registration.
 * Declare a license (though publishers SHOULD declare one in a narrative companion document).
 
-The status (draft / stable / deprecated) is implicit in the semver of the canonical URL: 0.x.y is draft by convention; 1.0.0 and later are stable; deprecation is communicated by publishing a new MAJOR version and by out-of-band announcement (release notes, changelog).
+The status (draft / stable / deprecated) is implicit in the semver of the canonical URL. Two distinct signals indicate draft-ness, either of which is sufficient:
+
+* MAJOR version 0 (0.x.y) is draft by semver convention: anything MAY change in the next 0.x.y release.
+* A semver pre-release suffix indicates the document is a pre-release of the version it qualifies, regardless of MAJOR. v1.0.1-DRAFT-1 is draft 1 of v1.0.1; subsequent drafts of the same target version are v1.0.1-DRAFT-2, v1.0.1-DRAFT-3, etc. When v1.0.1 is published without a suffix, it is the stable release of that version and the preceding -DRAFT-N drafts are superseded. Conventional pre-release identifiers (-alpha.1, -beta.2, -rc.1) work the same way.
+
+Both signals indicate draft-ness. A version like v0.2.0-DRAFT-1 is draft on two counts (MAJOR 0 AND pre-release suffix); both are normative draft indicators.
+
+A version with neither MAJOR 0 nor a pre-release suffix (e.g. v1.0.0, v2.3.1) is a stable release.
+
+Deprecation is communicated by publishing a new MAJOR version and by out-of-band announcement (release notes, changelog).
 
 The deliberate minimalism reflects that the value of well-known-spec is in the URL convention and the versioning rules, both of which are useful independent of how the spec content is encoded.
 
@@ -284,6 +293,18 @@ A separate spec (deployment-version) is published under the same convention at /
   </front>
   <seriesInfo name="BCP" value="14"/>
   <seriesInfo name="RFC" value="2119"/>
+</reference>
+
+<reference anchor="RFC3986" target="https://datatracker.ietf.org/doc/html/rfc3986">
+  <front>
+    <title>Uniform Resource Identifier (URI): Generic Syntax</title>
+    <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee"/>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding"/>
+    <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
+    <date year="2005" month="January"/>
+  </front>
+  <seriesInfo name="STD" value="66"/>
+  <seriesInfo name="RFC" value="3986"/>
 </reference>
 
 <reference anchor="RFC5234" target="https://datatracker.ietf.org/doc/html/rfc5234">
