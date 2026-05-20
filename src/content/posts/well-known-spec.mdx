@@ -3,7 +3,7 @@ title: "well-known-spec: A Convention for Publishing Versioned Specifications un
 description: "An optional, format-agnostic convention proposing that versioned specifications be published under /.well-known/spec/{name}/v{x.y.z}.{ext}. References pin to a specific version. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
 publishDate: "2026-05-20T18:00:00-05:00"
 tags: ["standards", "http", "well-known-spec", "spec"]
-marginalia: "A draft (v0.1.0) meta-convention in RFC-style Markdown. Canonical artifact: [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md)."
+marginalia: "A draft (v0.1.0) meta-convention. Canonical artifacts: pixel-perfect IETF [`v0.1.0.txt`](/.well-known/spec/well-known-spec/v0.1.0.txt) and parallel [`v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md)."
 visibility: draft
 ---
 
@@ -14,21 +14,22 @@ visibility: draft
 | **Author** | Ben Abbitt |
 | **Published** | 2026-05-20 |
 | **License** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
-| **Canonical URL** | [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) |
+| **Canonical URLs** | IETF plain text: [`/.well-known/spec/well-known-spec/v0.1.0.txt`](/.well-known/spec/well-known-spec/v0.1.0.txt)<br/>Markdown: [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) |
 | **Narrative (HTML)** | [`/posts/well-known-spec/`](/posts/well-known-spec/) |
-| **Format** | RFC-style Markdown — this is an abstract convention (see §5.1) |
+| **Format** | Pixel-perfect IETF plain text + RFC-style Markdown (this is an abstract convention, see §5.1; both forms describe the same spec per §4.4) |
 
 ## Abstract
 
 There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in, format-agnostic convention: publish versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.{ext}`, where `{ext}` matches the served Content-Type. References to a spec MUST pin to a specific version.
 
-The canonical artifact is at:
+The canonical artifacts are at:
 
 ```
-https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.md
+https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.txt   (pixel-perfect IETF)
+https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.md    (RFC-style Markdown)
 ```
 
-The convention is recursive: this specification is itself published at the URL it specifies, in a format that follows its own §5.1 format-selection rule (RFC-style Markdown, since the convention is abstract and not a data shape).
+The convention is recursive: this specification is itself published at the URLs it specifies, in formats that follow its own §5.1 format-selection rule (text-based, since the convention is abstract and not a data shape), and demonstrates §4.4 by publishing the same normative content in two formats at the same name and version.
 
 Publishing is opt-in. Nothing here mandates that any host publish anything.
 
@@ -77,7 +78,7 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 - Identifies the spec name unambiguously.
 - Identifies the exact version of the spec, immutable and stable.
 - Is discoverable by convention without registration.
-- Doesn't pretend to be more authoritative than a community proposal.
+- Functions as a draft community standard with a clear path toward formal IETF/IANA standardization as adoption justifies.
 
 This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.{ext}` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
 
@@ -87,7 +88,7 @@ The convention is **format-agnostic.** A spec document MAY be a JSON Schema, an 
 
 The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) and [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174), but only when they appear in all-uppercase, and **only as constraints on spec documents that opt in to this convention**. Nothing in this document requires any host to publish a spec.
 
-The term *spec document* refers to a JSON Schema published at a `/.well-known/spec/...` URL as defined by this convention.
+The term *spec document* refers to any file published at a `/.well-known/spec/...` URL as defined by this convention. A spec document MAY be in any format (see §5); this convention does not require any particular format.
 
 The term *canonical versioned URL* refers to a URL of the form `/.well-known/spec/{name}/v{x.y.z}.{ext}` — the only URL form this convention defines.
 
@@ -155,6 +156,25 @@ A missing sidecar is not an error — sidecars are optional. Consumers MAY proce
 The sidecar establishes integrity at fetch time. The consumer-hash record (§4.1) detects subsequent silent modification by the publisher. The two are complementary; neither replaces the other. A publisher may publish a sidecar even if no consumer maintains a hash record; a consumer may maintain a hash record even if no publisher publishes a sidecar.
 
 Note that a hash sidecar protects against transit-level corruption (CDN errors, intermediary mutation) and accidental publisher mistakes, but cannot detect deliberate tampering by a publisher who controls both the spec and its sidecar. Cryptographic signatures (out of scope for this version) would be needed for that threat model.
+
+### 4.4. Multiple Formats at the Same Version
+
+Different file extensions of the same spec — at the same `{name}` and same `{x.y.z}` — MAY coexist as separate canonical URLs. A publisher MAY publish, simultaneously:
+
+```
+/.well-known/spec/foo/v0.1.0.md       (RFC-style Markdown narrative, with reasoning)
+/.well-known/spec/foo/v0.1.0.txt      (pixel-perfect IETF plain text)
+/.well-known/spec/foo/v0.1.0.proto    (Protobuf source — pure IDL, no prose)
+/.well-known/spec/foo/v0.1.0.html     (rendered web view, possibly with styling)
+```
+
+The byte contents at these URLs MAY differ. The Markdown may carry narrative, examples, and rationale; the `.proto` may be pure source; the `.html` may add headers, styling, and navigation. Each URL is independently fetchable and independently immutable per [§4.1](#41-canonical-versioned-url). Consumers MAY use whichever format best suits their use case.
+
+**Cross-format consistency (normative).** Documents at the same `{name}` and same `{x.y.z}` MUST describe the same thing. They are not independent specs that happen to share a base name; they are different presentations of one spec. A publisher who publishes both `/.well-known/spec/foo/v0.1.0.md` and `/.well-known/spec/foo/v0.1.0.proto` represents both as `foo v0.1.0`, and the normative content (rules, data shape, structural requirements) MUST agree between them. Where the formats differ — narrative prose present in one and absent in another, machine-checkable schema present in one and not in another — the differences MUST be additions or presentational choices, never contradictions.
+
+If a publisher needs the content to differ semantically — if the `.proto` actually describes a different version of the data shape than the `.md` narrative — they MUST use a different version identifier on at least one of them. Two semantically-different documents at the same name+version is a contract violation, on the same footing as mutating the content of a canonical URL (a §4.1 violation).
+
+This rule is what makes the multi-format flexibility safe. A consumer who pins to `foo v0.1.0` can switch between `.md`, `.txt`, `.proto`, and `.html` and rely on getting the same spec, in different forms.
 
 ## 5. Spec Document Format
 
@@ -259,7 +279,7 @@ A spec document MAY identify the version of `well-known-spec` it conforms to in 
 
 The security surface of this convention is small.
 
-Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they are JSON Schemas describing other data. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
+Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they describe formats, protocols, or conventions, but do not contain credentials, user data, or runtime state. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
 
 Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
 
@@ -292,16 +312,24 @@ The `application/json` and `application/schema+json` media types are used unchan
 
 ## 11. Reference Implementation
 
-This site is a working implementation of `well-known-spec` v0.1.0. The live artifacts on this host:
+This site is a working implementation of `well-known-spec` v0.1.0. The live artifacts on this host demonstrate [§4.4](#44-multiple-formats-at-the-same-version) in action: the same spec, at the same name and version, presented in three formats:
 
-- This spec, served as RFC-style Markdown at: [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) — the canonical artifact.
-- The same content rendered as HTML at: [`/posts/well-known-spec/`](/posts/well-known-spec/) — the narrative companion.
-- A companion spec (`deployment-version`) published under the same convention: [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)). That spec describes a JSON manifest shape and is correctly published as a JSON Schema per [§5.1](#51-choosing-a-format).
+- **Pixel-perfect IETF plain text:** [`/.well-known/spec/well-known-spec/v0.1.0.txt`](/.well-known/spec/well-known-spec/v0.1.0.txt) — generated via [`mmark`](https://mmark.miek.nl/) + [`xml2rfc`](https://datatracker.ietf.org/doc/html/rfc7991) from a kramdown-rfc-style Markdown source. Carries the IETF aesthetic: header columns, centered title, dotted-leader TOC with page numbers, page footers, `Section X.Y` cross-references, `[RFCnnnn]` reference style.
+- **RFC-style Markdown:** [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) — the post body served as `text/markdown`. Same normative content; richer in narrative.
+- **HTML narrative:** [`/posts/well-known-spec/`](/posts/well-known-spec/) — rendered via the site's Astro layout.
+
+Per §4.4, all three URLs describe the same spec — `well-known-spec v0.1.0` — and the normative content is identical between them. Differences are presentational only.
+
+A separate spec (`deployment-version`) is published under the same convention at [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)). That spec describes a JSON manifest shape and is correctly published as a JSON Schema per [§5.1](#51-choosing-a-format).
 
 Source on GitHub (Astro static site):
 
-- This spec / post (single source of truth — the post's MDX body is what the canonical `.md` endpoint serves): [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
-- Canonical-URL endpoint that serves the body raw as `text/markdown`: [`src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts)
+- Markdown source (RFC-style, drives the HTML post and the `.md` URL): [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
+- Markdown endpoint (serves post body raw as `text/markdown`): [`src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts)
+- IETF mmark source (drives the `.txt`, kramdown-rfc dialect): [`src/lib/specs/well-known-spec-v0.1.0.mmark.md`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/well-known-spec-v0.1.0.mmark.md)
+- Pre-generated IETF text (committed at the canonical URL): [`public/.well-known/spec/well-known-spec/v0.1.0.txt`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/public/.well-known/spec/well-known-spec/v0.1.0.txt)
+
+The `.txt` is pre-generated locally via `mmark src.md | xml2rfc --text` and committed to `public/`. Because v0.1.0 is byte-immutable per §4.1, the generated `.txt` for this version is generated once and never changes; future versions get regenerated and committed.
 
 ## 12. References
 
