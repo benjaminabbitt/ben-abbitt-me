@@ -56,9 +56,9 @@
 							"description": "REQUIRED. The canonical or display form of this element's version. RECOMMENDED to be the form a human reading the manifest would recognize (e.g. '1.2.3', '2026.05.20', '9063c2a', 'v1.2.3+build.456')."
 						},
 						"scheme": {
-							"type": "string",
+							"type": ["string", "null"],
 							"minLength": 1,
-							"description": "OPTIONAL. Short identifier naming the versioning scheme (e.g. 'semver', 'calver', 'git-sha', 'pep440'). When present, signals to consumers what shape to expect in 'parts'. Not enumerated by this spec; implementations MAY use any non-empty string."
+							"description": "OPTIONAL. Identifier naming the versioning scheme AND the version of that scheme's interpretation, in 'name@version' form (e.g. 'semver@2.0.0', 'git-sha@1.0.0'). SHOULD be a registered entry from the well-known scheme registry maintained in the spec narrative. MAY be a custom name, in which case the name SHOULD be prefixed with the publisher's organization (e.g. 'acme.rolling-calver@1.0.0'). MAY be null to explicitly assert that no scheme applies; this is distinct from omitting the field, which is silence."
 						},
 						"parts": {
 							"type": "object",

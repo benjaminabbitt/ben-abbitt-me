@@ -15,7 +15,7 @@ export async function GET() {
 				name: siteConfig.title,
 				version: {
 					text: sha,
-					scheme: "git-sha",
+					scheme: "git-sha@1.0.0",
 				},
 			},
 		],

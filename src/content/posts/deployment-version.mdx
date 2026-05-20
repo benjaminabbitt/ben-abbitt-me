@@ -131,20 +131,30 @@ An example manifest appears in Appendix A.
 A version is always a JSON object. It has one REQUIRED field and up to two OPTIONAL fields:
 
 - `text` (string, REQUIRED) — The canonical or display form of the version. RECOMMENDED to be the form a human reading the manifest would recognize. Examples: `"1.2.3"`, `"2026.05.20"`, `"9063c2a"`, `"v1.2.3-rc.1+build.456"`. The `text` field is the version. The other fields describe its structure.
-- `scheme` (string, OPTIONAL) — A short identifier for the versioning scheme in use. When present, signals to consumers what structure to expect in `parts`. Examples: `"semver"`, `"calver"`, `"git-sha"`, `"pep440"`. The set of scheme identifiers is NOT enumerated by this spec — publishers MAY use any non-empty string. Consumers MAY ignore `scheme` if they don't recognize it; the `text` field is always interpretable.
+- `scheme` (string-or-null, OPTIONAL) — Identifier naming the versioning scheme AND the version of that scheme's interpretation, in `name@version` form. When present and non-null, signals to consumers what structure to expect in `parts`. SHOULD be one of the well-known registry entries documented in §4.6.1; MAY be any other publisher-coined `name@version` string. MAY be explicitly `null` to assert "no scheme applies" — semantically distinct from omitting the field, which is silence. Consumers MAY ignore `scheme` if they don't recognize it; the `text` field is always interpretable.
 - `parts` (object, OPTIONAL) — An implementation-defined parsed structure of the version, typically corresponding to `scheme`. The shape is NOT constrained by this spec. Consumers MUST NOT assume any particular shape; the canonical version is `text`.
 
-Common conventions for `parts`, when `scheme` is one of the well-known identifiers:
+### 4.6.1. Well-Known Scheme Registry
 
-| `scheme` | Typical `parts` shape |
-|---|---|
-| `semver` | `{ major: int, minor: int, patch: int, prerelease?: string, build?: string }` per [semver 2.0.0](https://semver.org/spec/v2.0.0.html) |
-| `calver` | `{ year: int, month: int, day: int }` (varies by [calver.org](https://calver.org/) format string) |
-| `git-sha` | `{ short?: string, long?: string }`; or just omit `parts` entirely and rely on `text` |
-| `pep440` | `{ epoch?: int, release: [int, ...], pre?: string, post?: int, dev?: int, local?: string }` per [PEP 440](https://peps.python.org/pep-0440/) |
-| `dotnet-assembly` | `{ major: int, minor: int, build: int, revision?: int }` |
+The following scheme identifiers are well-known. Publishers SHOULD use them when they apply, so consumers can rely on the documented `parts` shape:
 
-These tables are informative, not normative. Publishers MAY use any scheme name and any `parts` shape that fits their versioning model.
+| `scheme` | `parts` shape | Reference |
+|---|---|---|
+| `semver@2.0.0` | `{ major: int, minor: int, patch: int, prerelease?: string, build?: string }` | [semver 2.0.0](https://semver.org/spec/v2.0.0.html) |
+| `calver@1.0.0` | `{ year: int, month?: int, day?: int }` (varies by [calver.org](https://calver.org/) format string) | [calver.org](https://calver.org/) |
+| `git-sha@1.0.0` | `{ short?: string, long?: string }`; OR omit `parts` entirely | n/a |
+| `pep440@1.0.0` | `{ epoch?: int, release: [int, ...], pre?: string, post?: int, dev?: int, local?: string }` | [PEP 440](https://peps.python.org/pep-0440/) |
+| `dotnet-assembly@1.0.0` | `{ major: int, minor: int, build: int, revision?: int }` | .NET assembly versioning |
+
+The version suffix on each entry (`@2.0.0`, `@1.0.0`, etc.) is the version of *the registry entry*, not of the underlying scheme spec. For `semver` it happens to track [semver.org](https://semver.org/) directly. For schemes without their own published version (`git-sha`, `calver`, `dotnet-assembly`), the entry version is independent — it bumps when this registry changes its `parts` shape.
+
+- Adding a new scheme to the registry is a **MINOR** version bump of `deployment-version`.
+- Adding a new version of an existing scheme (with a changed `parts` shape) is also a **MINOR** bump (the old entry remains valid).
+- Removing or renaming a scheme is a **MAJOR** bump.
+
+> **Discussion items.** The composition of this registry — which schemes belong, what their canonical `parts` shapes are, the `name@version` separator (`@` vs `/` vs `:` vs `-`), and whether to register custom schemes via a vendor-prefix convention — are all open for v0.1.0.
+
+Publishers MAY use scheme identifiers not in the registry. Custom identifiers SHOULD use the same `name@version` form and SHOULD be prefixed with the publisher's organization or project to avoid colliding with future registry entries (e.g. `acme.rolling-calver@1.0.0`, `myco.build-tag@1.2.0`). Consumers MUST treat unknown scheme identifiers as opaque — they MAY still parse `text`, but MUST NOT assume any particular shape of `parts`.
 
 Why an object instead of a bare string? The motivating cases:
 
@@ -358,7 +368,7 @@ A site with a single root-level element, version expressed as a Git SHA:
       "name": "Reduction",
       "version": {
         "text": "9063c2a",
-        "scheme": "git-sha"
+        "scheme": "git-sha@1.0.0"
       }
     }
   ]
@@ -378,14 +388,14 @@ A site with a nested sub-application, mixing version schemes (root uses Git SHA,
     {
       "path": "/",
       "name": "Reduction",
-      "version": { "text": "9063c2a", "scheme": "git-sha" },
+      "version": { "text": "9063c2a", "scheme": "git-sha@1.0.0" },
       "elements": [
         {
           "path": "/forage-atlas/",
           "name": "Modern Forage Atlas",
           "version": {
             "text": "2026.05.20",
-            "scheme": "calver",
+            "scheme": "calver@1.0.0",
             "parts": { "year": 2026, "month": 5, "day": 20 }
           }
         }
@@ -401,7 +411,7 @@ A service publishing a semver version with both `parts` and the build SHA carrie
 {
   "version": {
     "text": "1.2.3-rc.1+9063c2a",
-    "scheme": "semver",
+    "scheme": "semver@2.0.0",
     "parts": {
       "major": 1,
       "minor": 2,
