@@ -29,10 +29,18 @@ const { roles } = Astro.props;
 			roles.map((r) => (
 				<>
 					<div
-						class="grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-4 -mx-2.5 border-b border-rule items-baseline print:break-inside-avoid"
+						class="flex flex-col gap-1.5 sm:grid sm:grid-cols-[100px_1fr_auto] sm:gap-[18px] sm:items-baseline px-2.5 py-4 -mx-2.5 border-b border-rule print:break-inside-avoid print:grid print:grid-cols-[100px_1fr_auto] print:gap-[18px] print:items-baseline"
 						data-marginalia={r.note ?? ""}
 					>
-						<span class="font-mono text-[11.5px] text-fg-dim">{r.years}</span>
+						<span class="font-mono text-[11.5px] text-fg-dim">
+							{r.years}
+							{r.domain && (
+								<span class="sm:hidden print:hidden text-fg-faint">
+									<span class="mx-1.5">·</span>
+									{r.domain}
+								</span>
+							)}
+						</span>
 						<div class="flex flex-col gap-1 min-w-0">
 							<div class="font-serif font-medium text-[18.5px] tracking-[-0.01em] text-fg">
 								{r.title}
@@ -55,24 +63,29 @@ const { roles } = Astro.props;
 								</div>
 							)}
 						</div>
-						<span class="font-mono text-[10.5px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
+						<span class="hidden sm:inline print:inline font-mono text-[10.5px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
 							{r.domain}
 						</span>
 					</div>
 					{r.engagements?.map((e, i) => (
 						<div
 							class:list={[
-								"grid grid-cols-[100px_1fr_auto] gap-[18px] px-2.5 py-3 -mx-2.5 items-baseline border-b print:break-inside-avoid",
+								"flex flex-col gap-1 pl-3 sm:pl-0 sm:grid sm:grid-cols-[100px_1fr_auto] sm:gap-[18px] sm:items-baseline print:grid print:grid-cols-[100px_1fr_auto] print:gap-[18px] print:items-baseline print:pl-0 px-2.5 py-3 -mx-2.5 border-b print:break-inside-avoid",
 								i === r.engagements!.length - 1
 									? "border-solid border-rule"
 									: "border-dashed border-rule",
 							]}
 							data-marginalia={r.note ?? ""}
 						>
-							<span class="font-mono text-[10px] text-fg-faint pl-[18px]">↳</span>
+							<span class="hidden sm:inline print:inline font-mono text-[10px] text-fg-faint pl-[18px]">↳</span>
 							<div class="flex flex-col gap-1 min-w-0">
 								<div class="font-serif italic font-medium text-[15.5px] text-fg">
 									{e.title}
+									{e.domain && (
+										<span class="sm:hidden print:hidden font-mono not-italic text-[10px] text-fg-faint ml-2 font-normal">
+											· {e.domain}
+										</span>
+									)}
 								</div>
 								<ul class="font-serif-body text-[13.5px] text-fg-dim mt-1 pl-[18px] leading-[1.5] list-disc">
 									{e.bullets.map((b) => (
@@ -80,7 +93,7 @@ const { roles } = Astro.props;
 									))}
 								</ul>
 							</div>
-							<span class="font-mono text-[10px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
+							<span class="hidden sm:inline print:inline font-mono text-[10px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
 								{e.domain}
 							</span>
 						</div>
