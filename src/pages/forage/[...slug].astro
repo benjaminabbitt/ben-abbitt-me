@@ -3,6 +3,7 @@ import { type CollectionEntry, getCollection, render } from "astro:content";
 import DishCount from "@/components/DishCount.astro";
 import Prose from "@/theme/components/Prose.astro";
 import PageLayout from "@/theme/layouts/PageLayout.astro";
+import { renderInlineMd } from "@/theme/lib/inlineMd";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
 import { tagHrefForage } from "@/theme/lib/tags";
 
@@ -60,7 +61,7 @@ const date = post.data.publishDate.toLocaleDateString("sv-SE", { timeZone: "Amer
 				post.data.marginalia && (
 					<p
 						class="font-serif italic text-[17px] text-accent mt-4 max-w-[42em] [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:opacity-80"
-						set:html={post.data.marginalia}
+						set:html={renderInlineMd(post.data.marginalia)}
 					/>
 				)
 			}
