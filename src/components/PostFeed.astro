@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { renderExcerpt } from "@/lib/dish-count";
 import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
+import { renderInlineMd } from "@/theme/lib/inlineMd";
 import { countWords, readMinutes } from "@/theme/lib/readTime";
 import { type BlogId, tagHrefFor } from "@/theme/lib/tags";
 
@@ -65,7 +66,7 @@ function postHref(p: AnyPost): string {
 				return (
 					<div
 						class="group relative flex flex-col gap-1.5 sm:grid sm:grid-cols-[100px_1fr_auto] sm:gap-[18px] sm:items-baseline px-2.5 py-3.5 -mx-2.5 border-b border-rule transition-colors duration-100 hover:bg-bg-alt"
-						data-marginalia={p.data.marginalia ?? ""}
+						data-marginalia={renderInlineMd(p.data.marginalia ?? "")}
 						data-post-id={p.id}
 						data-row
 						data-sort-date={p.data.publishDate.valueOf()}
