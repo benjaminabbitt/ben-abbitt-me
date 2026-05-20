@@ -139,7 +139,15 @@ The deliberate minimalism reflects that everything else is already either implic
 
 A tool that wants to verify a spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant can:
 
+<<<<<<< HEAD
 1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json) (or [`/.well-known/spec/well-known-spec.json`](/.well-known/spec/well-known-spec.json) for the latest), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
+=======
+<<<<<<< HEAD
+1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json) (or [`/.well-known/spec/well-known-spec.json`](/.well-known/spec/well-known-spec.json) for the latest), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
+=======
+1. Fetch `well-known-spec` from the publishing host at `/.well-known/spec/well-known-spec/v0.1.0.json` (or `well-known-spec.json` for the latest), OR from a known reference host such as `https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`.
+>>>>>>> origin/main
+>>>>>>> origin/main
 2. Validate the candidate spec document against that schema.
 
 Multiple hosts MAY publish their own copies of `well-known-spec`. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
@@ -158,7 +166,15 @@ A spec document MAY identify the version of `well-known-spec` it conforms to in 
 
 The security surface of this convention is small.
 
+<<<<<<< HEAD
 Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they are JSON Schemas describing other data. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
+=======
+<<<<<<< HEAD
+Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they are JSON Schemas describing other data. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
+=======
+Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they are JSON Schemas describing other data. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §8](/posts/deployment-version/)).
+>>>>>>> origin/main
+>>>>>>> origin/main
 
 Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
 
