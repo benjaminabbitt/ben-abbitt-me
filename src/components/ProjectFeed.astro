@@ -11,7 +11,7 @@ const { entries } = Astro.props;
 <MarginaliaLayout defaultText="Hover a project to read the margin note.">
 	<div class="flex flex-col">
 		<div
-			class="grid grid-cols-[90px_1fr_auto] gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
+			class="hidden sm:grid sm:grid-cols-[90px_1fr_auto] sm:gap-[18px] px-2.5 pb-3 border-b border-rule font-mono text-[10px] text-fg-faint tracking-[0.1em] uppercase"
 		>
 			<span>since</span><span>name · tagline</span><span>links</span>
 		</div>
@@ -20,14 +20,14 @@ const { entries } = Astro.props;
 				const p = entry.data;
 				return (
 					<div
-						class="grid grid-cols-[90px_1fr_auto] gap-[18px] px-2.5 py-[18px] -mx-2.5 border-b border-rule items-baseline"
+						class="flex flex-col gap-1.5 sm:grid sm:grid-cols-[90px_1fr_auto] sm:gap-[18px] sm:items-baseline px-2.5 py-[18px] -mx-2.5 border-b border-rule"
 						data-marginalia={p.note ?? ""}
 					>
 						<span class="font-mono text-[11.5px] text-fg-dim">
 							{p.createdAt.slice(0, 7)}
 						</span>
 						<div class="flex flex-col gap-1.5 min-w-0">
-							<span class="font-serif font-medium text-[22px] tracking-[-0.015em] text-fg">
+							<span class="font-serif font-medium text-[22px] leading-[1.18] sm:leading-normal tracking-[-0.015em] text-fg">
 								{p.name}
 								{p.status && (
 									<span class="font-mono text-[11px] text-fg-faint ml-1.5 font-normal">
@@ -53,7 +53,7 @@ const { entries } = Astro.props;
 								</span>
 							)}
 						</div>
-						<div class="flex flex-col gap-1 text-right whitespace-nowrap">
+						<div class="flex gap-x-4 gap-y-1 flex-wrap mt-1 sm:mt-0 sm:flex-col sm:gap-1 sm:text-right sm:whitespace-nowrap">
 							{p.site && (
 								<a
 									class="font-mono text-[11.5px] text-fg-dim hover:text-accent"
