@@ -248,7 +248,7 @@ A conforming server MAY emit a `Deployment-Version` response header on any respo
 
 ### 5.1. Field Name
 
-The field name is `Deployment-Version`. Servers MUST NOT use the `X-` prefix variant `X-Deployment-Version`. This is a stricter constraint than [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648), which deprecates the `X-` prefix but uses SHOULD NOT rather than MUST NOT; this spec hardens that recommendation for new servers adopting the convention, since there is no legacy reason to introduce a new `X-`-prefixed variant in 2026. The field name is currently unregistered with IANA; provisional registration is suggested as future work (see §11).
+The field name is `Deployment-Version`. Servers MUST NOT use the `X-` prefix variant `X-Deployment-Version`. This is a stricter constraint than [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648), which deprecates the `X-` prefix but uses SHOULD NOT rather than MUST NOT; this spec hardens that recommendation for new servers adopting the convention, since there is no legacy reason to introduce a new `X-`-prefixed variant in 2026. The field name is currently unregistered with IANA; provisional registration is suggested as future work (see §12).
 
 ### 5.2. Syntax
 
@@ -425,9 +425,27 @@ The `application/json` media type is used unchanged. The spec does not define a 
 
 Strict conformance to RFC 8615 and RFC 8288 awaits the three IANA registrations above. Loose conformance — adopting the URL pattern, the manifest shape, the header field, the meta tag, and the link relation — is achievable today by any host. The spec acknowledges the gap and does not represent itself as more authoritative than it is.
 
-## 13. References
+## 13. Reference Implementation
 
-### 13.1. Normative References
+This site is a working implementation of `deployment-version` v0.1.0. The live artifacts on this host:
+
+- Manifest: [`/.well-known/deployment-version.json`](/.well-known/deployment-version.json) — emits the schema-conforming JSON manifest with the current build's Git SHA as the root element's version.
+- JSON Schema: [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) — the canonical spec artifact this site claims to conform to.
+- HTML meta tag: every page emits `<meta name="deployment-version" content="...">` via the base layout.
+- Conformance to [`well-known-spec`](/posts/well-known-spec/) v0.1.0 — see [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json).
+
+Source code on GitHub (Astro static site):
+
+- Manifest endpoint: [`src/pages/.well-known/deployment-version.json.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/deployment-version.json.ts)
+- Spec endpoint: [`src/pages/.well-known/spec/deployment-version/v0.1.0.json.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/deployment-version/v0.1.0.json.ts)
+- Schema source data: [`src/lib/specs/deployment-version-v0.1.0.json`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/deployment-version-v0.1.0.json)
+- Meta tag wiring: [`src/theme/layouts/BaseLayout.astro`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/theme/layouts/BaseLayout.astro)
+- Build SHA injection: [`.github/workflows/deploy.yml`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/.github/workflows/deploy.yml) — the deploy workflow passes `BUILD_SHA` from `${{ github.sha }}` and the manifest endpoint reads it via `import.meta.env.BUILD_SHA`.
+- This post: [`src/content/posts/deployment-version.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/deployment-version.mdx)
+
+## 14. References
+
+### 14.1. Normative References
 
 - [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) — Key words for use in RFCs to Indicate Requirement Levels
 - [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454) — The Web Origin Concept
@@ -441,7 +459,7 @@ Strict conformance to RFC 8615 and RFC 8288 awaits the three IANA registrations 
 - [JSON Schema draft 2020-12](https://json-schema.org/draft/2020-12/schema)
 - [well-known-spec v0.1.0](/.well-known/spec/well-known-spec/v0.1.0.json)
 
-### 13.2. Informative References
+### 14.2. Informative References
 
 - [RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html) — The "api-catalog" Well-Known URI and Link Relation
 - [RFC 9264](https://datatracker.ietf.org/doc/html/rfc9264) — Linkset: Media Types and a Link Relation Type for Link Sets

@@ -40,9 +40,9 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 - Doesn't pretend to be more authoritative than a community proposal.
 - Refuses to offer a "give me the latest" affordance, because spec consumers need reproducibility more than they need convenience.
 
-This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.json` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
+This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.{ext}` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
 
-The form of the spec document is also opinionated: it MUST be a JSON Schema (draft 2020-12), so that tooling can validate documents claiming conformance to it, and so that "the spec" and "the validation schema" are the same artifact.
+The convention is **format-agnostic.** A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, a PDF — anything addressable as a single file at the canonical URL. The convention is about *where* specs live and *how* they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; `well-known-spec` itself does not.
 
 ## 2. Conventions and Terminology
 
@@ -71,7 +71,7 @@ This convention is unrelated to whether the *thing* a spec describes (a manifest
 A conforming spec document for a spec named `{name}` at version `{x.y.z}` MUST be served at:
 
 ```
-https://{host}/.well-known/spec/{name}/v{x.y.z}.json
+https://{host}/.well-known/spec/{name}/v{x.y.z}.{ext}
 ```
 
 where:
@@ -79,8 +79,9 @@ where:
 - `{host}` is the publishing origin (scheme, host, and optional port per [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454)).
 - `{name}` is the spec name. It MUST match the pattern `^[a-z][a-z0-9-]*$` (lowercase kebab-case, starting with a letter).
 - `{x.y.z}` is the spec version, a [semver 2.0.0](https://semver.org/spec/v2.0.0.html) string. The leading `v` is REQUIRED.
+- `{ext}` is the file extension matching the document's served Content-Type (see §5.1).
 
-The canonical URL MUST be served with `Content-Type: application/json` or, RECOMMENDED, `Content-Type: application/schema+json`.
+The canonical URL MUST be served with a Content-Type appropriate to the document's format (see §5.1).
 
 The canonical URL is immutable. Once published at a given version, the content at that URL MUST NOT change. There are no editorial-change exceptions: typo fixes, clarifications, and any other modification to the document, however small, require a new PATCH version bump (or higher if the change is normative). Consumers MUST be able to rely on the URL identifying a fixed byte sequence; pinning to a version means pinning to its exact content.
 
@@ -100,40 +101,69 @@ The canonical versioned URL SHOULD be served with a long `Cache-Control` `max-ag
 
 ## 5. Spec Document Format
 
-### 5.1. JSON Schema Requirement
+This convention is about URL location and versioning, not document format. A spec document MAY be in any format addressable as a single file at the canonical URL.
 
-A conforming spec document MUST be a JSON Schema, by default of dialect [draft 2020-12](https://json-schema.org/draft/2020-12/schema). Future spec versions of `well-known-spec` MAY relax this to additional dialects.
+### 5.1. File Extension and Content-Type
 
-### 5.2. Required Top-Level Fields
+The `{ext}` segment of the canonical URL MUST match the served Content-Type. Common pairings:
 
-A conforming spec document MUST have the following top-level fields:
+| Format | Extension | Content-Type |
+|---|---|---|
+| JSON Schema | `.json` | `application/schema+json` (RECOMMENDED) or `application/json` |
+| JSON (other) | `.json` | `application/json` |
+| OpenAPI (YAML) | `.yaml` | `application/yaml` |
+| OpenAPI (JSON) | `.json` | `application/json` |
+| Markdown | `.md` | `text/markdown` |
+| HTML | `.html` | `text/html` |
+| Plain text | `.txt` | `text/plain` |
+| ABNF / grammar | `.abnf` | `text/plain` |
+| PDF | `.pdf` | `application/pdf` |
 
-- `$schema` (string, URI) — MUST identify the JSON Schema dialect. RECOMMENDED: `"https://json-schema.org/draft/2020-12/schema"`.
-- `$id` (string, URI) — MUST be the canonical versioned URL of the spec document.
-- `title` (string, non-empty) — Human-readable name including the version, e.g. `"deployment-version v0.1.0"`.
+The table is illustrative. Any IANA-registered media type and corresponding well-known file extension MAY be used.
 
-The document SHOULD also include a `description` field with a one-paragraph abstract that includes the URL of any narrative companion document.
+### 5.2. Identity Declaration
 
-The document MAY include any other JSON Schema keywords as needed to describe the structure it validates.
+A spec document SHOULD declare its identity (name, version, canonical URL) in a format-appropriate way, so that consumers fetching the document by other means (local cache, mirror, forked copy) can identify it without relying on its filesystem location.
 
-### 5.3. What This Convention Does Not Require
+Examples:
+
+- **JSON Schema** — the `$id` field carries the canonical URL; `title` carries the name and version.
+- **OpenAPI** — `info.title` and `info.version`; canonical URL via an extension field like `info.x-canonical-url` (no standard field exists for this).
+- **Markdown** — YAML front-matter with `name`, `version`, `canonical_url` keys; or the first heading.
+- **HTML** — `<link rel="canonical" href="...">`, `<title>`, and a `<meta>` tag for the version.
+
+This is a SHOULD, not a MUST. The canonical URL is always the URL itself, regardless of whether the document internally references it.
+
+### 5.3. Companion Format-Specific Specs
+
+A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical `well-known-spec-json-schema` companion could require JSON Schema documents to carry `$schema`, `$id`, and `title` (the rules `well-known-spec` v0.1.0 itself happens to validate, applied as a constraint). A `well-known-spec-openapi` could require specific `info` fields. Such companion specs are out of scope for `well-known-spec` v0.1.0; they may be developed independently and referenced from the documents they constrain.
+
+### 5.4. What This Convention Does Not Require
 
 A conforming spec document is **NOT REQUIRED** to:
 
-- Carry custom metadata fields (`x-spec-name`, `x-spec-version`, etc.). The name and version are derived from the URL. The status (draft / stable / deprecated) is implicit in the semver: `0.x.y` is draft by convention; `1.0.0` and later are stable; deprecation is communicated by publishing a new MAJOR version and by out-of-band announcement (release notes, changelog).
-- Reference a particular IANA registration. No registration is required.
-- Use a particular license. Publishers SHOULD declare a license in the narrative companion document.
+- Use any particular document format.
+- Carry custom metadata fields beyond what its format naturally supports.
+- Conform to any companion format-specific spec.
+- Reference a particular IANA registration.
+- Declare a license (though publishers SHOULD declare one in a narrative companion document).
 
-The deliberate minimalism reflects that everything else is already either implicit in the URL or appropriately handled by the narrative companion document. The JSON Schema is the contract; words are words.
+The status (draft / stable / deprecated) is implicit in the semver of the canonical URL: `0.x.y` is draft by convention; `1.0.0` and later are stable; deprecation is communicated by publishing a new MAJOR version and by out-of-band announcement (release notes, changelog).
 
-## 6. Self-Validation
+The deliberate minimalism reflects that the value of `well-known-spec` is in the URL convention and the versioning rules, both of which are useful independent of how the spec content is encoded.
 
-`well-known-spec` v0.1.0 is itself a JSON Schema that validates spec documents conforming to `well-known-spec`. Because `well-known-spec` v0.1.0 is itself published as a `well-known-spec`-conforming document, it must validate against itself. It does.
+## 6. Self-Validation (JSON Schema Specs)
 
-A tool that wants to verify a spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant can:
+`well-known-spec` v0.1.0 is itself published as a JSON Schema (draft 2020-12). It defines `$schema`/`$id`/`title` as structural requirements **for spec documents that happen to be JSON Schemas.** Because `well-known-spec` v0.1.0 is itself a JSON Schema, it self-validates: the schema accepts itself as a conforming document.
+
+This is a property of the JSON-Schema sub-case, not a requirement of the broader convention. Spec documents in other formats (Markdown, OpenAPI, HTML, etc.) cannot self-validate against this JSON Schema; they may have format-specific validation through a [companion spec](#53-companion-format-specific-specs) or none at all.
+
+A tool that wants to verify a JSON-Schema-format spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant to `well-known-spec` can:
 
 1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
 2. Validate the candidate spec document against that schema.
+
+For spec documents in other formats, validation is format-specific or absent; consumers SHOULD rely on the canonical URL and §4.1 immutability rather than schema validation.
 
 Multiple hosts MAY publish their own copies of `well-known-spec`. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
 
@@ -182,9 +212,22 @@ Adopters concerned about strict RFC 8615 conformance are advised to await regist
 
 The `application/json` and `application/schema+json` media types are used unchanged. The convention does not define a new media type.
 
-## 11. References
+## 11. Reference Implementation
 
-### 11.1. Normative References
+This site is a working implementation of `well-known-spec` v0.1.0. The live artifacts on this host:
+
+- This spec, served at: [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json) — the canonical JSON Schema, self-validating per §6.
+- A companion spec published under the same convention: [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)).
+
+Source code on GitHub (Astro static site):
+
+- This spec's endpoint: [`src/pages/.well-known/spec/well-known-spec/v0.1.0.json.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0.json.ts)
+- Spec source data: [`src/lib/specs/well-known-spec-v0.1.0.json`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/well-known-spec-v0.1.0.json)
+- This post: [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
+
+## 12. References
+
+### 12.1. Normative References
 
 - [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) — Key words for use in RFCs to Indicate Requirement Levels
 - [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454) — The Web Origin Concept
@@ -194,7 +237,7 @@ The `application/json` and `application/schema+json` media types are used unchan
 - [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html)
 - [JSON Schema draft 2020-12](https://json-schema.org/draft/2020-12/schema)
 
-### 11.2. Informative References
+### 12.2. Informative References
 
 - [OpenAPI Issue #1851 — RFC 5785 conventions & suggested OpenAPI document locations](https://github.com/OAI/OpenAPI-Specification/issues/1851)
 - [draft-claise-semver-02 — Semantic Versioning and Structure for IETF Specifications](https://datatracker.ietf.org/doc/html/draft-claise-semver-02) (expired)
