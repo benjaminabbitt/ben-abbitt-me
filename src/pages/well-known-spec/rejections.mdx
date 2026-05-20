@@ -111,12 +111,13 @@ Every registered general-purpose sub-namespace operator either mandates a naming
 
 The implication for any proposal that publishes under `/.well-known/{suffix}/{name}/...` is that the §4.5-style origin-binding answer (canonical identifier is `(origin, name, version)`) is correct but addresses only *cross*-origin name collisions. The DE will additionally ask: what stops two organisations from publishing under `/.well-known/{suffix}/openapi/` with conflicting documents on the same origin?
 
-Two template answers have worked:
+Three template answers have worked, depending on the structure of the sub-namespace:
 
 - **Reverse-DNS naming requirement** (`appspecific` precedent). The leaf name MUST be reverse-DNS form (`com.example.thing`) based on a domain the publisher controls. Eliminates collision at the leaf because each leaf is namespaced to the publisher's own DNS.
 - **Public sub-registry** (`posh`, `brski`, `cmp`, `masque` precedent). The spec author maintains a public list of allowed leaf names at a stable URL (IANA sub-registry for the IETF cases).
+- **Origin binding via the full URL** (this convention's approach). The canonical identifier is the triple `(origin, name, version)`, not the name alone. Two leaves with the same `{name}` at different origins are two different specs by §4.5. The DE-blessed property — each leaf unambiguously identified with one publisher — is satisfied through HTTP origin semantics rather than through name-encoded DNS.
 
-`well-known-spec` adopts the reverse-DNS approach directly, modelling on the `appspecific` precedent. Specs published without a controlling DNS use a `com.example.{name}` placeholder, but the convention encourages publishers to obtain a DNS name and use its reverse form — DNS provides the namespace-ownership semantics the registry needs from a sub-namespace operator, and short common-word names (`openapi`, `deployment-version`) are exactly the kind that draw the DE objection in cluster 7.
+`well-known-spec` takes the third path. The mechanism differs from `appspecific`'s reverse-DNS rule, but the property is the same: each spec is unambiguously identified with its publisher. The argument in `well-known-spec` §4.5 makes this comparison explicit, citing the `appspecific` registration as the cousin solution to the same problem. The DE conversation about collision-prevention is therefore not avoided — it is answered with a different implementation of the same invariant.
 
 ## 5. Status: Provisional Implications
 

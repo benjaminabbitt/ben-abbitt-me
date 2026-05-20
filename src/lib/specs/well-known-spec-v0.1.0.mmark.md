@@ -184,9 +184,11 @@ Concretely:
 * https://example.com/.well-known/spec/foo/v0.1.0.json and https://other.com/.well-known/spec/foo/v0.1.0.json are different specs. They may describe entirely unrelated things; they may agree by coincidence or by deliberate adoption; this convention takes no position. The same {name} at two origins is not a collision and not a defect -- it is the expected outcome of an open sub-namespace.
 * A consumer that adopts a spec from one origin MUST track the origin as part of the pin. Pinning to "foo v0.1.0" without origin is incomplete and MUST NOT be treated as a canonical reference. Recording (origin, name, version) -- or simply the full URL -- is the only correct form.
 
-Within a single origin, the {name} and {x.y.z} are unambiguous by construction (the URL is unique), and shorthand of the form "foo v0.1.0" is acceptable in informal contexts when the origin is implicit and unambiguous from context. Cross-origin or out-of-context references MUST use the full URL or the full triple.
+Within a single origin, the {name} and {x.y.z} are unambiguous by construction (the URL is unique), and shorthand of the form "foo v0.1.0" is acceptable in informal contexts when the origin is implicit and unambiguous from context. Cross-origin or out-of-context references MUST use the full URL or the full triple. A bare {name} v{version} reference, with the origin omitted or assumed, is NOT a canonical reference, and a consumer that records or transmits one has stored an ambiguous identifier -- there is no way for a later reader to resolve it back to a specific document. Tooling that pins to specs published under this convention MUST record the full URL or the (origin, name, version) triple; storage formats, configuration files, manifests, and bibliographies that elide the origin are non-conformant.
 
 This origin-binding rule is what makes the open {name} namespace safe. There is no global registry of {name} values, no name-resolution authority, and no need for one -- because the names are never asked to function as global identifiers. The URL is the identifier. The convention is a publishing pattern, not a naming authority.
+
+Comparison with the appspecific precedent. The IANA-registered /.well-known/appspecific/ suffix -- currently the only general-purpose open sub-namespace operator in the registry -- achieves the same outcome through a different mechanism: it requires the leaf name to be reverse-DNS based on a domain the publisher controls (e.g. /.well-known/appspecific/com.example.thing.json). The DNS-ownership rule scopes each leaf to a single publisher's authoritative DNS by construction. well-known-spec achieves the same outcome -- each spec is unambiguously identified with its publisher -- but via the full origin URL rather than via domain inversion in the leaf name. The mechanism differs; the property does not. A {name} like "openapi" published at https://example.com/.well-known/spec/openapi/v0.1.0.json and at https://other.com/.well-known/spec/openapi/v0.1.0.json are two different specs by the origin-binding rule -- exactly as /.well-known/appspecific/com.example.thing.json and /.well-known/appspecific/com.other.thing.json would be two different application-specific resources by appspecific's rule. The cited DE precedent for sub-namespace operators is therefore satisfied; the implementation chosen here uses URL origin rather than name-encoded DNS, which preserves the ergonomic of short community-adopted names (openapi, deployment-version) without sacrificing the unambiguous-identity property.
 
 ## Path Semantics and Client Behavior
 
@@ -227,23 +229,6 @@ Per-spec directory: /.well-known/spec/{name}/. A request to this path SHOULD ret
 Listings are advisory, not authoritative. A consumer that wants to know whether a specific version is published MUST request its canonical leaf URL and rely on the response code, not on the directory listing. The directory is a discovery aid; the leaf is the contract. A divergence between them is a misconfiguration the consumer cannot detect from the directory alone.
 
 Bare suffix when nothing is published. A host that has not published any specs MAY return 404 at /.well-known/spec/. A host that publishes specs SHOULD enumerate them; auto-generated filesystem directory listings (Apache's mod_autoindex, nginx autoindex) are NOT RECOMMENDED because they conflate convention-defined entries with arbitrary filesystem contents. Generate the listing intentionally.
-
-## Name Allocation: Reverse-DNS Required
-
-The {name} segment of the canonical URL MUST be in reverse-DNS form, based on a domain name owned or controlled by the publisher. This requirement is modelled directly on the appspecific precedent (the only general-purpose open sub-namespace operator the IANA well-known URIs registry has approved).
-
-The naming rule:
-
-* Format. {name} MUST consist of one or more labels separated by ".", ordered from least-specific to most-specific (the reverse of conventional DNS order). Example: a publisher controlling example.com publishes specs under com.example.{spec-name}.
-* DNS ownership. The publisher MUST own or control the DNS name being reversed. Publishing under com.competitor.foo while not controlling competitor.com is a contract violation; the rule exists to prevent it.
-* Character set. {name} MUST match the pattern ^\[a-z\]\[a-z0-9-\]\*(\.\[a-z0-9\]\[a-z0-9-\]\*)\*$ -- lowercase ASCII, period-separated labels, kebab-case within labels. This is more restrictive than DNS (which permits uppercase and a wider character set) because spec names appear in URLs and tooling that may not be case-tolerant.
-* No bare common-word names. A {name} like openapi, spec, agent, deployment-version, or any single-label common-word string is NOT permitted under this convention. The rule that prevents collision is the reverse-DNS rule; common-word names defeat it by construction.
-
-The rule exists for one reason: a sub-namespace operator that does not prevent leaf collisions does not survive Designated Expert review. The reverse-DNS rule borrows the structural discipline of appspecific directly: each publisher's leaf-name space is namespaced to the DNS that publisher controls, so two publishers cannot collide at the same leaf by construction.
-
-Specs without controlling DNS. A publisher experimenting with this convention before obtaining a domain MAY use the IANA-reserved com.example.{name} form (per [@RFC2606]). This is a placeholder for genuinely experimental use; specs intended to be referenced by anyone other than the author SHOULD use a real reverse-DNS form. The cost of obtaining a domain is small; the cost of consumers pinning to a placeholder com.example.foo and discovering later that ten unrelated specs use the same name is large.
-
-Migration. A publisher that owns multiple domains MAY publish the same spec under multiple reverse-DNS names. Each canonical URL is a separate spec identity per the canonical-identifier rule; the contents at the same name+version+ext MUST be consistent per the multi-format rule. A publisher migrating to a new domain SHOULD publish the spec under the new reverse-DNS name and leave the old URL in place for the lifetime of pinned references.
 
 # Spec Document Format
 
@@ -482,17 +467,6 @@ A separate spec (deployment-version) is published under the same convention at /
   </front>
   <seriesInfo name="BCP" value="14"/>
   <seriesInfo name="RFC" value="2119"/>
-</reference>
-
-<reference anchor="RFC2606" target="https://datatracker.ietf.org/doc/html/rfc2606">
-  <front>
-    <title>Reserved Top Level DNS Names</title>
-    <author initials="D." surname="Eastlake" fullname="Donald Eastlake"/>
-    <author initials="A." surname="Panitz" fullname="Aliza Panitz"/>
-    <date year="1999" month="June"/>
-  </front>
-  <seriesInfo name="BCP" value="32"/>
-  <seriesInfo name="RFC" value="2606"/>
 </reference>
 
 <reference anchor="RFC3986" target="https://datatracker.ietf.org/doc/html/rfc3986">
