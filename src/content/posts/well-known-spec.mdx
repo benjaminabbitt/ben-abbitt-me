@@ -84,6 +84,8 @@ The canonical URL MUST be served with `Content-Type: application/json` or, RECOM
 
 The canonical URL is immutable. Once published at a given version, the content at that URL MUST NOT change. There are no editorial-change exceptions: typo fixes, clarifications, and any other modification to the document, however small, require a new PATCH version bump (or higher if the change is normative). Consumers MUST be able to rely on the URL identifying a fixed byte sequence; pinning to a version means pinning to its exact content.
 
+Consumers are permitted, and encouraged, to compute and record a cryptographic hash (RECOMMENDED: SHA-256) of any spec document they fetch and pin to. If a subsequent fetch of the same canonical URL yields a document whose hash differs, the publisher has violated the immutability rule of this section; the consumer SHOULD treat the divergence as a contract breach, report it to the publisher, and treat the new content as a distinct document not covered by their original pin. Consumer-side hashing provides tamper-evidence without requiring any publisher-side hash publication.
+
 ### 4.2. Latest-Version Alias
 
 A host SHOULD also serve the latest published version of each spec at the bare-name URL:
