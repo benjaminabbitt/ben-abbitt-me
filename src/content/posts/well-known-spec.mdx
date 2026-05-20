@@ -3,19 +3,32 @@ title: "well-known-spec: A Convention for Publishing Versioned Specifications un
 description: "An optional, format-agnostic convention proposing that versioned specifications be published under /.well-known/spec/{name}/v{x.y.z}.{ext}. References pin to a specific version. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
 publishDate: "2026-05-20T18:00:00-05:00"
 tags: ["standards", "http", "well-known-spec", "spec"]
-marginalia: "A draft (v0.1.0) meta-convention. The post is the narrative; the [JSON Schema](/.well-known/spec/well-known-spec/v0.1.0.json) is the contract — and validates itself."
+marginalia: "A draft (v0.1.0) meta-convention in RFC-style Markdown. Canonical artifact: [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md)."
 visibility: draft
 ---
+
+| | |
+|---|---|
+| **Status** | Draft (v0.1.0) |
+| **Category** | Community Specification — Independent Submission |
+| **Author** | Ben Abbitt |
+| **Published** | 2026-05-20 |
+| **License** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| **Canonical URL** | [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) |
+| **Narrative (HTML)** | [`/posts/well-known-spec/`](/posts/well-known-spec/) |
+| **Format** | RFC-style Markdown — this is an abstract convention (see §5.1) |
 
 ## Abstract
 
 There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in, format-agnostic convention: publish versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.{ext}`, where `{ext}` matches the served Content-Type. References to a spec MUST pin to a specific version.
 
-The convention is recursive: this specification is itself published at the URLs it specifies, in the format it specifies, and validates against itself. The canonical machine-readable artifact is:
+The canonical artifact is at:
 
 ```
-https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json
+https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.md
 ```
+
+The convention is recursive: this specification is itself published at the URL it specifies, in a format that follows its own §5.1 format-selection rule (RFC-style Markdown, since the convention is abstract and not a data shape).
 
 Publishing is opt-in. Nothing here mandates that any host publish anything.
 
@@ -23,7 +36,34 @@ Publishing is opt-in. Nothing here mandates that any host publish anything.
 
 This is `well-known-spec` v0.1.0, status `draft`. The major version is 0; per [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), this signals a pre-stable spec that may change incompatibly in subsequent 0.x releases. There is no working group, no certification, and no IANA registration. The document is published under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-This document conforms to itself (`well-known-spec` v0.1.0). The cross-reference is intentional: it demonstrates by example that the convention's self-validation property holds.
+This document is itself published per the convention it describes — at the canonical URL above, in RFC-style Markdown.
+
+## Table of Contents
+
+1. [Introduction](#1-introduction)
+2. [Conventions and Terminology](#2-conventions-and-terminology)
+3. [Optionality and Scope](#3-optionality-and-scope)
+4. [URL Convention](#4-url-convention)
+   - [4.1. Canonical Versioned URL](#41-canonical-versioned-url)
+   - [4.2. Cache-Control](#42-cache-control)
+   - [4.3. Hash Sidecar (Optional)](#43-hash-sidecar-optional)
+5. [Spec Document Format](#5-spec-document-format)
+   - [5.1. Choosing a Format](#51-choosing-a-format)
+   - [5.2. File Extension and Content-Type](#52-file-extension-and-content-type)
+   - [5.3. Identity Declaration](#53-identity-declaration)
+   - [5.4. Companion Format-Specific Specs](#54-companion-format-specific-specs)
+   - [5.5. What This Convention Does Not Require](#55-what-this-convention-does-not-require)
+6. [Validation](#6-validation)
+7. [Versioning of This Spec](#7-versioning-of-this-spec)
+8. [Security Considerations](#8-security-considerations)
+9. [Discoverability](#9-discoverability)
+10. [IANA Considerations](#10-iana-considerations)
+11. [Reference Implementation](#11-reference-implementation)
+12. [References](#12-references)
+- [Appendix A: Example Spec Document](#appendix-a-example-spec-document)
+- [Appendix B: Implementation Patterns](#appendix-b-implementation-patterns)
+- [Appendix C: Change Log](#appendix-c-change-log)
+- [Author's Address](#authors-address)
 
 ---
 
@@ -189,20 +229,21 @@ The status (draft / stable / deprecated) is implicit in the semver of the canoni
 
 The deliberate minimalism reflects that the value of `well-known-spec` is in the URL convention and the versioning rules, both of which are useful independent of how the spec content is encoded.
 
-## 6. Self-Validation (JSON Schema Specs)
+## 6. Validation
 
-`well-known-spec` v0.1.0 is itself published as a JSON Schema (draft 2020-12). It defines `$schema`/`$id`/`title` as structural requirements **for spec documents that happen to be JSON Schemas.** Because `well-known-spec` v0.1.0 is itself a JSON Schema, it self-validates: the schema accepts itself as a conforming document.
+This convention does not standardize validation tooling. Whether a spec document is machine-validatable depends entirely on its format:
 
-This is a property of the JSON-Schema sub-case, not a requirement of the broader convention. Spec documents in other formats (Markdown, OpenAPI, HTML, etc.) cannot self-validate against this JSON Schema; they may have format-specific validation through a [companion spec](#54-companion-format-specific-specs) or none at all.
+- **JSON Schema** documents can be validated using any JSON Schema validator (`ajv`, Python `jsonschema`, etc.).
+- **OpenAPI** documents can be validated using OpenAPI validators (`openapi-spec-validator`, Spectral, etc.).
+- **Protobuf** `.proto` files can be parsed and type-checked by `protoc` and language SDKs.
+- **XSD, RELAX NG, Avro, GraphQL SDL, SHACL** — each has its own validators.
+- **Markdown, HTML, plain text**, and other narrative formats have no standard machine validation; they are validated by reading.
 
-A tool that wants to verify a JSON-Schema-format spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant to `well-known-spec` can:
+Companion specs ([§5.4](#54-companion-format-specific-specs)) MAY provide additional structural constraints for specific formats and accompanying validators. None are required by this convention.
 
-1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
-2. Validate the candidate spec document against that schema.
+This document, `well-known-spec` v0.1.0, is itself in RFC-style Markdown (see [§5.1](#51-choosing-a-format)) and has no machine validator. The only properties this convention enforces on a spec document are that it is reachable at its canonical URL and immutable per §4.1. Consumers needing integrity assurance beyond reachability MAY use [§4.1](#41-canonical-versioned-url)'s consumer-side hashing or rely on a publisher-side [hash sidecar](#43-hash-sidecar-optional) if published.
 
-For spec documents in other formats, validation is format-specific or absent; consumers SHOULD rely on the canonical URL and §4.1 immutability rather than schema validation.
-
-Multiple hosts MAY publish their own copies of `well-known-spec`. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
+Multiple hosts MAY publish their own copies of `well-known-spec` or any other spec. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
 
 ## 7. Versioning of This Spec
 
@@ -253,14 +294,14 @@ The `application/json` and `application/schema+json` media types are used unchan
 
 This site is a working implementation of `well-known-spec` v0.1.0. The live artifacts on this host:
 
-- This spec, served at: [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json) — the canonical JSON Schema, self-validating per §6.
-- A companion spec published under the same convention: [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)).
+- This spec, served as RFC-style Markdown at: [`/.well-known/spec/well-known-spec/v0.1.0.md`](/.well-known/spec/well-known-spec/v0.1.0.md) — the canonical artifact.
+- The same content rendered as HTML at: [`/posts/well-known-spec/`](/posts/well-known-spec/) — the narrative companion.
+- A companion spec (`deployment-version`) published under the same convention: [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)). That spec describes a JSON manifest shape and is correctly published as a JSON Schema per [§5.1](#51-choosing-a-format).
 
-Source code on GitHub (Astro static site):
+Source on GitHub (Astro static site):
 
-- This spec's endpoint: [`src/pages/.well-known/spec/well-known-spec/v0.1.0.json.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0.json.ts)
-- Spec source data: [`src/lib/specs/well-known-spec-v0.1.0.json`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/well-known-spec-v0.1.0.json)
-- This post: [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
+- This spec / post (single source of truth — the post's MDX body is what the canonical `.md` endpoint serves): [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
+- Canonical-URL endpoint that serves the body raw as `text/markdown`: [`src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0.md.ts)
 
 ## 12. References
 
@@ -346,3 +387,11 @@ and it will be served at the corresponding URL.
 ## Appendix C: Change Log
 
 - **v0.1.0** (2026-05-20) — Initial draft.
+
+---
+
+## Author's Address
+
+Ben Abbitt  
+Email: ben+spec@abbitt.me  
+URI: [https://ben.abbitt.me/](https://ben.abbitt.me/)
