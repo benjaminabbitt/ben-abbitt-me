@@ -116,13 +116,43 @@ Each element MUST have the following REQUIRED properties:
 
 - `path` (string) — URL path scoping the element. SHOULD start with `/`. The root element uses `path: "/"`.
 - `name` (string) — Human-readable name. MUST be non-empty.
-- `version` (string) — Arbitrary non-empty version string. SHOULD follow [semver 2.0.0](https://semver.org/spec/v2.0.0.html) when applicable; MAY be any non-empty string (Git SHA, CalVer, opaque hash) when semver does not apply.
+- `version` (object) — A version object, structured per §4.6.
 
 An element MAY contain a nested `elements` array, allowing tree-shaped manifests for deployments with hierarchical components. A child's `path` SHOULD be a descendant of the parent's `path`, advisory only.
 
 Producers MAY use the flat form (all elements at the top level) or the nested form (children inside parent `elements`). Consumers MUST handle both and treat them as semantically equivalent.
 
 An example manifest appears in Appendix A.
+
+### 4.6. The Version Object
+
+> **Design choices under discussion in v0.1.0.** The field names `text` and `parts`, and whether to include `scheme` at all, are open questions for the draft. The shape below is what `v0.1.0` ships; the names may change before v1.0.0. The choices are flagged here so adopters know not to lean on the names without checking the current draft.
+
+A version is always a JSON object. It has one REQUIRED field and up to two OPTIONAL fields:
+
+- `text` (string, REQUIRED) — The canonical or display form of the version. RECOMMENDED to be the form a human reading the manifest would recognize. Examples: `"1.2.3"`, `"2026.05.20"`, `"9063c2a"`, `"v1.2.3-rc.1+build.456"`. The `text` field is the version. The other fields describe its structure.
+- `scheme` (string, OPTIONAL) — A short identifier for the versioning scheme in use. When present, signals to consumers what structure to expect in `parts`. Examples: `"semver"`, `"calver"`, `"git-sha"`, `"pep440"`. The set of scheme identifiers is NOT enumerated by this spec — publishers MAY use any non-empty string. Consumers MAY ignore `scheme` if they don't recognize it; the `text` field is always interpretable.
+- `parts` (object, OPTIONAL) — An implementation-defined parsed structure of the version, typically corresponding to `scheme`. The shape is NOT constrained by this spec. Consumers MUST NOT assume any particular shape; the canonical version is `text`.
+
+Common conventions for `parts`, when `scheme` is one of the well-known identifiers:
+
+| `scheme` | Typical `parts` shape |
+|---|---|
+| `semver` | `{ major: int, minor: int, patch: int, prerelease?: string, build?: string }` per [semver 2.0.0](https://semver.org/spec/v2.0.0.html) |
+| `calver` | `{ year: int, month: int, day: int }` (varies by [calver.org](https://calver.org/) format string) |
+| `git-sha` | `{ short?: string, long?: string }`; or just omit `parts` entirely and rely on `text` |
+| `pep440` | `{ epoch?: int, release: [int, ...], pre?: string, post?: int, dev?: int, local?: string }` per [PEP 440](https://peps.python.org/pep-0440/) |
+| `dotnet-assembly` | `{ major: int, minor: int, build: int, revision?: int }` |
+
+These tables are informative, not normative. Publishers MAY use any scheme name and any `parts` shape that fits their versioning model.
+
+Why an object instead of a bare string? The motivating cases:
+
+1. **Multi-form versions.** A build tag like `v1.2.3-rc.1+sha.9063c2a` has a human form (the whole string), a semver core (`1.2.3`), a prerelease (`rc.1`), and a build metadata field (`sha.9063c2a`). A plain string forces every consumer to re-parse to extract any of those.
+2. **Multi-scheme deployments.** Some elements use semver; others use Git SHAs; others use CalVer. A consumer aggregating manifests across deployments needs a uniform handle. `text` is that handle.
+3. **Extensibility.** A publisher who wants to include extra version-related metadata (build timestamp, branch, environment label) can put it in `parts` without changing the spec.
+
+Why is `parts` allowed to be free-form? Because version schemes proliferate. Semver, CalVer, PEP 440, .NET assembly versioning, Conan recipe versions, Maven version-range syntax, Cargo's slightly-modified semver, opaque hashes, build numbers — none of them share a structure. Enumerating every shape would either freeze the spec or grow it without bound. Punting the shape to the publisher and the `scheme` identifier is the honest move.
 
 ## 5. The Deployment-Version Response Header
 
@@ -146,9 +176,9 @@ The value MUST be a non-empty string. Consumers MUST treat it as opaque except w
 
 ### 5.3. Longest-Prefix Matching
 
-When emitted, the header value SHOULD equal the `version` of the element whose `path`, treated as a URL path prefix, is the longest match for the request's path among all elements in the manifest.
+When emitted, the header value SHOULD equal the `version.text` of the element whose `path`, treated as a URL path prefix, is the longest match for the request's path among all elements in the manifest. The header carries the canonical string form (`text`) of the matched element's version; consumers wanting the parsed structure (`parts`) must fetch the manifest.
 
-For a manifest declaring elements at `/` (version `9063c2a`) and `/forage-atlas/` (version `2026.05.20`):
+For a manifest declaring elements at `/` (version.text `"9063c2a"`) and `/forage-atlas/` (version.text `"2026.05.20"`):
 
 - `GET /posts/foo/` → `Deployment-Version: "9063c2a"` (matches the `/` element)
 - `GET /forage-atlas/regions/west/` → `Deployment-Version: "2026.05.20"` (matches the `/forage-atlas/` element)
@@ -170,10 +200,10 @@ A conforming server emitting HTML MAY include a single `<meta>` tag of the form:
 When included:
 
 - The tag MUST appear inside the document `<head>`.
-- The `content` attribute MUST equal the `version` of the root element (the element whose `path` is `/`), if such an element exists in the manifest.
+- The `content` attribute MUST equal the `version.text` of the root element (the element whose `path` is `/`), if such an element exists in the manifest.
 - A conforming page MUST NOT include more than one `deployment-version` meta tag.
 
-The meta tag is a convenience for browser-based inspection where a developer can right-click → View Source or use a one-line `document.querySelector('meta[name=deployment-version]').content` in DevTools. It carries no information beyond the root-element version.
+The meta tag is a convenience for browser-based inspection where a developer can right-click → View Source or use a one-line `document.querySelector('meta[name=deployment-version]').content` in DevTools. It carries no information beyond the root-element's version text; consumers wanting the parsed structure must fetch the manifest.
 
 ## 7. When This Is Useful — and When It Isn't
 
@@ -313,7 +343,7 @@ Strict conformance to RFC 8615 awaits IANA registration. Loose conformance — a
 
 ## Appendix A: Example Manifest
 
-A site with a single root-level element:
+A site with a single root-level element, version expressed as a Git SHA:
 
 ```json
 {
@@ -326,13 +356,16 @@ A site with a single root-level element:
     {
       "path": "/",
       "name": "Reduction",
-      "version": "9063c2a"
+      "version": {
+        "text": "9063c2a",
+        "scheme": "git-sha"
+      }
     }
   ]
 }
 ```
 
-A site with a nested sub-application (nested form):
+A site with a nested sub-application, mixing version schemes (root uses Git SHA, sub-app uses CalVer):
 
 ```json
 {
@@ -345,12 +378,16 @@ A site with a nested sub-application (nested form):
     {
       "path": "/",
       "name": "Reduction",
-      "version": "9063c2a",
+      "version": { "text": "9063c2a", "scheme": "git-sha" },
       "elements": [
         {
           "path": "/forage-atlas/",
           "name": "Modern Forage Atlas",
-          "version": "2026.05.20"
+          "version": {
+            "text": "2026.05.20",
+            "scheme": "calver",
+            "parts": { "year": 2026, "month": 5, "day": 20 }
+          }
         }
       ]
     }
@@ -358,19 +395,29 @@ A site with a nested sub-application (nested form):
 }
 ```
 
-The same manifest in flat form is semantically equivalent:
+A service publishing a semver version with both `parts` and the build SHA carried in semver build metadata:
 
 ```json
 {
-  "spec": {
-    "name": "deployment-version",
-    "version": "0.1.0",
-    "url": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json"
-  },
-  "elements": [
-    { "path": "/", "name": "Reduction", "version": "9063c2a" },
-    { "path": "/forage-atlas/", "name": "Modern Forage Atlas", "version": "2026.05.20" }
-  ]
+  "version": {
+    "text": "1.2.3-rc.1+9063c2a",
+    "scheme": "semver",
+    "parts": {
+      "major": 1,
+      "minor": 2,
+      "patch": 3,
+      "prerelease": "rc.1",
+      "build": "9063c2a"
+    }
+  }
+}
+```
+
+The minimum conformant version object has only `text`:
+
+```json
+{
+  "version": { "text": "anything-non-empty" }
 }
 ```
 

@@ -13,7 +13,10 @@ export async function GET() {
 			{
 				path: "/",
 				name: siteConfig.title,
-				version: sha,
+				version: {
+					text: sha,
+					scheme: "git-sha",
+				},
 			},
 		],
 	};

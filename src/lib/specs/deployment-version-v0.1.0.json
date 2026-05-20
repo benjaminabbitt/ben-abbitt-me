@@ -46,9 +46,25 @@
 					"description": "Human-readable name of the element."
 				},
 				"version": {
-					"type": "string",
-					"minLength": 1,
-					"description": "Arbitrary version string. SHOULD follow semver 2.0.0 when applicable; MAY be any non-empty string (Git SHA, CalVer, etc.) when semver does not apply."
+					"type": "object",
+					"required": ["text"],
+					"additionalProperties": false,
+					"properties": {
+						"text": {
+							"type": "string",
+							"minLength": 1,
+							"description": "REQUIRED. The canonical or display form of this element's version. RECOMMENDED to be the form a human reading the manifest would recognize (e.g. '1.2.3', '2026.05.20', '9063c2a', 'v1.2.3+build.456')."
+						},
+						"scheme": {
+							"type": "string",
+							"minLength": 1,
+							"description": "OPTIONAL. Short identifier naming the versioning scheme (e.g. 'semver', 'calver', 'git-sha', 'pep440'). When present, signals to consumers what shape to expect in 'parts'. Not enumerated by this spec; implementations MAY use any non-empty string."
+						},
+						"parts": {
+							"type": "object",
+							"description": "OPTIONAL. Implementation-defined parsed structure, typically corresponding to 'scheme'. The shape is not constrained by this spec; common conventions documented in the narrative include semver (major, minor, patch, prerelease, build), CalVer (year, month, day), and Git build metadata (commit, branch). The canonical version remains the 'text' field; consumers MUST NOT assume any particular shape of 'parts'."
+						}
+					}
 				},
 				"elements": {
 					"$ref": "#/$defs/elementsArray",
