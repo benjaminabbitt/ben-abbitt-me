@@ -47,6 +47,12 @@ This document proposes such a pattern: /.well-known/spec/{name}/v{x.y.z}.{ext} i
 
 The convention is format-agnostic. A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, or anything else textual addressable as a single file at the canonical URL. The convention is about where specs live and how they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; well-known-spec itself does not.
 
+Why /.well-known/? Roy Fielding's objection to the contribute.json proposal -- that reserving a universal location for this purpose does not make sense when clients could fetch a linked document from a homepage -- applies to any well-known proposal and must be answered. The answer for well-known-spec:
+
+A consumer that needs to validate against, or interoperate with, a specification an origin publishes typically has only the origin URL. It has no homepage to crawl (machines do not crawl), no out-of-band registry to consult (none exists for site-local and community-local specs by definition), and no link relation to follow (the spec document is not linked from arbitrary HTML pages; it is the contract the origin publishes for tooling consumption). Without a well-known location, the consumer has no path from https://example.com/ to "the foo spec example.com publishes" except by guessing -- /openapi.json, /api-docs, /foo.json, /spec/foo, etc. -- which is the exact problem this convention exists to solve.
+
+A well-known URL provides an unguessable-becomes-knowable contract: a consumer that knows only the origin and the spec name can construct the canonical URL deterministically. This is the discoverability property well-known URIs exist to provide, and it is the same property /.well-known/openid-configuration, /.well-known/security.txt, and /.well-known/api-catalog rely on. The objection that "you could just link to it" applies in a browser-driven world; it does not apply in a machine-driven world where the consumer has only an origin and a name.
+
 ## Design Intent: A Space for Site-Local and Community-Local Specs
 
 The /.well-known/spec/ namespace is deliberately an open sub-namespace. Each {name} slot is publisher-defined; IANA does not govern its children. This is a feature.
@@ -170,6 +176,28 @@ Within a single origin, the {name} and {x.y.z} are unambiguous by construction (
 
 This origin-binding rule is what makes the open {name} namespace safe. There is no global registry of {name} values, no name-resolution authority, and no need for one -- because the names are never asked to function as global identifiers. The URL is the identifier. The convention is a publishing pattern, not a naming authority.
 
+## Path Semantics and Client Behavior
+
+This convention treats /.well-known/spec/ as a structured path with three segments after the prefix. Client behavior is determined entirely by exact URL match; this section makes the semantics explicit so implementers and reviewers do not have to infer them.
+
+Path structure. A spec document is addressable only at the full canonical URL of the form /.well-known/spec/{name}/v{x.y.z}.{ext}. The segments are:
+
+* /.well-known/spec/ -- the convention root. A request to this exact path is NOT REQUIRED to return any meaningful response; a host MAY return 404, MAY return an index document for human navigation, and MAY return a 403. No client behavior depends on what is served here.
+* /.well-known/spec/{name}/ -- the per-spec directory. As above: NOT REQUIRED to return anything meaningful. A client MUST NOT construct or rely on a request to this path; the directory exists only as a URL-path organizational device.
+* /.well-known/spec/{name}/v{x.y.z}.{ext} -- the only URL with normative semantics. A client requesting this exact path either receives the spec document at exactly that version and format, or receives 404.
+
+No path traversal beyond the leaf. This convention does not define semantics for any path under /.well-known/spec/{name}/v{x.y.z}.{ext} -- i.e., paths with additional segments appended. Hosts MAY serve content at deeper paths for unrelated purposes; clients MUST NOT interpret deeper paths as part of this convention.
+
+404 is informative. A 404 from the canonical URL means exactly one thing: this host does not publish this name at this version in this format. It is not an error condition for the client to recover from; it is a meaningful negative answer. Clients SHOULD treat 404 as "spec is unavailable from this origin" and proceed accordingly. Clients MUST NOT retry with different versions, different extensions, or different name spellings as a fallback unless their own configuration explicitly directs them to.
+
+No format negotiation via the Accept header. Format selection in this convention is done via the {ext} segment of the URL, not via HTTP content negotiation. A client requesting /.well-known/spec/foo/v0.1.0.json is asking for the JSON form of foo v0.1.0; a client requesting /.well-known/spec/foo/v0.1.0.md is asking for the Markdown form. Servers MAY ignore the Accept header for these URLs; servers MUST NOT serve a .md document at a .json URL even if the Accept header would otherwise direct them to. The {ext} is the format selector; the Accept header is advisory at most. This is a deliberate departure from HTTP content negotiation for the same reason /.well-known/security.txt and /.well-known/openid-configuration use a fixed extension: it makes clients' URLs trivially constructable from (origin, name, version, format) without runtime negotiation.
+
+No version selection via "latest" or any other alias. The {x.y.z} segment MUST be a literal semver string. There is no alias, no symbolic name (latest, stable, current), and no redirect from an unversioned URL to a versioned one. A client that wants the latest published version of a spec MUST obtain that information out of band (for example, from an api-catalog entry). This convention does not provide a mechanism for asking "what is the newest foo." That question belongs to discovery layers above this convention.
+
+Cache and Cache-Control. The canonical versioned URL is immutable and SHOULD be served with Cache-Control: public, max-age=31536000, immutable. The "directory" paths (the convention root and the per-spec directory) have no caching guidance because they have no normative semantics.
+
+No automatic listings. Hosts MUST NOT auto-generate directory listings at /.well-known/spec/ or /.well-known/spec/{name}/ and represent them as conformant artifacts of this convention. A host MAY serve an index document for human discoverability, but such an index is informational only and MUST NOT be interpreted by clients as authoritative over which specs and versions a host publishes. The authoritative answer to "does this host publish foo v0.1.0 in JSON?" is the response to a request for the exact canonical URL.
+
 # Spec Document Format
 
 This convention is about URL location and versioning, not document format. A spec document MAY be in any format addressable as a single file at the canonical URL.
@@ -279,13 +307,48 @@ A spec document MAY identify the version of well-known-spec it conforms to in it
 
 # Security Considerations
 
-The security surface of this convention is small.
+The security surface of this convention is small but not zero. Spec documents are read by tooling that may make decisions based on their content; the threats below are the ones a reviewer is likely to ask about.
 
-Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data -- they describe formats, protocols, or conventions, but do not contain credentials, user data, or runtime state. A consumer fetching a spec URL learns that this host publishes the named convention; whether they fetch any corresponding manifest, deploy a server, or expose API endpoints is a separate question with separate security considerations.
+## Spec Documents Carry No Operational Data
 
-Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at /.well-known/spec/{name}/v0.1.0.{ext} and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
+Publishing spec documents at predictable URLs is a discoverability feature, not a security concern in itself. The spec documents themselves carry no operational data -- they describe formats, protocols, or conventions, but do not contain credentials, user data, or runtime state. A consumer fetching a spec URL learns that this host publishes the named convention; whether they fetch any corresponding manifest, deploy a server, or expose API endpoints is a separate question with separate security considerations.
 
-Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS. Every reference under this convention pins to a specific version (the canonical versioned URL), which is the right default for reproducible validation.
+## Hostile Spec Documents and Origin Authority
+
+A host that controls /.well-known/spec/{name}/v{x.y.z}.{ext} controls the spec a consumer sees at that URL. A compromised, hostile, or simply mistaken host can publish a spec document that misleads automated tooling -- for example, a .proto that declares fields not present in the actual service, or a JSON Schema that permits values the service does not accept. The threat model here is the same as for any origin-served metadata: the origin is the authority on what it publishes; consumers MUST verify the origin via TLS and SHOULD treat the origin as the trust anchor for the spec's contents.
+
+Clients fetching specs from origins they do not control SHOULD:
+
+* Require HTTPS. The convention does not define HTTP-served variants; reading a spec from http:// exposes the consumer to in-path tampering.
+* Validate the TLS certificate against the expected origin per [@!RFC6454]. A spec at https://example.com/.well-known/spec/foo/v0.1.0.json is authoritative only when served by example.com over a valid certificate chain.
+* Pin to a specific version. A consumer that records the canonical URL plus a SHA-256 hash of the fetched document is protected against subsequent silent modification by the origin.
+
+## Version Selection and Rollback
+
+This convention has no "latest" alias, no symbolic version names, and no redirect from unversioned to versioned URLs. Clients MUST request specific versions. This eliminates one class of attack: there is no version-selection logic for an attacker to manipulate, because the client's URL contains the full version literally.
+
+A discovery layer above this convention (such as api-catalog) MAY advertise a specific version as "current." If consumers follow such advertisements, the discovery layer is the surface where rollback or selection attacks could be staged -- not this convention. Implementers of discovery layers SHOULD consider rollback explicitly; this convention takes no position because version selection happens outside its scope.
+
+## Content-Type and Sniffing
+
+The {ext} segment of the URL and the served Content-Type MUST agree. A host that serves .json URLs with Content-Type: text/html, or .md URLs with Content-Type: application/json, has misconfigured its server in a way that may cause clients or intermediaries to misinterpret the content. Misinterpretation is the precondition for several known attack classes:
+
+* MIME sniffing. Some HTTP clients and browsers will sniff content type when the served type is generic (application/octet-stream, text/plain) or absent. A spec document fetched as text/plain but sniffed as text/html could in theory be rendered as HTML and execute embedded script if surfaced to a browser context. Hosts SHOULD send X-Content-Type-Options: nosniff on spec documents to inhibit this.
+* Confusion attacks. A consumer that parses .json strictly will reject a misserved Markdown document; a consumer that parses leniently might accept it as a degenerate JSON value (e.g., a string). Strict parsing is the right default; lenient parsing of spec documents is NOT RECOMMENDED.
+
+Clients that fetch spec documents SHOULD validate that the Content-Type returned matches the {ext} they requested and SHOULD reject responses where it does not. Treating a Content-Type mismatch as a parse error is appropriate.
+
+## Immutability and Cache Poisoning
+
+Hosts MUST ensure spec documents are immutable at their canonical versioned URL. A host that publishes content at /.well-known/spec/{name}/v0.1.0.{ext} and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL, and is in violation of this convention's normative requirements.
+
+Consumer-side SHA-256 hashing provides tamper-evidence against subsequent silent modification, whether by the publisher or by an intermediary. Where threat model warrants, consumers SHOULD record and verify hashes.
+
+The long Cache-Control recommended for canonical URLs has a security consequence: an attacker that successfully poisons a CDN cache for an immutable URL has poisoned it for the full TTL, potentially a year. Publishers controlling intermediate caches SHOULD have a documented purge procedure for the rare case where a published spec must be withdrawn (e.g., to correct an immutability violation already in flight). Consumers cannot rely on publishers' caches; consumer-side hashing remains the durable defense.
+
+## Cross-Origin Confusion
+
+The canonical identifier of a spec is the triple (origin, name, version). A consumer that treats {name} v{version} as a global identifier -- fetching from one origin and assuming agreement with another origin's spec of the same name -- has misused the convention and exposes itself to confusion attacks where two origins publish unrelated specs with colliding names. This is not a convention defect; it is a consumer-side requirement to track origin as part of every spec pin. Implementations MUST record the full origin alongside the name and version of any spec they adopt.
 
 # Discoverability
 
@@ -311,6 +374,22 @@ The convention treats the segment immediately after "spec" (the spec name, e.g. 
 Adopters concerned about strict RFC 8615 conformance SHOULD await registration; alternatively they MAY deploy a host-specific variant under a known-conformant suffix.
 
 The application/json, application/schema+json, text/markdown, text/plain, and other media types referenced by this convention are used unchanged. The convention does not define a new media type.
+
+## Naming Considerations and Renaming Provision
+
+The current proposed suffix is "spec". The authors acknowledge that this is a generic English word and that the well-known URIs registry GitHub README explicitly warns against single common words: single common words, extremely short names, terms like "ai" or "agent" due to broad interest, or misleading names falsely claiming standard status are subject to rejection.
+
+The arguments for "spec" are: it is the most direct word in English for the thing being published; it is unambiguous in context (the path segment after /.well-known/ is by construction not a generic word but a registered identifier); and the convention's content is in fact specifications, not some euphemism. The convention does not claim to be the spec convention -- it claims to be a publishing convention for specifications, and the registry's role is to make that claim coherent at the URL layer.
+
+The arguments against are real. If the Designated Expert determines that "spec" is too generic or too broad, the authors are prepared to rename. Defensible alternatives include:
+
+* "published-spec" -- explicit, slightly longer, unambiguous.
+* "wks-spec" -- short, prefixed with a stable acronym, unlikely to collide.
+* "spec-doc" -- emphasizes the document nature of the artifact.
+
+A rename does not require a new version of this convention. The convention is about path structure and document semantics, not the literal suffix string. A v0.2.0 of well-known-spec could change the registered suffix without changing any other normative content; adopters would migrate their URLs and Cache-Control immutability ensures the old URLs remain valid identifiers for the documents they pointed at.
+
+The authors expect to file the registration request using the suffix "spec" and to engage in DE-mediated renaming if the request runs into the "single common words" rule.
 
 # Reference Implementation
 
