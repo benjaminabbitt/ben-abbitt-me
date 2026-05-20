@@ -45,10 +45,10 @@ Table of Contents
    5.  Spec Document Format  . . . . . . . . . . . . . . . . . . . .   7
      5.1.  Choosing a Format . . . . . . . . . . . . . . . . . . . .   7
      5.2.  File Extension and Content-Type . . . . . . . . . . . . .   8
-     5.3.  Identity Declaration  . . . . . . . . . . . . . . . . . .   8
-     5.4.  Companion Format-Specific Specs . . . . . . . . . . . . .   9
-     5.5.  What This Convention Does Not Require . . . . . . . . . .   9
-   6.  Validation  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     5.3.  Identity Declaration  . . . . . . . . . . . . . . . . . .   9
+     5.4.  Companion Format-Specific Specs . . . . . . . . . . . . .  10
+     5.5.  What This Convention Does Not Require . . . . . . . . . .  10
+   6.  Validation  . . . . . . . . . . . . . . . . . . . . . . . . .  11
    7.  Versioning of This Spec . . . . . . . . . . . . . . . . . . .  11
 
 
@@ -58,20 +58,20 @@ Abbitt                        Informational                     [Page 1]
                              well-known-spec                    May 2026
 
 
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
    9.  Discoverability . . . . . . . . . . . . . . . . . . . . . . .  12
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-   11. Reference Implementation  . . . . . . . . . . . . . . . . . .  13
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Example Spec Document  . . . . . . . . . . . . . . .  14
-   Appendix B.  Implementation Patterns  . . . . . . . . . . . . . .  14
-     B.1.  Astro static endpoint . . . . . . . . . . . . . . . . . .  14
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+   11. Reference Implementation  . . . . . . . . . . . . . . . . . .  14
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Example Spec Document  . . . . . . . . . . . . . . .  15
+   Appendix B.  Implementation Patterns  . . . . . . . . . . . . . .  15
+     B.1.  Astro static endpoint . . . . . . . . . . . . . . . . . .  15
      B.2.  nginx static  . . . . . . . . . . . . . . . . . . . . . .  15
-     B.3.  GitHub Pages and other static hosts . . . . . . . . . . .  15
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  15
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
+     B.3.  GitHub Pages and other static hosts . . . . . . . . . . .  16
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  16
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -306,17 +306,49 @@ Abbitt                        Informational                     [Page 5]
    independently fetchable and independently immutable.  Consumers MAY
    use whichever format best suits their use case.
 
+   Different formats carry different content -- by design.  The byte
+   content at each URL is expected to differ, sometimes substantially.
+   Narrative formats (.md, .txt, .html, .pdf) typically include prose,
+   rationale, examples, references, and discussion that the format
+   permits.  Machine-readable formats (.proto, .json, .yaml for OpenAPI/
+   JSON Schema/etc., .cddl, .asn1) are tightly bound to the data shape
+   they describe; rationale typically lives in comments or is absent
+   entirely.  A consumer fetching .proto is asking for the IDL; a
+   consumer fetching .md is asking for the IDL and the prose explaining
+   it.  Both are valid views of the same spec.
+
    Cross-format consistency (normative): documents at the same {name}
    and same {x.y.z} MUST describe the same thing.  They are not
    independent specs that happen to share a base name; they are
-   different presentations of one spec.  A publisher who publishes both
-   /.well-known/spec/foo/v0.1.0.md and /.well-known/spec/foo/
-   v0.1.0.proto represents both as "foo v0.1.0", and the normative
-   content (rules, data shape, structural requirements) MUST agree
-   between them.  Where the formats differ -- narrative prose present in
-   one and absent in another, machine-checkable schema present in one
-   and not in another -- the differences MUST be additions or
-   presentational choices, never contradictions.
+   different presentations -- at different levels of formality and
+   detail -- of one spec.  The normative content (rules, data shape,
+   structural requirements, identifiers, version constraints) MUST agree
+   across formats.  Differences MUST be one of:
+
+   *  Additions.  Prose, rationale, examples, references, diagrams, or
+      commentary present in a narrative format and absent from a
+      machine-readable format.  These are permitted and expected; the
+      narrative is the rationale layer over the same underlying spec.
+
+
+
+
+Abbitt                        Informational                     [Page 6]
+
+                             well-known-spec                    May 2026
+
+
+   *  Presentation.  Styling, layout, anchors, pagination, table-of-
+      contents rendering.  The same content arranged for the medium.
+   *  Format-imposed structure.  A .proto file expresses the same shape
+      as a .md description of that shape, in the syntax .proto requires.
+      The shape is the same; the surface is different.
+
+   Differences MUST NOT be contradictions.  If the .proto declares a
+   required field and the .md says it is optional, that is a contract
+   violation.  If the .json schema permits a value the .md forbids, that
+   is a contract violation.  The machine-readable form and the narrative
+   form must describe the same normative reality.
 
    If a publisher needs the content to differ semantically -- if the
    .proto actually describes a different version of the data shape than
@@ -329,14 +361,6 @@ Abbitt                        Informational                     [Page 5]
    consumer who pins to "foo v0.1.0" can switch between .md, .txt,
    .proto, and .html and rely on getting the same spec, in different
    forms.
-
-
-
-
-Abbitt                        Informational                     [Page 6]
-
-                             well-known-spec                    May 2026
-
 
 5.  Spec Document Format
 
@@ -361,6 +385,15 @@ Abbitt                        Informational                     [Page 6]
       specification that ultimately compiles to a Protobuf-described
       wire format, .proto is the right artifact.
    *  JSON data shape -- use JSON Schema.
+
+
+
+
+Abbitt                        Informational                     [Page 7]
+
+                             well-known-spec                    May 2026
+
+
    *  HTTP API surfaces (request/response shapes, routes, parameters) --
       use OpenAPI.
    *  XML data shape -- use XSD or RELAX NG.
@@ -386,14 +419,6 @@ Abbitt                        Informational                     [Page 6]
    hostile to inspection, diff, and version-control review; treat it as
    binary.  Use a textual format for the spec document, even when the
    data the spec describes is binary -- Protobuf's .proto is text
-
-
-
-Abbitt                        Informational                     [Page 7]
-
-                             well-known-spec                    May 2026
-
-
    describing binary messages, and that is the right shape.  A binary
    spec document raises the cost of inspection, diff, code review, and
    porting between hosts without offering compensating benefits.
@@ -406,6 +431,24 @@ Abbitt                        Informational                     [Page 7]
 
    The {ext} segment of the canonical URL MUST match the served Content-
    Type.  Common pairings:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Abbitt                        Informational                     [Page 8]
+
+                             well-known-spec                    May 2026
+
 
    +==============+===========+=======================================+
    | Format       | Extension | Content-Type                          |
@@ -442,14 +485,6 @@ Abbitt                        Informational                     [Page 7]
    document by other means (local cache, mirror, forked copy) can
    identify it without relying on its filesystem location.
 
-
-
-
-Abbitt                        Informational                     [Page 8]
-
-                             well-known-spec                    May 2026
-
-
    Examples:
 
    *  JSON Schema -- the $id field carries the canonical URL; title
@@ -461,6 +496,15 @@ Abbitt                        Informational                     [Page 8]
       keys; or the first heading.
    *  HTML -- <link rel="canonical" href="...">, <title>, and a meta tag
       for the version.
+
+
+
+
+
+Abbitt                        Informational                     [Page 9]
+
+                             well-known-spec                    May 2026
+
 
    This is a SHOULD, not a MUST.  The canonical URL is always the URL
    itself, regardless of whether the document internally references it.
@@ -498,14 +542,6 @@ Abbitt                        Informational                     [Page 8]
    *  A semver pre-release suffix indicates the document is a pre-
       release of the version it qualifies, regardless of MAJOR.
       v1.0.1-DRAFT-1 is draft 1 of v1.0.1; subsequent drafts of the same
-
-
-
-Abbitt                        Informational                     [Page 9]
-
-                             well-known-spec                    May 2026
-
-
       target version are v1.0.1-DRAFT-2, v1.0.1-DRAFT-3, etc.  When
       v1.0.1 is published without a suffix, it is the stable release of
       that version and the preceding -DRAFT-N drafts are superseded.
@@ -518,6 +554,13 @@ Abbitt                        Informational                     [Page 9]
 
    A version with neither MAJOR 0 nor a pre-release suffix (e.g. v1.0.0,
    v2.3.1) is a stable release.
+
+
+
+Abbitt                        Informational                    [Page 10]
+
+                             well-known-spec                    May 2026
+
 
    Deprecation is communicated by publishing a new MAJOR version and by
    out-of-band announcement (release notes, changelog).
@@ -554,14 +597,6 @@ Abbitt                        Informational                     [Page 9]
    MAY use consumer-side hashing or rely on a publisher-side hash
    sidecar if published.
 
-
-
-
-Abbitt                        Informational                    [Page 10]
-
-                             well-known-spec                    May 2026
-
-
    Multiple hosts MAY publish their own copies of well-known-spec or any
    other spec.  Hosts SHOULD use the same content for the same version;
    this is by convention, not by enforcement.
@@ -573,6 +608,16 @@ Abbitt                        Informational                    [Page 10]
    *  MAJOR version bumps signal changes that invalidate existing spec
       documents -- for instance, removing a required field, repurposing
       a field name, or changing the meaning of a required field.
+
+
+
+
+
+Abbitt                        Informational                    [Page 11]
+
+                             well-known-spec                    May 2026
+
+
    *  MINOR version bumps signal additions that do not invalidate
       existing spec documents -- for instance, allowing additional JSON
       Schema dialects, adding OPTIONAL fields.
@@ -610,14 +655,6 @@ Abbitt                        Informational                    [Page 10]
    pins to a specific version (the canonical versioned URL), which is
    the right default for reproducible validation.
 
-
-
-
-Abbitt                        Informational                    [Page 11]
-
-                             well-known-spec                    May 2026
-
-
 9.  Discoverability
 
    This convention is discoverable in the way [RFC8615] intends.  A
@@ -629,6 +666,13 @@ Abbitt                        Informational                    [Page 11]
        spec's format).
    2.  Receive a 404 if the host has not published that version of the
        spec.
+
+
+
+Abbitt                        Informational                    [Page 12]
+
+                             well-known-spec                    May 2026
+
 
    The 404 is informative.  It says "this host does not publish this
    spec," and the consumer can proceed accordingly.
@@ -666,14 +710,6 @@ Abbitt                        Informational                    [Page 11]
    name, e.g. "deployment-version") as a sub-path under the registered
    suffix, not as its own registered suffix.  RFC 8615's ABNF allows
    multi-segment URLs under a registered prefix (existing precedent:
-
-
-
-Abbitt                        Informational                    [Page 12]
-
-                             well-known-spec                    May 2026
-
-
    /.well-known/acme-challenge/{token} from [RFC8555]).  Registration of
    "spec" would therefore suffice for any number of specs published
    under it.
@@ -685,6 +721,14 @@ Abbitt                        Informational                    [Page 12]
    The application/json, application/schema+json, text/markdown, text/
    plain, and other media types referenced by this convention are used
    unchanged.  The convention does not define a new media type.
+
+
+
+
+Abbitt                        Informational                    [Page 13]
+
+                             well-known-spec                    May 2026
+
 
 11.  Reference Implementation
 
@@ -720,16 +764,6 @@ Abbitt                        Informational                    [Page 12]
               Requirement Levels", BCP 14, RFC 2119, March 1997,
               <https://datatracker.ietf.org/doc/html/rfc2119>.
 
-
-
-
-
-
-Abbitt                        Informational                    [Page 13]
-
-                             well-known-spec                    May 2026
-
-
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
               RFC 3986, January 2005,
@@ -741,6 +775,16 @@ Abbitt                        Informational                    [Page 13]
 
    [RFC6454]  Barth, A., "The Web Origin Concept", RFC 6454, December
               2011, <https://datatracker.ietf.org/doc/html/rfc6454>.
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 14]
+
+                             well-known-spec                    May 2026
+
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, May 2017,
@@ -778,14 +822,6 @@ B.1.  Astro static endpoint
    endpoint source is at src/pages/.well-known/spec/well-known-spec/
    v0.1.0-alpha.1.txt.ts in the publisher's repository.
 
-
-
-
-Abbitt                        Informational                    [Page 14]
-
-                             well-known-spec                    May 2026
-
-
    The parallel Markdown URL is served by an analogous endpoint that
    returns the post body raw as text/markdown.
 
@@ -796,6 +832,15 @@ B.2.  nginx static
      add_header Cache-Control "public, max-age=31536000, immutable";
      alias /var/www/specs/my-spec-v0.1.0.txt;
    }
+
+
+
+
+
+Abbitt                        Informational                    [Page 15]
+
+                             well-known-spec                    May 2026
+
 
 B.3.  GitHub Pages and other static hosts
 
@@ -837,4 +882,15 @@ Author's Address
 
 
 
-Abbitt                        Informational                    [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+Abbitt                        Informational                    [Page 16]
