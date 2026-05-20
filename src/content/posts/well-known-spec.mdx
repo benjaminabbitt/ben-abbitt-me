@@ -18,6 +18,8 @@ visibility: draft
 | **Narrative (HTML)** | [`/posts/well-known-spec/`](/posts/well-known-spec/) |
 | **Format** | Pixel-perfect IETF plain text + RFC-style Markdown (this is an abstract convention, see §5.1; both forms describe the same spec per §4.4) |
 
+> 📄 **Reading this as a formal IETF document?** The pixel-perfect plain-text rendering with proper RFC formatting (header block, dotted-leader TOC, page footers, `[RFCnnnn]` reference style) is at **[`/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt)** — generated via `mmark` + `xml2rfc` from a kramdown-rfc source. The HTML you're reading now is the same normative content rendered for the web.
+
 ## Abstract
 
 There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in, format-agnostic convention: publish versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.{ext}`, where `{ext}` matches the served Content-Type. References to a spec MUST pin to a specific version.
