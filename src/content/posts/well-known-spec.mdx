@@ -343,6 +343,16 @@ Source on GitHub (Astro static site):
 
 The `.txt` is pre-generated locally via `mmark src.md | xml2rfc --text` and committed to `public/`. Because v0.1.0 is byte-immutable per §4.1, the generated `.txt` for this version is generated once and never changes; future versions get regenerated and committed.
 
+### 11.1. Publish Your Own
+
+Next time you have a spec to publish on a site you control, put it at:
+
+```
+/.well-known/spec/{your-name}/v{MAJOR}.{MINOR}.{PATCH}.{ext}
+```
+
+That's the only URL the convention defines. Pick a format from [§5.1](#51-choosing-a-format), pick a version per [§7](#7-versioning), and you are publishing per `well-known-spec` v0.1.0-alpha.1. If you publish more than one format at the same name+version, [§4.4](#44-multiple-formats-at-the-same-version) tells you what has to stay equivalent across them.
+
 ## 12. References
 
 ### 12.1. Normative References

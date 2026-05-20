@@ -39,11 +39,11 @@ A practical recurring problem: you push a change, you wait for CI, you reload th
 
 The honest probe — "what version is actually deployed?" — has no standard answer. People solve it ad hoc:
 
-- A `<meta name="generator">` tag from the static site generator (Hugo, WordPress) — identifies the *tool*, not the build.
-- A hidden HTML comment with the build SHA — buried, only useful if you know to view source.
-- A `Server` header overloaded with the build identifier — conflicts with the actual web server name, and on hosts you do not control (GitHub Pages, Cloudflare Pages) you cannot set it.
-- A `/health`, `/info`, or `/version` endpoint — works for services that have these conventions; static sites usually do not.
 - An `X-Build-Sha` response header — common in practice, undefined in standard, and [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) has deprecated the `X-` prefix since 2012.
+- A `/health`, `/info`, or `/version` endpoint — works for services that have these conventions; static sites usually do not.
+- A hidden HTML comment with the build SHA — buried, only useful if you know to view source.
+- A `<meta name="generator">` tag from the static site generator (Hugo, WordPress) — identifies the *tool*, not the build.
+- A `Server` header overloaded with the build identifier — conflicts with the actual web server name, and on hosts you do not control (GitHub Pages, Cloudflare Pages) you cannot set it.
 
 Each of these works in isolation. None composes. None is portable across the stacks people actually deploy. This spec proposes a small composable set of three surfaces under one name, so that the same probe ("`curl /.well-known/deployment-version.json`") works against a static blog on GitHub Pages, a Node service behind a CDN, and a homelab IoT admin endpoint — provided each chooses to publish.
 
@@ -442,6 +442,16 @@ Source code on GitHub (Astro static site):
 - Meta tag wiring: [`src/theme/layouts/BaseLayout.astro`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/theme/layouts/BaseLayout.astro)
 - Build SHA injection: [`.github/workflows/deploy.yml`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/.github/workflows/deploy.yml) — the deploy workflow passes `BUILD_SHA` from `${{ github.sha }}` and the manifest endpoint reads it via `import.meta.env.BUILD_SHA`.
 - This post: [`src/content/posts/deployment-version.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/deployment-version.mdx)
+
+### 13.1. Try It
+
+Next time a commit lands on `main` here, run:
+
+```bash
+curl -s https://ben.abbitt.me/.well-known/deployment-version.json | jq '.elements[0].version.text'
+```
+
+The string returned is the Git SHA the live site was built from. Compare it to the latest commit on [`benjaminabbitt/ben-abbitt-me@main`](https://github.com/benjaminabbitt/ben-abbitt-me/commits/main) — they should match within the deploy window.
 
 ## 14. References
 
