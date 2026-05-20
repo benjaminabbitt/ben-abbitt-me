@@ -100,7 +100,7 @@ Abbitt                        Informational                     [Page 1]
 
    The convention is format-agnostic.  A spec document MAY be a JSON
    Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF
-   grammar, plain text, a PDF, or anything else addressable as a single
+   grammar, plain text, or anything else textual addressable as a single
    file at the canonical URL.  The convention is about where specs live
    and how they are versioned, not what they look like inside.
    Companion specs MAY define format-specific structural requirements;
@@ -360,19 +360,23 @@ Abbitt                        Informational                     [Page 6]
    For specs that are more abstract -- a protocol, a naming convention,
    a grammar, an algorithm, an architectural pattern, a process -- text-
    based formats are appropriate.  ABNF [RFC5234] for grammar; Markdown,
-   HTML, plain text, or PDF for narrative.  This document (well-known-
-   spec) is in this category, and is itself published as pixel-perfect
-   IETF plain text (this .txt) and as RFC-style Markdown (the parallel
-   .md) -- both presenting the same normative content per Section 4.4.
+   HTML, or plain text for narrative.  This document (well-known-spec)
+   is in this category, and is itself published as pixel-perfect IETF
+   plain text (this .txt) and as RFC-style Markdown (the parallel .md)
+   -- both presenting the same normative content per Section 4.4.
 
    Specifications using complex binary formats for the spec document
-   itself are NOT RECOMMENDED.  Specs are read by humans and by tooling
-   alike; binary formats hurt both.  Use a textual format for the spec
-   document, even when the data the spec describes is binary --
-   Protobuf's .proto is text describing binary messages, and that is the
-   right shape.  A binary spec document raises the cost of inspection,
-   diff, code review, and porting between hosts without offering
-   compensating benefits.
+   itself -- PDF, CBOR, MessagePack, custom binary protocols, word-
+   processor formats, etc. -- are NOT RECOMMENDED.  Specs are read by
+   humans and by tooling alike; binary formats hurt both.  PDF in
+   particular is sometimes mistaken for a "text" format because it
+   carries text content, but it is a complex binary container and
+   hostile to inspection, diff, and version-control review; treat it as
+   binary.  Use a textual format for the spec document, even when the
+   data the spec describes is binary -- Protobuf's .proto is text
+   describing binary messages, and that is the right shape.  A binary
+   spec document raises the cost of inspection, diff, code review, and
+   porting between hosts without offering compensating benefits.
 
    The convention does not enforce these choices.  A publisher MAY use
    any format they prefer; the SHOULD reflects practical advice for
@@ -382,10 +386,6 @@ Abbitt                        Informational                     [Page 6]
 
    The {ext} segment of the canonical URL MUST match the served Content-
    Type.  Common pairings:
-
-
-
-
 
 
 
@@ -416,8 +416,6 @@ Abbitt                        Informational                     [Page 7]
    | ABNF /       | .abnf     | text/plain                            |
    | grammar      |           |                                       |
    +--------------+-----------+---------------------------------------+
-   | PDF          | .pdf      | application/pdf                       |
-   +--------------+-----------+---------------------------------------+
 
                                  Table 1
 
@@ -442,6 +440,8 @@ Abbitt                        Informational                     [Page 7]
       keys; or the first heading.
    *  HTML -- <link rel="canonical" href="...">, <title>, and a meta tag
       for the version.
+
+
 
 
 

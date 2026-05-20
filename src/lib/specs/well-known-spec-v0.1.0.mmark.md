@@ -43,7 +43,7 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 
 This document proposes such a pattern: /.well-known/spec/{name}/v{x.y.z}.{ext} is the canonical URL, and the only URL. The choice of /.well-known/ is grounded in [@!RFC8615], which reserves the path prefix for site-wide metadata. No new IANA registration is required immediately, because the spec documents are leaf files under /.well-known/, not new well-known URI suffixes (registration of the "spec" suffix is suggested as future work; see [@iana-considerations]).
 
-The convention is format-agnostic. A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, a PDF, or anything else addressable as a single file at the canonical URL. The convention is about where specs live and how they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; well-known-spec itself does not.
+The convention is format-agnostic. A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, or anything else textual addressable as a single file at the canonical URL. The convention is about where specs live and how they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; well-known-spec itself does not.
 
 # Conventions and Terminology
 
@@ -147,9 +147,9 @@ For specs that describe data shapes, message structures, or service surfaces, fo
 * GraphQL schemas -- use the GraphQL Schema Definition Language (.graphql).
 * Linked-data shapes -- use SHACL or RDF Schema.
 
-For specs that are more abstract -- a protocol, a naming convention, a grammar, an algorithm, an architectural pattern, a process -- text-based formats are appropriate. ABNF [@!RFC5234] for grammar; Markdown, HTML, plain text, or PDF for narrative. This document (well-known-spec) is in this category, and is itself published as pixel-perfect IETF plain text (this .txt) and as RFC-style Markdown (the parallel .md) -- both presenting the same normative content per [@multiple-formats-at-the-same-version].
+For specs that are more abstract -- a protocol, a naming convention, a grammar, an algorithm, an architectural pattern, a process -- text-based formats are appropriate. ABNF [@!RFC5234] for grammar; Markdown, HTML, or plain text for narrative. This document (well-known-spec) is in this category, and is itself published as pixel-perfect IETF plain text (this .txt) and as RFC-style Markdown (the parallel .md) -- both presenting the same normative content per [@multiple-formats-at-the-same-version].
 
-Specifications using complex binary formats for the spec document itself are NOT RECOMMENDED. Specs are read by humans and by tooling alike; binary formats hurt both. Use a textual format for the spec document, even when the data the spec describes is binary -- Protobuf's .proto is text describing binary messages, and that is the right shape. A binary spec document raises the cost of inspection, diff, code review, and porting between hosts without offering compensating benefits.
+Specifications using complex binary formats for the spec document itself -- PDF, CBOR, MessagePack, custom binary protocols, word-processor formats, etc. -- are NOT RECOMMENDED. Specs are read by humans and by tooling alike; binary formats hurt both. PDF in particular is sometimes mistaken for a "text" format because it carries text content, but it is a complex binary container and hostile to inspection, diff, and version-control review; treat it as binary. Use a textual format for the spec document, even when the data the spec describes is binary -- Protobuf's .proto is text describing binary messages, and that is the right shape. A binary spec document raises the cost of inspection, diff, code review, and porting between hosts without offering compensating benefits.
 
 The convention does not enforce these choices. A publisher MAY use any format they prefer; the SHOULD reflects practical advice for adoption, tooling support, and readability.
 
@@ -167,7 +167,6 @@ The {ext} segment of the canonical URL MUST match the served Content-Type. Commo
 | HTML           | .html     | text/html                                 |
 | Plain text     | .txt      | text/plain                                |
 | ABNF / grammar | .abnf     | text/plain                                |
-| PDF            | .pdf      | application/pdf                           |
 
 The table is illustrative. Any IANA-registered media type and corresponding well-known file extension MAY be used.
 
