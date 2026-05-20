@@ -98,8 +98,19 @@ function postHref(p: AnyPost): string {
 									))}
 								</span>
 							)}
+							{p.data.marginalia && (
+								<span
+									class="wide:hidden font-serif italic text-[14.5px] text-accent leading-[1.45] mt-1 relative z-10 [&_a]:underline [&_a]:underline-offset-2"
+									set:html={renderInlineMd(p.data.marginalia)}
+								/>
+							)}
 							{showExcerpt && excerpt && (
-								<span class="font-serif-body text-[14.5px] text-fg-dim mt-1">
+								<span
+									class:list={[
+										"font-serif-body text-[14.5px] text-fg-dim mt-1",
+										p.data.marginalia ? "hidden wide:block" : "",
+									]}
+								>
 									{excerpt}
 								</span>
 							)}

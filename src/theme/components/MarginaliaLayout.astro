@@ -10,7 +10,7 @@ const { defaultText = "Hover a row to read the margin note." } = Astro.props;
 >
 	<slot />
 	<aside
-		class="self-start mt-2 pt-5 border-t border-dashed border-rule wide:mt-0 wide:pt-1.5 wide:pb-1.5 wide:pl-5 wide:border-t-0 wide:border-l wide:border-solid wide:sticky wide:top-20 print:hidden"
+		class="hidden wide:block wide:self-start wide:mt-0 wide:pt-1.5 wide:pb-1.5 wide:pl-5 wide:border-l wide:border-solid wide:border-rule wide:sticky wide:top-20 print:hidden"
 	>
 		<div
 			data-marginalia-text
