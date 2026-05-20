@@ -29,9 +29,39 @@
 		"elements": {
 			"$ref": "#/$defs/elementsArray",
 			"description": "Components of the deployment, each with an independent version. MAY be empty."
+		},
+		"links": {
+			"type": "array",
+			"items": { "$ref": "#/$defs/link" },
+			"description": "OPTIONAL. Outbound links to related resources on this host, in RFC 8288 web-linking style. If the host publishes an api-catalog per RFC 9727, this array SHOULD include a link with rel='api-catalog' pointing to it."
 		}
 	},
 	"$defs": {
+		"link": {
+			"type": "object",
+			"required": ["rel", "href"],
+			"additionalProperties": true,
+			"properties": {
+				"rel": {
+					"type": "string",
+					"minLength": 1,
+					"description": "RFC 8288 link relation type. RECOMMENDED to use an IANA-registered name from the link relation registry, or an extension URI."
+				},
+				"href": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Target URL or URL-reference."
+				},
+				"type": {
+					"type": "string",
+					"description": "OPTIONAL. Media type of the linked resource (RFC 8288 type parameter)."
+				},
+				"title": {
+					"type": "string",
+					"description": "OPTIONAL. Human-readable title for the link (RFC 8288 title parameter)."
+				}
+			}
+		},
 		"element": {
 			"type": "object",
 			"required": ["path", "name", "version"],

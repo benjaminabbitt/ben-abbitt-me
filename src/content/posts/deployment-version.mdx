@@ -164,6 +164,40 @@ Why an object instead of a bare string? The motivating cases:
 
 Why is `parts` allowed to be free-form? Because version schemes proliferate. Semver, CalVer, PEP 440, .NET assembly versioning, Conan recipe versions, Maven version-range syntax, Cargo's slightly-modified semver, opaque hashes, build numbers — none of them share a structure. Enumerating every shape would either freeze the spec or grow it without bound. Punting the shape to the publisher and the `scheme` identifier is the honest move.
 
+### 4.7. Outbound Links
+
+The manifest MAY include a top-level `links` array advertising related resources at the same host. Each entry is an object following [RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288) web-linking conventions:
+
+```json
+"links": [
+  { "rel": "api-catalog", "href": "/.well-known/api-catalog" },
+  { "rel": "documentation", "href": "/docs/" }
+]
+```
+
+REQUIRED fields:
+- `rel` (string) — Link relation type. RECOMMENDED to use a name from the IANA [Link Relations registry](https://www.iana.org/assignments/link-relations/), or an extension URI per RFC 8288.
+- `href` (string) — Target URL or URL-reference.
+
+OPTIONAL fields per RFC 8288:
+- `type` (string) — Media type of the linked resource.
+- `title` (string) — Human-readable title.
+
+Other RFC 8288 link parameters MAY be included.
+
+#### 4.7.1. Relationship with api-catalog (RFC 9727)
+
+[RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html) defines `/.well-known/api-catalog` and the `api-catalog` link relation as the standardized way for a host to enumerate the APIs it exposes. The two specs do not collide; they are structurally complementary:
+
+- **api-catalog** answers: *"what APIs does this host expose, and where is their documentation?"*
+- **deployment-version** answers: *"what build of the deployed thing is currently running?"*
+
+RFC 9727 §4.1 RECOMMENDS but does not structurally define version metadata in catalog entries; version information is carried indirectly via linked OpenAPI documents (their `info.version` field) or URL-path conventions (`/v1/...`). This spec fills that structural gap. A host publishing both can use api-catalog for API discovery and deployment-version for build identity, keyed on path — the same path the api-catalog uses to anchor an API entry.
+
+**If the host publishes an api-catalog at `/.well-known/api-catalog`, the deployment-version manifest SHOULD include an entry in `links` with `rel: "api-catalog"` pointing to it.** A consumer wanting the deployed version of an API can then resolve it through deployment-version's `elements` (longest-prefix-matched against the API's path) without parsing the OpenAPI document.
+
+---
+
 ## 5. The Deployment-Version Response Header
 
 A conforming server MAY emit a `Deployment-Version` response header on any response.
@@ -215,7 +249,26 @@ When included:
 
 The meta tag is a convenience for browser-based inspection where a developer can right-click → View Source or use a one-line `document.querySelector('meta[name=deployment-version]').content` in DevTools. It carries no information beyond the root-element's version text; consumers wanting the parsed structure must fetch the manifest.
 
-## 7. When This Is Useful — and When It Isn't
+## 7. Discovery via Link Relation
+
+Servers MAY advertise the manifest from any response via an HTTP `Link` header, per [RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288):
+
+```
+Link: </.well-known/deployment-version.json>; rel="deployment-version"
+```
+
+This is an alternative discovery affordance to the `Deployment-Version` response header (§5) and the HTML meta tag (§6). The three surfaces are not mutually exclusive; a server MAY emit any subset. The Link header is useful for consumers locating the manifest from any response without probing `/.well-known/` directly.
+
+The pattern follows the precedent set by [RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html), which registered the `api-catalog` link relation type for the same discovery role. A response emitted by a host that publishes both specs might carry both relations:
+
+```
+Link: </.well-known/api-catalog>;          rel="api-catalog",
+      </.well-known/deployment-version.json>; rel="deployment-version"
+```
+
+The link relation type `deployment-version` is currently unregistered with [IANA's Link Relations registry](https://www.iana.org/assignments/link-relations/); provisional registration is suggested as future work (see §12).
+
+## 8. When This Is Useful — and When It Isn't
 
 This spec is designed for contexts where knowing the deployed version cheaply is more valuable than concealing it. Those contexts include:
 
@@ -239,7 +292,7 @@ The spec is **NOT** appropriate where:
 
 A server's choice not to publish is conformant. See §8.
 
-## 8. Security Considerations
+## 9. Security Considerations
 
 The primary risk of this spec is information disclosure. [OWASP A05:2021 — Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) explicitly lists "exposing the versions of software in use" as a misconfiguration risk, on the grounds that attackers correlate version numbers with public vulnerability databases (CVEs) to prioritize exploitation.
 
@@ -257,7 +310,7 @@ A publisher emitting the `Deployment-Version` header on every response increases
 
 The spec defines no authentication. A publisher who wants the manifest to be accessible only to authorized clients MAY require authentication for the endpoint, at the cost of reducing its utility for anonymous health-checking.
 
-## 9. Discoverability
+## 10. Discoverability
 
 Well-known URIs are discoverable by design. [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) reserves the `/.well-known/` path prefix precisely so that operators of HTTP services can publish "site-wide metadata" at predictable locations without prior negotiation with clients. Anyone curious about a host can `curl https://example.com/.well-known/deployment-version.json` and either find a manifest or get a 404. The 404 is informative ("this site does not publish a deployment-version manifest") and not a failure mode of the spec.
 
@@ -278,7 +331,7 @@ Consumers seeking to discover whether a host publishes a `deployment-version` ma
 
 The three surfaces compose: a consumer finding any one of them learns of the convention's adoption by the host without further negotiation.
 
-## 10. Versioning of This Spec
+## 11. Versioning of This Spec
 
 This spec is itself versioned per [semver 2.0.0](https://semver.org/spec/v2.0.0.html).
 
@@ -302,11 +355,13 @@ https://ben.abbitt.me/.well-known/spec/deployment-version.json
 
 References to this spec from other documents SHOULD pin to the versioned URL; references to "the current version" MAY use the alias.
 
-## 11. IANA Considerations
+## 12. IANA Considerations
 
-This spec, as currently published, is **not fully conformant with [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)'s registration requirements.** Two IANA registrations would be required for strict conformance, and neither has been filed.
+This spec, as currently published, is **not fully conformant with [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)'s registration requirements.** Three IANA registrations would be required for strict conformance, and none have been filed.
 
-### 11.1. Well-Known URI Suffix
+The model for those registrations is [RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html) (October 2025), which registered both the `/.well-known/api-catalog` URI suffix and the `api-catalog` link relation type. RFC 9727 is the concrete precedent for the registration playbook below, and is recent enough to confirm that the IETF process for adjacent specs is open and tractable.
+
+### 12.1. Well-Known URI Suffix
 
 RFC 8615 §3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The `deployment-version.json` suffix used by this spec for the manifest URL is unregistered. The same is true of the `spec` suffix used by [`well-known-spec`](/posts/well-known-spec/) for spec document publication.
 
@@ -314,28 +369,33 @@ This puts the spec in the same category as a great deal of `/.well-known/` usage
 
 Adopters concerned about strict RFC 8615 conformance are advised either to await registration (preferred) or to deploy a host-specific variant under a known-conformant suffix. The convention's URL pattern is otherwise stable.
 
-### 11.2. HTTP Field Name
+### 12.2. HTTP Field Name
 
 The `Deployment-Version` field name is not currently registered in the [IANA HTTP Field Name Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml). The registry uses three status tiers: Permanent (Specification Required), Provisional (Expert Review), and Deprecated. Provisional registration is the appropriate path for a community-spec field of this kind. Registration is suggested as future work and is similarly low-ceremony.
 
 Existing version-related fields in the registry — `OData-Version`, `OSLC-Core-Version` — share the pattern of a vendor or convention prefix and would be the comparable precedent.
 
-### 11.3. Media Type
+### 12.3. Link Relation Type
+
+The `deployment-version` link relation type used in §7 is not currently registered in the [IANA Link Relations registry](https://www.iana.org/assignments/link-relations/). Registration is via Specification Required per [RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288) §4. RFC 9727 registered `api-catalog` via the same path; that is the direct precedent.
+
+### 12.4. Media Type
 
 The `application/json` media type is used unchanged. The spec does not define a new media type.
 
-### 11.4. Status Summary
+### 12.5. Status Summary
 
-Strict conformance to RFC 8615 awaits IANA registration. Loose conformance — adopting the URL pattern, the manifest shape, the header field, and the meta tag — is achievable today by any host. The spec acknowledges the gap and does not represent itself as more authoritative than it is.
+Strict conformance to RFC 8615 and RFC 8288 awaits the three IANA registrations above. Loose conformance — adopting the URL pattern, the manifest shape, the header field, the meta tag, and the link relation — is achievable today by any host. The spec acknowledges the gap and does not represent itself as more authoritative than it is.
 
-## 12. References
+## 13. References
 
-### 12.1. Normative References
+### 13.1. Normative References
 
 - [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) — Key words for use in RFCs to Indicate Requirement Levels
 - [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454) — The Web Origin Concept
 - [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) — Deprecating the "X-" Prefix and Similar Constructs in Application Protocols
 - [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174) — Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words
+- [RFC 8288](https://datatracker.ietf.org/doc/html/rfc8288) — Web Linking
 - [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) — Well-Known Uniform Resource Identifiers
 - [RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941) — Structured Field Values for HTTP
 - [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110) — HTTP Semantics
@@ -343,10 +403,13 @@ Strict conformance to RFC 8615 awaits IANA registration. Loose conformance — a
 - [JSON Schema draft 2020-12](https://json-schema.org/draft/2020-12/schema)
 - [well-known-spec v0.1.0](/.well-known/spec/well-known-spec/v0.1.0.json)
 
-### 12.2. Informative References
+### 13.2. Informative References
 
+- [RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html) — The "api-catalog" Well-Known URI and Link Relation
+- [RFC 9264](https://datatracker.ietf.org/doc/html/rfc9264) — Linkset: Media Types and a Link Relation Type for Link Sets
 - [OWASP A05:2021 — Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
 - [IANA HTTP Field Name Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml)
+- [IANA Link Relations Registry](https://www.iana.org/assignments/link-relations/)
 - [OpenAPI Issue #1851 — RFC 5785 conventions & suggested OpenAPI document locations](https://github.com/OAI/OpenAPI-Specification/issues/1851)
 
 ---
