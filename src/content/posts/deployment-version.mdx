@@ -23,13 +23,13 @@ The canonical machine-readable artifact is the JSON Schema at:
 https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json
 ```
 
-Per [`well-known-spec`](/posts/well-known-spec/) §4.2, references to a spec MUST pin to a specific version. This document defines no latest-version alias; consumers reference `deployment-version` at this exact URL or not at all.
+Per [`well-known-spec`](/posts/well-known-spec/), references to a spec MUST pin to a specific version. Consumers reference `deployment-version` at this exact URL or not at all.
 
 ## Status of This Memo
 
 This is `deployment-version` v0.1.0, status `draft`. The major version is 0; per [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), this signals a pre-stable spec that may change incompatibly in subsequent 0.x releases. Adoption is optional and provides no formal conformance benefit — there is no working group, no certification, and no IANA registration. The document is published under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-This document conforms to [`well-known-spec` v0.1.0](/posts/well-known-spec/), the convention for publishing versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.json`.
+This document conforms to [`well-known-spec` v0.1.0](/posts/well-known-spec/), the format-agnostic convention for publishing versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.{ext}`.
 
 ---
 
@@ -391,7 +391,7 @@ The canonical URL of this spec version is permanent and immutable:
 https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json
 ```
 
-Per [`well-known-spec`](/posts/well-known-spec/) §4.2, this convention defines no latest-version alias. References to this spec from other documents MUST pin to the canonical versioned URL above. Tooling that wants to know whether a newer version exists MUST do so by enumeration or out-of-band signaling (release notes, changelog, package metadata), not by following a latest URL.
+Per [`well-known-spec`](/posts/well-known-spec/), references to this spec from other documents MUST pin to the canonical versioned URL above. Tooling that wants to know whether a newer version exists MUST do so by enumeration or out-of-band signaling (release notes, changelog, package metadata).
 
 ## 12. IANA Considerations
 

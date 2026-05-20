@@ -1,6 +1,6 @@
 ---
 title: "well-known-spec: A Convention for Publishing Versioned Specifications under /.well-known/spec/"
-description: "An optional convention proposing that versioned specifications be published as JSON Schema documents under /.well-known/spec/{name}/v{x.y.z}.json. References pin to a specific version; the convention defines no latest-version alias. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
+description: "An optional, format-agnostic convention proposing that versioned specifications be published under /.well-known/spec/{name}/v{x.y.z}.{ext}. References pin to a specific version. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
 publishDate: "2026-05-20T18:00:00-05:00"
 tags: ["standards", "http", "well-known-spec", "spec"]
 marginalia: "A draft (v0.1.0) meta-convention. The post is the narrative; the [JSON Schema](/.well-known/spec/well-known-spec/v0.1.0.json) is the contract — and validates itself."
@@ -9,7 +9,7 @@ visibility: draft
 
 ## Abstract
 
-There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in convention: publish versioned specifications as JSON Schema documents under `/.well-known/spec/{name}/v{x.y.z}.json`. References to a spec MUST pin to a specific version; this convention deliberately defines no latest-version alias or other floating reference.
+There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in, format-agnostic convention: publish versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.{ext}`, where `{ext}` matches the served Content-Type. References to a spec MUST pin to a specific version.
 
 The convention is recursive: this specification is itself published at the URLs it specifies, in the format it specifies, and validates against itself. The canonical machine-readable artifact is:
 
@@ -38,7 +38,6 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 - Identifies the exact version of the spec, immutable and stable.
 - Is discoverable by convention without registration.
 - Doesn't pretend to be more authoritative than a community proposal.
-- Refuses to offer a "give me the latest" affordance, because spec consumers need reproducibility more than they need convenience.
 
 This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.{ext}` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
 
@@ -50,7 +49,7 @@ The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RE
 
 The term *spec document* refers to a JSON Schema published at a `/.well-known/spec/...` URL as defined by this convention.
 
-The term *canonical versioned URL* refers to a URL of the form `/.well-known/spec/{name}/v{x.y.z}.json` — the only URL form this convention defines.
+The term *canonical versioned URL* refers to a URL of the form `/.well-known/spec/{name}/v{x.y.z}.{ext}` — the only URL form this convention defines.
 
 ## 3. Optionality and Scope
 
@@ -60,7 +59,7 @@ This convention is opt-in. Specifically:
 - A host that publishes a spec document is **NOT REQUIRED** to publish other versions of the same spec.
 - A host that publishes multiple specs MAY publish them in any subset of the namespaces under `/.well-known/spec/`.
 
-The convention's MUST and SHOULD language applies only to documents that exist. Hosts publishing nothing are conformant. Documents published at `/.well-known/spec/{name}/v{x.y.z}.json` MUST be shaped per §5.
+The convention's MUST and SHOULD language applies only to documents that exist. Hosts publishing nothing are conformant. Documents published at `/.well-known/spec/{name}/v{x.y.z}.{ext}` MUST follow §5.
 
 This convention is unrelated to whether the *thing* a spec describes (a manifest format, a header, a protocol) is opt-in. That is the individual spec's concern. This convention concerns only where and how *spec documents themselves* are published.
 
@@ -87,17 +86,35 @@ The canonical URL is immutable. Once published at a given version, the content a
 
 Consumers are permitted, and encouraged, to compute and record a cryptographic hash (RECOMMENDED: SHA-256) of any spec document they fetch and pin to. If a subsequent fetch of the same canonical URL yields a document whose hash differs, the publisher has violated the immutability rule of this section; the consumer SHOULD treat the divergence as a contract breach, report it to the publisher, and treat the new content as a distinct document not covered by their original pin. Consumer-side hashing provides tamper-evidence without requiring any publisher-side hash publication.
 
-### 4.2. No Latest-Version Alias
-
-This convention deliberately defines **no** "latest-version" alias, no "most-recent" URL, and no other floating reference. Publishers MAY serve any other content they like at bare-name URLs (e.g. `/.well-known/spec/{name}.json` without a version segment), but such content is not part of this convention and consumers MUST NOT treat any bare-name URL as a `well-known-spec`-conforming spec document.
-
-The motivation is reproducibility. A spec at `v0.1.0` is byte-immutable (§4.1). A "latest" alias is by definition mutable — its referent changes as new versions are published. A reference that pins to "latest" pins to nothing in particular; tooling that follows such a reference cannot reproduce its inputs across time. Spec consumers need reproducibility more than they need convenience.
-
-References to a spec — whether in another spec's `x-spec-conforms-to`-style field, in a `$ref`, in a blog post citation, or in tooling configuration — MUST identify a specific version via the canonical versioned URL. Tooling that wants to know "is a newer version available?" MUST do so by enumeration or out-of-band signaling (release announcements, RSS, package-manager metadata), not by following a latest alias on the same host.
-
-### 4.3. Cache-Control
+### 4.2. Cache-Control
 
 The canonical versioned URL SHOULD be served with a long `Cache-Control` `max-age`; the content is immutable. RECOMMENDED: `Cache-Control: public, max-age=31536000, immutable` (one year, immutable).
+
+### 4.3. Hash Sidecar (Optional)
+
+A publisher MAY publish a SHA-256 hash sidecar alongside a spec document, following the Apache-style sidecar convention widely used by package mirrors (Maven, PyPI mirrors, Apache release archives, etc.). The sidecar URL is the spec URL with `.sha256` appended:
+
+```
+/.well-known/spec/{name}/v{x.y.z}.{ext}.sha256
+```
+
+The sidecar's content MUST be the hex-encoded SHA-256 digest of the spec document, optionally followed by whitespace and the filename, matching the output format of `sha256sum`:
+
+```
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  v0.1.0.json
+```
+
+Other digest algorithms MAY be published using the corresponding suffix (`.sha512`, `.sha1`, etc.). SHA-256 is RECOMMENDED. There is no formal RFC standardizing this sidecar convention; this section codifies the prevailing practice from the Apache/Maven/PyPI ecosystem for use within `well-known-spec`.
+
+The sidecar is itself subject to §4.1 immutability — once published at its canonical URL, its content MUST NOT change.
+
+**Consumer behavior.** A consumer fetching a spec document SHOULD also fetch the sidecar (if present) and verify that the digest of the fetched spec matches the sidecar's digest **before storing or trusting** the spec. If the digests do not match, the consumer SHOULD treat the fetch as failed, the spec content as untrusted, and discard it; the consumer MUST NOT cache, validate against, or otherwise rely on the unverified content.
+
+A missing sidecar is not an error — sidecars are optional. Consumers MAY proceed without verification if no sidecar is published, but SHOULD compute their own hash on first fetch and record it for future re-fetch comparison (see §4.1).
+
+The sidecar establishes integrity at fetch time. The consumer-hash record (§4.1) detects subsequent silent modification by the publisher. The two are complementary; neither replaces the other. A publisher may publish a sidecar even if no consumer maintains a hash record; a consumer may maintain a hash record even if no publisher publishes a sidecar.
+
+Note that a hash sidecar protects against transit-level corruption (CDN errors, intermediary mutation) and accidental publisher mistakes, but cannot detect deliberate tampering by a publisher who controls both the spec and its sidecar. Cryptographic signatures (out of scope for this version) would be needed for that threat model.
 
 ## 5. Spec Document Format
 
@@ -185,13 +202,13 @@ Publishing spec documents at predictable URLs is a discoverability feature, not 
 
 Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
 
-Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS. Because this convention defines no latest-version alias (§4.2), every reference necessarily pins to a specific version, which is the right default for reproducible validation.
+Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS. Every reference under this convention pins to a specific version (the canonical versioned URL), which is the right default for reproducible validation.
 
 ## 9. Discoverability
 
 This convention is discoverable in the way [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) intends. A consumer aware of `well-known-spec` and the name of a spec they want can:
 
-1. Probe `https://{host}/.well-known/spec/{name}/v{x.y.z}.json` for a specific version.
+1. Probe `https://{host}/.well-known/spec/{name}/v{x.y.z}.{ext}` for a specific version (with the extension the publisher uses for that spec's format).
 2. Receive a 404 if the host has not published that version of the spec.
 
 The 404 is informative. It says "this host does not publish this spec," and the consumer can proceed accordingly.
