@@ -1,0 +1,64 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json",
+	"title": "deployment-version v0.1.0",
+	"description": "Manifest schema for HTTP-served deployments exposing deploy/build version information. Conforming servers publish a manifest at /.well-known/deployment-version.json and MAY emit a Deployment-Version response header; HTML responses MAY include a <meta name=\"deployment-version\"> tag. Narrative at https://ben.abbitt.me/posts/deployment-version/.",
+	"type": "object",
+	"required": ["spec", "elements"],
+	"properties": {
+		"spec": {
+			"type": "object",
+			"required": ["name", "version", "url"],
+			"properties": {
+				"name": {
+					"const": "deployment-version",
+					"description": "MUST be the literal string 'deployment-version'."
+				},
+				"version": {
+					"type": "string",
+					"pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+					"description": "Semver 2.0.0 version of the deployment-version spec this manifest conforms to. The pattern is the official semver 2.0.0 regex."
+				},
+				"url": {
+					"type": "string",
+					"format": "uri",
+					"description": "Canonical versioned URL of the deployment-version spec the manifest conforms to."
+				}
+			}
+		},
+		"elements": {
+			"$ref": "#/$defs/elementsArray",
+			"description": "Components of the deployment, each with an independent version. MAY be empty."
+		}
+	},
+	"$defs": {
+		"element": {
+			"type": "object",
+			"required": ["path", "name", "version"],
+			"properties": {
+				"path": {
+					"type": "string",
+					"description": "URL path scoping this element. SHOULD start with '/'. The root element uses '/'."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Human-readable name of the element."
+				},
+				"version": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Arbitrary version string. SHOULD follow semver 2.0.0 when applicable; MAY be any non-empty string (Git SHA, CalVer, etc.) when semver does not apply."
+				},
+				"elements": {
+					"$ref": "#/$defs/elementsArray",
+					"description": "OPTIONAL nested elements. A child's path SHOULD be a descendant of the parent's path. Producers MAY use either a flat or nested form; consumers MUST handle both."
+				}
+			}
+		},
+		"elementsArray": {
+			"type": "array",
+			"items": { "$ref": "#/$defs/element" }
+		}
+	}
+}

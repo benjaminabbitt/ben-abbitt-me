@@ -1,0 +1,30 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json",
+	"title": "well-known-spec v0.1.0",
+	"description": "A convention for publishing versioned specifications at /.well-known/spec/{name}/v{x.y.z}.json. Conforming spec documents are JSON Schemas (draft 2020-12) with $schema, $id, and title set. The latest version of a spec is also served at the bare-name URL /.well-known/spec/{name}.json. Narrative at https://ben.abbitt.me/posts/well-known-spec/.",
+	"type": "object",
+	"required": ["$schema", "$id", "title"],
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"format": "uri",
+			"description": "MUST identify the JSON Schema dialect. RECOMMENDED: https://json-schema.org/draft/2020-12/schema."
+		},
+		"$id": {
+			"type": "string",
+			"format": "uri",
+			"pattern": "/v(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(?:\\+[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*)?\\.json$",
+			"description": "MUST be the canonical versioned URL of the spec document, ending in /v{x.y.z}.json where {x.y.z} is a semver 2.0.0 version. MUST NOT be the latest-alias URL."
+		},
+		"title": {
+			"type": "string",
+			"minLength": 1,
+			"description": "Human-readable spec name including the version, e.g. 'deployment-version v0.1.0'."
+		},
+		"description": {
+			"type": "string",
+			"description": "RECOMMENDED. Abstract describing the spec; SHOULD include the narrative URL."
+		}
+	}
+}

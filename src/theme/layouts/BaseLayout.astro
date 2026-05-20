@@ -21,7 +21,7 @@ const buildSha = import.meta.env.BUILD_SHA || "dev";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="build-sha" content={buildSha} />
+    <meta name="deployment-version" content={buildSha} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link

@@ -1,0 +1,449 @@
+---
+title: "deployment-version: A Convention for Exposing Deploy Versions over HTTP"
+description: "An optional convention for HTTP-served deployments to expose deploy/build version via a /.well-known manifest, an optional response header, and an optional HTML meta tag. Most useful in development, staging, and unique-installation contexts."
+publishDate: "2026-05-20T18:00:00-05:00"
+tags: ["standards", "http", "deployment-version", "spec"]
+marginalia: "A draft (v0.1.0) convention. The post is the narrative; the JSON Schema at [/.well-known/spec/deployment-version/v0.1.0.json](/.well-known/spec/deployment-version/v0.1.0.json) is the contract."
+visibility: draft
+---
+
+## Abstract
+
+Anything served over HTTP has a deployed version — a build SHA, a release tag, a calendar stamp. There is no widely-adopted convention for exposing that version to a curious operator, a debugging developer, or an automated probe asking "is the build I expect what's actually live?" This document defines `deployment-version`, a small, optional convention with three independent surfaces:
+
+1. A JSON manifest at `/.well-known/deployment-version.json` whose shape is defined by a JSON Schema.
+2. An OPTIONAL `Deployment-Version` HTTP response header.
+3. An OPTIONAL `<meta name="deployment-version">` tag in HTML responses.
+
+Publishing any of these is opt-in. Servers MAY publish none, some, or all. The spec describes only what conforming documents and headers look like; it makes no demand that any deployment publish anything at all.
+
+The canonical machine-readable artifact is the JSON Schema at:
+
+```
+https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json
+```
+
+The latest version's URL (subject to change at MAJOR version bumps) is:
+
+```
+https://ben.abbitt.me/.well-known/spec/deployment-version.json
+```
+
+## Status of This Memo
+
+This is `deployment-version` v0.1.0, status `draft`. The major version is 0; per [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), this signals a pre-stable spec that may change incompatibly in subsequent 0.x releases. Adoption is optional and provides no formal conformance benefit — there is no working group, no certification, and no IANA registration. The document is published under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+This document conforms to [`well-known-spec` v0.1.0](/posts/well-known-spec/), the convention for publishing versioned specifications at `/.well-known/spec/{name}/v{x.y.z}.json`.
+
+---
+
+## 1. Introduction
+
+A practical recurring problem: you push a change, you wait for CI, you reload the page, and you cannot tell whether the bytes coming back are from the new build or the old one. CDNs cache. Deploys lag. Browsers cache harder than CDNs. The page looks the same either way.
+
+The honest probe — "what version is actually deployed?" — has no standard answer. People solve it ad hoc:
+
+- A `<meta name="generator">` tag from the static site generator (Hugo, WordPress) — identifies the *tool*, not the build.
+- A hidden HTML comment with the build SHA — buried, only useful if you know to view source.
+- A `Server` header overloaded with the build identifier — conflicts with the actual web server name, and on hosts you do not control (GitHub Pages, Cloudflare Pages) you cannot set it.
+- A `/health`, `/info`, or `/version` endpoint — works for services that have these conventions; static sites usually do not.
+- An `X-Build-Sha` response header — common in practice, undefined in standard, and [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) has deprecated the `X-` prefix since 2012.
+
+Each of these works in isolation. None composes. None is portable across the stacks people actually deploy. This spec proposes a small composable set of three surfaces under one name, so that the same probe ("`curl /.well-known/deployment-version.json`") works against a static blog on GitHub Pages, a Node service behind a CDN, and a homelab IoT admin endpoint — provided each chooses to publish.
+
+The choice is the point. See §3 for the explicit non-mandate, and §7 for where this is actually worth implementing.
+
+## 2. Conventions and Terminology
+
+The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) and [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174), but only when they appear in all-uppercase, and **only as constraints on documents and headers that opt in to this spec**. Nothing in this spec requires a deployment to publish a `deployment-version` manifest, header, or meta tag.
+
+The term *deployment* refers to anything served over HTTP that has an identifiable version. This includes static sites, REST APIs, single-page apps, CDN edges, media servers, and embedded device admin interfaces.
+
+The term *element* refers to a component of a deployment with an independent version, identified by a URL path.
+
+## 3. Optionality and Scope
+
+This spec is opt-in at every level. Specifically:
+
+- A deployment is **NOT REQUIRED** to publish a manifest. The absence of `/.well-known/deployment-version.json` is a perfectly conformant state.
+- A deployment that publishes a manifest is **NOT REQUIRED** to emit a `Deployment-Version` header. The absence of the header is conformant.
+- A deployment that emits the header or publishes the manifest is **NOT REQUIRED** to include a `<meta name="deployment-version">` tag.
+- The three surfaces are independent. Servers MAY publish any subset.
+
+The spec's MUST and SHOULD language applies only to the contents of documents and headers that exist. It does not mandate that they exist. Servers that publish nothing are conformant. Servers that publish a manifest MUST shape it per §4. Servers that emit the header MUST follow §5. Servers that include the meta tag MUST follow §6.
+
+The cost of adopting one surface should be measured in tens of lines of configuration, not in subscribing to a working group.
+
+## 4. The Manifest
+
+### 4.1. URL
+
+A conforming manifest MUST be served at the path `/.well-known/deployment-version.json`, resolved against the origin per [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454).
+
+### 4.2. Media Type
+
+A conforming manifest MUST be served with `Content-Type: application/json`.
+
+### 4.3. Cache-Control
+
+A conforming manifest SHOULD be served with `Cache-Control: no-cache`, or with a `max-age` short enough that consumers polling for deploy changes see them within an acceptable lag (RECOMMENDED: under 60 seconds). The whole point of the manifest is freshness; aggressive caching defeats it.
+
+### 4.4. Schema
+
+A conforming manifest MUST validate against the JSON Schema published at [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json). At the top level the manifest is an object with two REQUIRED properties: `spec` and `elements`.
+
+The `spec` object identifies the spec version this manifest conforms to:
+
+```json
+{
+  "name": "deployment-version",
+  "version": "0.1.0",
+  "url": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json"
+}
+```
+
+- `name` MUST be the literal string `"deployment-version"`.
+- `version` MUST be a [semver 2.0.0](https://semver.org/spec/v2.0.0.html) string matching the spec the manifest claims to conform to.
+- `url` MUST be the canonical versioned URL of that spec.
+
+The `version` and `url` SHOULD agree. Consumers MAY use either to resolve the spec; they MUST NOT silently follow `url` to a different version than `version` claims.
+
+### 4.5. The elements Array
+
+`elements` is an array of objects, each representing a component of the deployment with an independent version. The array MAY be empty, in which case the manifest exists as a discoverability signal without committing to any element-level versioning.
+
+Each element MUST have the following REQUIRED properties:
+
+- `path` (string) — URL path scoping the element. SHOULD start with `/`. The root element uses `path: "/"`.
+- `name` (string) — Human-readable name. MUST be non-empty.
+- `version` (string) — Arbitrary non-empty version string. SHOULD follow [semver 2.0.0](https://semver.org/spec/v2.0.0.html) when applicable; MAY be any non-empty string (Git SHA, CalVer, opaque hash) when semver does not apply.
+
+An element MAY contain a nested `elements` array, allowing tree-shaped manifests for deployments with hierarchical components. A child's `path` SHOULD be a descendant of the parent's `path`, advisory only.
+
+Producers MAY use the flat form (all elements at the top level) or the nested form (children inside parent `elements`). Consumers MUST handle both and treat them as semantically equivalent.
+
+An example manifest appears in Appendix A.
+
+## 5. The Deployment-Version Response Header
+
+A conforming server MAY emit a `Deployment-Version` response header on any response.
+
+### 5.1. Field Name
+
+The field name is `Deployment-Version`. Servers MUST NOT use the `X-` prefix variant `X-Deployment-Version`. This is a stricter constraint than [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648), which deprecates the `X-` prefix but uses SHOULD NOT rather than MUST NOT; this spec hardens that recommendation for new servers adopting the convention, since there is no legacy reason to introduce a new `X-`-prefixed variant in 2026. The field name is currently unregistered with IANA; provisional registration is suggested as future work (see §11).
+
+### 5.2. Syntax
+
+The value is an [RFC 8941 structured field string](https://datatracker.ietf.org/doc/html/rfc8941):
+
+```
+Deployment-Version: "9063c2a"
+Deployment-Version: "2026.05.20"
+Deployment-Version: "1.2.3-rc.1"
+```
+
+The value MUST be a non-empty string. Consumers MUST treat it as opaque except when they have other context indicating the publishing element's versioning scheme.
+
+### 5.3. Longest-Prefix Matching
+
+When emitted, the header value SHOULD equal the `version` of the element whose `path`, treated as a URL path prefix, is the longest match for the request's path among all elements in the manifest.
+
+For a manifest declaring elements at `/` (version `9063c2a`) and `/forage-atlas/` (version `2026.05.20`):
+
+- `GET /posts/foo/` → `Deployment-Version: "9063c2a"` (matches the `/` element)
+- `GET /forage-atlas/regions/west/` → `Deployment-Version: "2026.05.20"` (matches the `/forage-atlas/` element)
+
+If no element's `path` is a prefix of the request path, the server SHOULD omit the header. The header MUST NOT be emitted with an empty value.
+
+### 5.4. Why Not X-
+
+The `X-` prefix convention for "experimental" or "non-standard" headers was deprecated by [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648). The rationale is that headers initially marketed as experimental tend to become permanent, and the prefix then becomes a wart that cannot be removed without breaking consumers. Using a bare name from the start is the recommended modern practice for new community-defined headers, even when those headers are not formally standardized.
+
+## 6. The Meta Tag
+
+A conforming server emitting HTML MAY include a single `<meta>` tag of the form:
+
+```html
+<meta name="deployment-version" content="9063c2a">
+```
+
+When included:
+
+- The tag MUST appear inside the document `<head>`.
+- The `content` attribute MUST equal the `version` of the root element (the element whose `path` is `/`), if such an element exists in the manifest.
+- A conforming page MUST NOT include more than one `deployment-version` meta tag.
+
+The meta tag is a convenience for browser-based inspection where a developer can right-click → View Source or use a one-line `document.querySelector('meta[name=deployment-version]').content` in DevTools. It carries no information beyond the root-element version.
+
+## 7. When This Is Useful — and When It Isn't
+
+This spec is designed for contexts where knowing the deployed version cheaply is more valuable than concealing it. Those contexts include:
+
+**Development and staging.** Developers routinely need to confirm that a local dev server reflects the working tree, that staging matches the open PR, and that the build that "just deployed" actually propagated. The current state of the art is reading the build log and trusting it; an inspectable endpoint is faster and more reliable.
+
+**Personal sites, blogs, and unique installations.** A static blog deployed by one person to GitHub Pages has effectively no attack surface from "this site is at SHA 9063c2a." Nothing about the SHA reveals exploitable software versions, because the only "software" is the framework, which is identifiable a hundred other ways (HTML structure, asset paths). Publishing the deploy SHA lets visiting developers and the author confirm freshness without harming any threat model.
+
+**Multi-environment debugging.** When prod, staging, and dev disagree about behavior, the first diagnostic is "are they running the same version?" Per-environment manifests answer that in one HTTP request each.
+
+**CDN/edge propagation checks.** After a deploy, "did all the edges update?" is a question with a deeply unpleasant default answer ("wait and see"). Manifests at each edge surface the answer immediately.
+
+**Internal tooling and inventories.** Tools that scan an organization's HTTP-reachable services to inventory them benefit from a uniform probe. The same `curl` works against every conforming endpoint.
+
+**Multi-component sites.** Sites with sub-applications (e.g., a CMS plus an embedded forum plus a docs portal) can expose per-component versions through the `elements` array. The root version answers "what build is the shell on?" while child elements answer "what build is each sub-app on?"
+
+The spec is **NOT** appropriate where:
+
+- The deployment runs widely-installed software with known CVEs and the deploy version corresponds to a public release tag attackers can map to vulnerabilities. (Most static-site frameworks, custom apps, and personal projects do not fall into this category.)
+- The deployment is internal-only and version disclosure aids reconnaissance.
+- Organizational policy treats deploy versions as confidential.
+
+A server's choice not to publish is conformant. See §8.
+
+## 8. Security Considerations
+
+The primary risk of this spec is information disclosure. [OWASP A05:2021 — Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) explicitly lists "exposing the versions of software in use" as a misconfiguration risk, on the grounds that attackers correlate version numbers with public vulnerability databases (CVEs) to prioritize exploitation.
+
+The spec acknowledges this risk and addresses it through three deliberate design choices:
+
+1. **All publication is opt-in.** A server publishing nothing is fully conformant. See §3.
+2. **The manifest deliberately omits dependency, library, and infrastructure version information.** It exposes only the publisher's own deploy version of their own elements. The schema does not have a field for "Node version" or "framework version" because those are higher-value reconnaissance targets that the spec refuses to standardize a place for.
+3. **The `version` field is an opaque string.** A publisher MAY use a Git SHA (which is not enumerable to a release tag without the source repo), a calendar version, an opaque build hash, or any other identifier that decouples deploy identity from external CVE databases.
+
+A publisher whose `version` strings *are* tied to public release tags of widely-deployed software with known vulnerabilities SHOULD consider whether the freshness-debugging benefit outweighs the reconnaissance cost.
+
+A publisher emitting the `Deployment-Version` header on every response increases the request volume that returns the version. Manifests at `/.well-known/deployment-version.json` are reached deliberately; the header is reached unavoidably by every reader. Publishers concerned about passive disclosure SHOULD publish the manifest only.
+
+`Cache-Control: no-cache` (§4.3) means the manifest endpoint is not cached by intermediaries. This is required for freshness, but it also means every request reaches the origin. Servers MAY rate-limit the endpoint without violating the spec.
+
+The spec defines no authentication. A publisher who wants the manifest to be accessible only to authorized clients MAY require authentication for the endpoint, at the cost of reducing its utility for anonymous health-checking.
+
+## 9. Discoverability
+
+Well-known URIs are discoverable by design. [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) reserves the `/.well-known/` path prefix precisely so that operators of HTTP services can publish "site-wide metadata" at predictable locations without prior negotiation with clients. Anyone curious about a host can `curl https://example.com/.well-known/deployment-version.json` and either find a manifest or get a 404. The 404 is informative ("this site does not publish a deployment-version manifest") and not a failure mode of the spec.
+
+There is therefore an inherent tension between this spec and any preference for non-discoverability:
+
+- **For the publisher who wants version freshness debugging:** discoverability is the feature.
+- **For the publisher who wants to remain unidentifiable:** discoverability is the bug.
+
+The spec resolves this by leaving the choice entirely with the publisher (§3). Publishers who do not want their deploy versions discovered SHOULD NOT publish a manifest, a header, or a meta tag. There is no obligation to opt in.
+
+The `.well-known/` convention has a secondary discoverability consequence: search engines and crawlers generally do not index `.well-known/` paths by default, and many sites' `robots.txt` excludes the prefix. This provides a soft, not hard, barrier — the URL is not advertised to passive crawling, but it is also not hidden from anyone who guesses or learns about the convention.
+
+Consumers seeking to discover whether a host publishes a `deployment-version` manifest can:
+
+1. Probe `/.well-known/deployment-version.json` directly.
+2. Inspect HTML responses for `<meta name="deployment-version">`.
+3. Inspect any response for a `Deployment-Version` header.
+
+The three surfaces compose: a consumer finding any one of them learns of the convention's adoption by the host without further negotiation.
+
+## 10. Versioning of This Spec
+
+This spec is itself versioned per [semver 2.0.0](https://semver.org/spec/v2.0.0.html).
+
+- **MAJOR** version bumps signal changes that invalidate existing manifests, such as removing a required field, repurposing a field name, or changing the meaning of a required field.
+- **MINOR** version bumps signal additions that do not invalidate existing manifests, such as adding an OPTIONAL property to elements.
+- **PATCH** version bumps signal clarifications, typo fixes, and improved descriptions with no normative change.
+
+A manifest MUST identify the spec version it conforms to via `spec.version`. Consumers MUST NOT silently upgrade a manifest's `spec.version`; if a manifest claims `0.1.0`, consumers MUST validate it against `0.1.0`'s schema, even if newer versions exist.
+
+The canonical URL of this spec version is permanent and immutable:
+
+```
+https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json
+```
+
+The latest-version alias is mutable and tracks the most recent published version:
+
+```
+https://ben.abbitt.me/.well-known/spec/deployment-version.json
+```
+
+References to this spec from other documents SHOULD pin to the versioned URL; references to "the current version" MAY use the alias.
+
+## 11. IANA Considerations
+
+This spec, as currently published, is **not fully conformant with [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)'s registration requirements.** Two IANA registrations would be required for strict conformance, and neither has been filed.
+
+### 11.1. Well-Known URI Suffix
+
+RFC 8615 §3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The `deployment-version.json` suffix used by this spec for the manifest URL is unregistered. The same is true of the `spec` suffix used by [`well-known-spec`](/posts/well-known-spec/) for spec document publication.
+
+This puts the spec in the same category as a great deal of `/.well-known/` usage in the wild: real, deployed, recognizable to consumers, and technically unregistered. Provisional registration via Expert Review is suggested as future work, requires no advancement to RFC status, and is documented by stable URL pointing to this post and the JSON Schema.
+
+Adopters concerned about strict RFC 8615 conformance are advised either to await registration (preferred) or to deploy a host-specific variant under a known-conformant suffix. The convention's URL pattern is otherwise stable.
+
+### 11.2. HTTP Field Name
+
+The `Deployment-Version` field name is not currently registered in the [IANA HTTP Field Name Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml). The registry uses three status tiers: Permanent (Specification Required), Provisional (Expert Review), and Deprecated. Provisional registration is the appropriate path for a community-spec field of this kind. Registration is suggested as future work and is similarly low-ceremony.
+
+Existing version-related fields in the registry — `OData-Version`, `OSLC-Core-Version` — share the pattern of a vendor or convention prefix and would be the comparable precedent.
+
+### 11.3. Media Type
+
+The `application/json` media type is used unchanged. The spec does not define a new media type.
+
+### 11.4. Status Summary
+
+Strict conformance to RFC 8615 awaits IANA registration. Loose conformance — adopting the URL pattern, the manifest shape, the header field, and the meta tag — is achievable today by any host. The spec acknowledges the gap and does not represent itself as more authoritative than it is.
+
+## 12. References
+
+### 12.1. Normative References
+
+- [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119) — Key words for use in RFCs to Indicate Requirement Levels
+- [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454) — The Web Origin Concept
+- [RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648) — Deprecating the "X-" Prefix and Similar Constructs in Application Protocols
+- [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174) — Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words
+- [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) — Well-Known Uniform Resource Identifiers
+- [RFC 8941](https://datatracker.ietf.org/doc/html/rfc8941) — Structured Field Values for HTTP
+- [RFC 9110](https://datatracker.ietf.org/doc/html/rfc9110) — HTTP Semantics
+- [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html)
+- [JSON Schema draft 2020-12](https://json-schema.org/draft/2020-12/schema)
+- [well-known-spec v0.1.0](/.well-known/spec/well-known-spec/v0.1.0.json)
+
+### 12.2. Informative References
+
+- [OWASP A05:2021 — Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
+- [IANA HTTP Field Name Registry](https://www.iana.org/assignments/http-fields/http-fields.xhtml)
+- [OpenAPI Issue #1851 — RFC 5785 conventions & suggested OpenAPI document locations](https://github.com/OAI/OpenAPI-Specification/issues/1851)
+
+---
+
+## Appendix A: Example Manifest
+
+A site with a single root-level element:
+
+```json
+{
+  "spec": {
+    "name": "deployment-version",
+    "version": "0.1.0",
+    "url": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json"
+  },
+  "elements": [
+    {
+      "path": "/",
+      "name": "Reduction",
+      "version": "9063c2a"
+    }
+  ]
+}
+```
+
+A site with a nested sub-application (nested form):
+
+```json
+{
+  "spec": {
+    "name": "deployment-version",
+    "version": "0.1.0",
+    "url": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json"
+  },
+  "elements": [
+    {
+      "path": "/",
+      "name": "Reduction",
+      "version": "9063c2a",
+      "elements": [
+        {
+          "path": "/forage-atlas/",
+          "name": "Modern Forage Atlas",
+          "version": "2026.05.20"
+        }
+      ]
+    }
+  ]
+}
+```
+
+The same manifest in flat form is semantically equivalent:
+
+```json
+{
+  "spec": {
+    "name": "deployment-version",
+    "version": "0.1.0",
+    "url": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json"
+  },
+  "elements": [
+    { "path": "/", "name": "Reduction", "version": "9063c2a" },
+    { "path": "/forage-atlas/", "name": "Modern Forage Atlas", "version": "2026.05.20" }
+  ]
+}
+```
+
+## Appendix B: Implementation Patterns
+
+### B.1. Astro Static Endpoint
+
+```ts
+// src/pages/.well-known/deployment-version.json.ts
+const sha = import.meta.env.BUILD_SHA || "dev";
+
+export async function GET() {
+  const manifest = {
+    spec: {
+      name: "deployment-version",
+      version: "0.1.0",
+      url: "https://example.com/.well-known/spec/deployment-version/v0.1.0.json",
+    },
+    elements: [
+      { path: "/", name: "Example Site", version: sha },
+    ],
+  };
+  return new Response(JSON.stringify(manifest, null, 2), {
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  });
+}
+```
+
+### B.2. nginx (Header Only)
+
+```nginx
+add_header Deployment-Version "\"9063c2a\"" always;
+```
+
+The build's deploy step substitutes the SHA into the config before reload.
+
+### B.3. Express Middleware
+
+```js
+app.use((req, res, next) => {
+  res.setHeader("Deployment-Version", `"${process.env.BUILD_SHA}"`);
+  next();
+});
+
+app.get("/.well-known/deployment-version.json", (req, res) => {
+  res.setHeader("Cache-Control", "no-cache");
+  res.json({
+    spec: { name: "deployment-version", version: "0.1.0", url: SPEC_URL },
+    elements: [{ path: "/", name: APP_NAME, version: process.env.BUILD_SHA }],
+  });
+});
+```
+
+### B.4. GitHub Pages and Other Static Hosts
+
+GitHub Pages does not support custom response headers. The `Deployment-Version` header is unavailable. Conforming sites SHOULD publish the manifest (a static JSON file or build-time-generated endpoint) and the `<meta name="deployment-version">` tag.
+
+### B.5. Cloudflare Workers / Edge
+
+```js
+export default {
+  async fetch(req) {
+    const res = await fetch(req);
+    const newHeaders = new Headers(res.headers);
+    newHeaders.set("Deployment-Version", `"${BUILD_SHA}"`);
+    return new Response(res.body, { status: res.status, headers: newHeaders });
+  },
+};
+```
+
+## Appendix C: Change Log
+
+- **v0.1.0** (2026-05-20) — Initial draft.
