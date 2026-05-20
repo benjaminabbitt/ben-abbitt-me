@@ -66,6 +66,11 @@
 			"type": "object",
 			"required": ["path", "name", "version"],
 			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-z][a-z0-9-]*$",
+					"description": "OPTIONAL. Stable, lowercase-kebab-case identifier addressable as a URL fragment on the manifest URL (e.g. '#forage-atlas'). MUST be unique across all elements in the manifest, including elements nested at any depth. RECOMMENDED for any element that may be cross-referenced from other resources (such as an api-catalog entry). Uniqueness is not enforced by this JSON Schema and is the publisher's responsibility."
+				},
 				"path": {
 					"type": "string",
 					"description": "URL path scoping this element. SHOULD start with '/'. The root element uses '/'."

@@ -194,7 +194,55 @@ Other RFC 8288 link parameters MAY be included.
 
 RFC 9727 §4.1 RECOMMENDS but does not structurally define version metadata in catalog entries; version information is carried indirectly via linked OpenAPI documents (their `info.version` field) or URL-path conventions (`/v1/...`). This spec fills that structural gap. A host publishing both can use api-catalog for API discovery and deployment-version for build identity, keyed on path — the same path the api-catalog uses to anchor an API entry.
 
-**If the host publishes an api-catalog at `/.well-known/api-catalog`, the deployment-version manifest SHOULD include an entry in `links` with `rel: "api-catalog"` pointing to it.** A consumer wanting the deployed version of an API can then resolve it through deployment-version's `elements` (longest-prefix-matched against the API's path) without parsing the OpenAPI document.
+**If a host publishes both `deployment-version` and api-catalog, the deployment-version manifest SHOULD include an entry in `links` with `rel: "api-catalog"` pointing to the catalog**, and individual api-catalog entries SHOULD include a forward link back to a specific element of this manifest (see §4.8.1). Publishing either spec without the other is conformant; the SHOULD applies only to hosts that operate both. Cross-linking is strongly recommended but not mandated: a publisher with a valid reason to omit the cross-link (e.g., the two manifests are maintained by different teams) MAY do so.
+
+### 4.8. Element Anchors and Cross-References
+
+Each element MAY include an OPTIONAL `id` field — a stable identifier addressable as a URL fragment on the manifest URL:
+
+```json
+{
+  "id": "forage-atlas",
+  "path": "/forage-atlas/",
+  "name": "Modern Forage Atlas",
+  "version": { "text": "2026.05.20", "scheme": "calver@1.0.0" }
+}
+```
+
+The `id`:
+
+- MUST match the pattern `^[a-z][a-z0-9-]*$` (lowercase kebab-case, starting with a letter).
+- MUST be unique across all elements in the manifest, including elements nested at any depth.
+- SHOULD be short, human-readable, and stable across deploys (so external references survive).
+
+A consumer wanting to reference a specific element MAY use a fragment on the manifest URL:
+
+```
+https://example.com/.well-known/deployment-version.json#forage-atlas
+```
+
+Fragment resolution is client-side: the consumer fetches the manifest, walks the element tree, and locates the element whose `id` matches the fragment. The manifest URL without a fragment refers to the manifest as a whole.
+
+Elements without an `id` cannot be addressed by fragment. This is by design — only publishers who want their elements cross-referenced need to assign IDs.
+
+#### 4.8.1. Cross-Reference from api-catalog
+
+When a host publishes both `deployment-version` and an api-catalog ([RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html)), individual catalog entries SHOULD include a link to the corresponding `deployment-version` element using the `deployment-version` link relation:
+
+```json
+{
+  "anchor": "https://example.com/api/v1/",
+  "item": [{ "href": "https://example.com/api/v1/" }],
+  "service-desc": [{ "href": "https://example.com/api/v1/openapi.json" }],
+  "deployment-version": [
+    { "href": "https://example.com/.well-known/deployment-version.json#api-v1" }
+  ]
+}
+```
+
+The cross-link uses RFC 9727's existing free-form-metadata permission (§4.1) — `deployment-version` is an additional link relation on the catalog's linkset entries. No change to api-catalog is required.
+
+Cross-linking is strongly recommended but not mandated. A publisher who has not assigned `id` values to their elements cannot construct fragment URLs and is exempt; a publisher with a valid reason to omit the cross-link (e.g., the two manifests are maintained by different teams) MAY do so. Consumers MUST NOT assume a cross-link exists.
 
 ---
 
