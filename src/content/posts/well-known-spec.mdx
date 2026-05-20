@@ -1,6 +1,6 @@
 ---
 title: "well-known-spec: A Convention for Publishing Versioned Specifications under /.well-known/spec/"
-description: "An optional convention proposing that versioned specifications be published as JSON Schema documents under /.well-known/spec/{name}/v{x.y.z}.json, with a bare-name latest-version alias. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
+description: "An optional convention proposing that versioned specifications be published as JSON Schema documents under /.well-known/spec/{name}/v{x.y.z}.json. References pin to a specific version; the convention defines no latest-version alias. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
 publishDate: "2026-05-20T18:00:00-05:00"
 tags: ["standards", "http", "well-known-spec", "spec"]
 marginalia: "A draft (v0.1.0) meta-convention. The post is the narrative; the [JSON Schema](/.well-known/spec/well-known-spec/v0.1.0.json) is the contract — and validates itself."
@@ -9,7 +9,7 @@ visibility: draft
 
 ## Abstract
 
-There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in convention: publish versioned specifications as JSON Schema documents under `/.well-known/spec/{name}/v{x.y.z}.json`, with an additional latest-version alias at `/.well-known/spec/{name}.json`.
+There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like ([open issues since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851)); JSON Schemas live wherever the `$id` says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in convention: publish versioned specifications as JSON Schema documents under `/.well-known/spec/{name}/v{x.y.z}.json`. References to a spec MUST pin to a specific version; this convention deliberately defines no latest-version alias or other floating reference.
 
 The convention is recursive: this specification is itself published at the URLs it specifies, in the format it specifies, and validates against itself. The canonical machine-readable artifact is:
 
@@ -36,11 +36,11 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 - Identifies the host that publishes it (different hosts may publish different specs of the same name).
 - Identifies the spec name unambiguously.
 - Identifies the exact version of the spec, immutable and stable.
-- Optionally provides a "give me the latest" alias.
 - Is discoverable by convention without registration.
 - Doesn't pretend to be more authoritative than a community proposal.
+- Refuses to offer a "give me the latest" affordance, because spec consumers need reproducibility more than they need convenience.
 
-This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.json` for the versioned URL and `/.well-known/spec/{name}.json` for the latest alias. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
+This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.json` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
 
 The form of the spec document is also opinionated: it MUST be a JSON Schema (draft 2020-12), so that tooling can validate documents claiming conformance to it, and so that "the spec" and "the validation schema" are the same artifact.
 
@@ -50,17 +50,17 @@ The key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RE
 
 The term *spec document* refers to a JSON Schema published at a `/.well-known/spec/...` URL as defined by this convention.
 
-The term *latest alias* refers to the bare-name URL `/.well-known/spec/{name}.json` (without the version segment) serving the most recent published version's content.
+The term *canonical versioned URL* refers to a URL of the form `/.well-known/spec/{name}/v{x.y.z}.json` — the only URL form this convention defines.
 
 ## 3. Optionality and Scope
 
 This convention is opt-in. Specifically:
 
 - A host is **NOT REQUIRED** to publish any spec documents. The absence of `/.well-known/spec/*` is conformant.
-- A host that publishes a spec document is **NOT REQUIRED** to also publish a latest alias.
+- A host that publishes a spec document is **NOT REQUIRED** to publish other versions of the same spec.
 - A host that publishes multiple specs MAY publish them in any subset of the namespaces under `/.well-known/spec/`.
 
-The convention's MUST and SHOULD language applies only to documents that exist. Hosts publishing nothing are conformant. Documents published at `/.well-known/spec/{name}/v{x.y.z}.json` MUST be shaped per §5. Latest aliases MUST follow §4.
+The convention's MUST and SHOULD language applies only to documents that exist. Hosts publishing nothing are conformant. Documents published at `/.well-known/spec/{name}/v{x.y.z}.json` MUST be shaped per §5.
 
 This convention is unrelated to whether the *thing* a spec describes (a manifest format, a header, a protocol) is opt-in. That is the individual spec's concern. This convention concerns only where and how *spec documents themselves* are published.
 
@@ -84,26 +84,19 @@ The canonical URL MUST be served with `Content-Type: application/json` or, RECOM
 
 The canonical URL is immutable. Once published at a given version, the content at that URL MUST NOT change. There are no editorial-change exceptions: typo fixes, clarifications, and any other modification to the document, however small, require a new PATCH version bump (or higher if the change is normative). Consumers MUST be able to rely on the URL identifying a fixed byte sequence; pinning to a version means pinning to its exact content.
 
-### 4.2. Latest-Version Alias
+Consumers are permitted, and encouraged, to compute and record a cryptographic hash (RECOMMENDED: SHA-256) of any spec document they fetch and pin to. If a subsequent fetch of the same canonical URL yields a document whose hash differs, the publisher has violated the immutability rule of this section; the consumer SHOULD treat the divergence as a contract breach, report it to the publisher, and treat the new content as a distinct document not covered by their original pin. Consumer-side hashing provides tamper-evidence without requiring any publisher-side hash publication.
 
-A host SHOULD also serve the latest published version of each spec at the bare-name URL:
+### 4.2. No Latest-Version Alias
 
-```
-https://{host}/.well-known/spec/{name}.json
-```
+This convention deliberately defines **no** "latest-version" alias, no "most-recent" URL, and no other floating reference. Publishers MAY serve any other content they like at bare-name URLs (e.g. `/.well-known/spec/{name}.json` without a version segment), but such content is not part of this convention and consumers MUST NOT treat any bare-name URL as a `well-known-spec`-conforming spec document.
 
-The latest alias serves the same content as the highest-precedence semver of all the published versions of `{name}`. Precedence is per [semver 2.0.0 §11](https://semver.org/spec/v2.0.0.html#spec-item-11) (prerelease versions have lower precedence than the corresponding normal version).
+The motivation is reproducibility. A spec at `v0.1.0` is byte-immutable (§4.1). A "latest" alias is by definition mutable — its referent changes as new versions are published. A reference that pins to "latest" pins to nothing in particular; tooling that follows such a reference cannot reproduce its inputs across time. Spec consumers need reproducibility more than they need convenience.
 
-The latest alias is mutable. Consumers MUST NOT pin references to the latest alias if they require a specific version's behavior.
-
-The latest alias MUST be served with the same media type as the canonical versioned URL it currently points to.
+References to a spec — whether in another spec's `x-spec-conforms-to`-style field, in a `$ref`, in a blog post citation, or in tooling configuration — MUST identify a specific version via the canonical versioned URL. Tooling that wants to know "is a newer version available?" MUST do so by enumeration or out-of-band signaling (release announcements, RSS, package-manager metadata), not by following a latest alias on the same host.
 
 ### 4.3. Cache-Control
 
-Both the canonical versioned URL and the latest alias SHOULD be served with appropriate Cache-Control headers:
-
-- Canonical versioned URL: Long `max-age` is appropriate; the content is immutable. RECOMMENDED `Cache-Control: public, max-age=31536000, immutable` (one year, immutable).
-- Latest alias: Short `max-age` or `no-cache` is appropriate; the content changes when new versions are published. RECOMMENDED `Cache-Control: no-cache` or `max-age` under 300.
+The canonical versioned URL SHOULD be served with a long `Cache-Control` `max-age`; the content is immutable. RECOMMENDED: `Cache-Control: public, max-age=31536000, immutable` (one year, immutable).
 
 ## 5. Spec Document Format
 
@@ -116,7 +109,7 @@ A conforming spec document MUST be a JSON Schema, by default of dialect [draft 2
 A conforming spec document MUST have the following top-level fields:
 
 - `$schema` (string, URI) — MUST identify the JSON Schema dialect. RECOMMENDED: `"https://json-schema.org/draft/2020-12/schema"`.
-- `$id` (string, URI) — MUST be the canonical versioned URL of the spec document. MUST NOT be the latest-alias URL.
+- `$id` (string, URI) — MUST be the canonical versioned URL of the spec document.
 - `title` (string, non-empty) — Human-readable name including the version, e.g. `"deployment-version v0.1.0"`.
 
 The document SHOULD also include a `description` field with a one-paragraph abstract that includes the URL of any narrative companion document.
@@ -127,7 +120,7 @@ The document MAY include any other JSON Schema keywords as needed to describe th
 
 A conforming spec document is **NOT REQUIRED** to:
 
-- Carry custom metadata fields (`x-spec-name`, `x-spec-version`, etc.). The name and version are derived from the URL. The status (draft / stable / deprecated) is implicit in the semver: `0.x.y` is draft by convention; `1.0.0` and later are stable; deprecation is communicated by publishing a new major version and updating the latest alias.
+- Carry custom metadata fields (`x-spec-name`, `x-spec-version`, etc.). The name and version are derived from the URL. The status (draft / stable / deprecated) is implicit in the semver: `0.x.y` is draft by convention; `1.0.0` and later are stable; deprecation is communicated by publishing a new MAJOR version and by out-of-band announcement (release notes, changelog).
 - Reference a particular IANA registration. No registration is required.
 - Use a particular license. Publishers SHOULD declare a license in the narrative companion document.
 
@@ -139,7 +132,7 @@ The deliberate minimalism reflects that everything else is already either implic
 
 A tool that wants to verify a spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant can:
 
-1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json) (or [`/.well-known/spec/well-known-spec.json`](/.well-known/spec/well-known-spec.json) for the latest), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
+1. Fetch `well-known-spec` from the publishing host at [`/.well-known/spec/well-known-spec/v0.1.0.json`](/.well-known/spec/well-known-spec/v0.1.0.json), OR from a known reference host such as [`https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json`](https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0.json).
 2. Validate the candidate spec document against that schema.
 
 Multiple hosts MAY publish their own copies of `well-known-spec`. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
@@ -162,17 +155,14 @@ Publishing spec documents at predictable URLs is a discoverability feature, not 
 
 Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
 
-The latest alias is explicitly mutable; consumers who follow it accept that.
-
-Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS and SHOULD pin their dependency to a specific version (the canonical versioned URL), not the latest alias, when they require deterministic validation behavior.
+Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS. Because this convention defines no latest-version alias (§4.2), every reference necessarily pins to a specific version, which is the right default for reproducible validation.
 
 ## 9. Discoverability
 
 This convention is discoverable in the way [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615) intends. A consumer aware of `well-known-spec` and the name of a spec they want can:
 
-1. Probe `https://{host}/.well-known/spec/{name}.json` for the latest.
-2. Probe `https://{host}/.well-known/spec/{name}/v{x.y.z}.json` for a specific version.
-3. Receive a 404 if the host has not published the spec.
+1. Probe `https://{host}/.well-known/spec/{name}/v{x.y.z}.json` for a specific version.
+2. Receive a 404 if the host has not published that version of the spec.
 
 The 404 is informative. It says "this host does not publish this spec," and the consumer can proceed accordingly.
 
@@ -251,8 +241,6 @@ export async function GET() {
 }
 ```
 
-For the latest alias, a second endpoint at `src/pages/.well-known/spec/my-spec.json.ts` imports the same JSON, served with a short cache lifetime.
-
 ### B.2. nginx Static
 
 ```nginx
@@ -261,26 +249,19 @@ location /.well-known/spec/my-spec/v0.1.0.json {
   add_header Cache-Control "public, max-age=31536000, immutable";
   alias /var/www/specs/my-spec-v0.1.0.json;
 }
-
-location = /.well-known/spec/my-spec.json {
-  add_header Content-Type "application/schema+json";
-  add_header Cache-Control "no-cache";
-  alias /var/www/specs/my-spec-latest.json;
-}
 ```
 
 ### B.3. GitHub Pages and Other Static Hosts
 
 GitHub Pages does not allow custom `Content-Type` or `Cache-Control` headers. Static spec files are served with the default `application/json` Content-Type (since the file extension is `.json`) and GitHub's default cache behavior. The convention is satisfied; the headers are degraded.
 
-A site can place files directly at the paths:
+A site can place a file directly at:
 
 ```
 public/.well-known/spec/my-spec/v0.1.0.json
-public/.well-known/spec/my-spec.json
 ```
 
-and these will be served at the corresponding URLs.
+and it will be served at the corresponding URL.
 
 ## Appendix C: Change Log
 
