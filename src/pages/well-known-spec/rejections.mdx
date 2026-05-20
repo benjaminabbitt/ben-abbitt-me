@@ -1,0 +1,155 @@
+---
+layout: ../../theme/layouts/PageLayout.astro
+title: "IETF Well-Known URI Rejections — Patterns and Countermeasures"
+description: "Survey of rejected and stalled well-known URI suffix registration proposals, the patterns DE objections cluster into, and the structural defenses successful sub-namespace operators have used. Companion document to the well-known-spec proposal."
+current: "index"
+---
+import Prose from "@/theme/components/Prose.astro";
+
+<article class="max-w-[680px] mx-auto">
+
+<header class="mb-10">
+  <div class="font-mono text-[11.5px] text-fg-faint flex gap-2 flex-wrap mb-5">
+    <span>Companion document to <a href="/posts/well-known-spec/" class="text-fg-dim hover:text-accent">well-known-spec</a> · See also <a href="/well-known-spec/roadmap" class="text-fg-dim hover:text-accent">registration roadmap</a></span>
+  </div>
+  <h1 class="font-serif font-medium text-[44px] leading-[1.08] tracking-[-0.02em]">
+    IETF Well-Known URI Rejections: Patterns and Countermeasures
+  </h1>
+  <p class="font-serif italic text-[17px] text-fg-dim mt-4 max-w-[42em]">
+    What gets rejected, why, and what successful sub-namespace operators did differently. A field reference for anyone proposing a new well-known URI suffix.
+  </p>
+</header>
+
+<Prose>
+
+## 1. Methodology and Sources
+
+This survey draws on three primary sources: (a) closed and long-stalled issues on the [protocol-registries/well-known-uris GitHub repository](https://github.com/protocol-registries/well-known-uris), filtering for issues closed as "not planned" (the GitHub equivalent of declined/withdrawn) and open issues older than two years; (b) the [wellknown-uri-review IETF mailing list archive](https://mailarchive.ietf.org/arch/browse/wellknown-uri-review/), focusing on threads where Roy Fielding, Mark Nottingham (mnot, the Designated Expert), or Ben Schwartz raised substantive objections; and (c) the [IANA Well-Known URIs registry](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml) cross-referenced against the [draft-nottingham-rfc8615bis-02](https://www.ietf.org/archive/id/draft-nottingham-rfc8615bis-02.html) review-criteria text and the [registry README policy](https://github.com/protocol-registries/well-known-uris/blob/main/README.md).
+
+Five issues were closed as "Not Planned" — the closest GitHub signal to outright rejection — and another seven open issues have been sitting more than two years, mostly tagged `waiting for stable reference` or `waiting for input`. The mailing list yielded three substantive review encounters with verbatim DE objections: contribute.json (2016), dnt-policy.txt (2015), and software-status (2026). Many older threads survive only as procedural exchanges where the DE redirected the proponent to a working group before any technical review happened.
+
+A note on coverage: GitHub `is:issue` searches surface labelled state cleanly, but the registry README does not use `wontfix`/`declined` labels — the project's convention is to close as "not planned" with no closing comment. So the closure rationale almost always lives earlier in the thread or in a mailing-list cross-post, not at the close itself. For three of the five "not planned" closures, no public closure rationale exists, only the change controller and an inference based on Nottingham's known criteria. Where inference was required, the writeup says so.
+
+## 2. Documented Rejections and Stalls
+
+### 2.1. contribute.json — Mozilla, Paul McLanahan (2016)
+
+The proposal, [archived at the mailing list](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/LohZG5z1oMZ0aCqEtVWRhXe8Sb0/), asked to register `/.well-known/contribute.json` for a Mozilla-authored JSON schema describing how to contribute to an open-source project. Fielding objected — the [verbatim message](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/tf4EY_QCSlunyUZ1pbkGhKT6jQI/) reads:
+
+> "FWIW, reserving a universal location for this purpose doesn't make any sense. It is common for a single hostname to provide many different open source projects. … The well-known URIs are intended for protocols that do not want to access part of a site's normal resources. In particular, when the only thing a client knows about a site is a URI that it does not want to access before knowing something more about the site or its communication options. In this case, the client already knows the home page of an open source project. There is no reason for that client not to GET the homepage."
+
+Fielding offered three architectural alternatives: a JSON-LD island in the homepage, an HTML profile, or a `<link rel>`. The thread never resolved. `contribute.json` is **not** in the registry today — never registered, never re-pitched. This is the canonical Fielding objection: *the client already has a URL, so a well-known location is gratuitous*.
+
+### 2.2. dnt-policy.txt — EFF, Alan Toner (2015)
+
+EFF proposed `dnt-policy.txt` to flag compliance with EFF's specific DNT policy. Fielding called it ([archive thread](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/9s9EiE6Vu5dfQ7kwsgGCsBeR_ks/)):
+
+> "extremely poor behavior on the part of EFF. … The private EFF registration is non-standard, redundant, and far less efficient than the existing specification for DNT requires. That should be noted in their registration."
+
+Nottingham overruled the objection in his approval email: *"I don't think it's appropriate to say that in the registration; we don't judge the quality of registration entries beyond what's required by the well-known RFC."* This is an unusually crisp DE precedent: **Nottingham's review does NOT judge "quality" or efficiency** beyond RFC 8615 conformance. It was registered. The case matters because it shows where the bar actually sits: relatively low for provisional registration, even over a senior architect's objection.
+
+### 2.3. software-status — McConnell (2026)
+
+McConnell proposed `/.well-known/software-status.json` for vendor lifecycle status — see the [initial post](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/lXpClIbeuMnQLRy8ClpvBkHjmA4/) and [Nottingham's reply](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/bECmsAI7TVGshZ6JmCrlMxPBuQQ/). Nottingham did not engage technical merit at all; he wrote: *"If you'd like this to be an open standard, it's best to take it to a venue for discussion; registration would happen during the standardisation process, not before."* He pointed at SCITT and DISPATCH. This is **the procedural deflection pattern**: an individual draft proposing a public-purpose `.well-known` suffix gets shunted to a working group before review begins.
+
+### 2.4. casper — johnwiard (2024)
+
+[Issue #53](https://github.com/protocol-registries/well-known-uris/issues/53) was closed as not planned. The "specification" link was a personal site (`johnwiardgroup.io.vn`) with no published spec text, and the change controller was named as "IETF" without any IETF document or working group sponsorship. No DE comment was written at close — almost certainly a "no real specification" closure. **Pattern: false change-controller attribution.**
+
+### 2.5. no-op — Roy-Orbison (2024)
+
+[Issue #47](https://github.com/protocol-registries/well-known-uris/issues/47) proposed `no-op` for connectivity testing. Closed as not planned with no public rationale. Inference from criteria: (a) the name is a single common term, (b) the use case (uptime monitoring) is satisfied by ordinary HTTP HEAD, and (c) "any HTTP response at all" implies no defined behaviour — failing Nottingham's "what does the URL actually return" implicit test.
+
+### 2.6. protocol-handler — Fedi-To, SoniEx2 (2023)
+
+[Issue #34](https://github.com/protocol-registries/well-known-uris/issues/34): a Fediverse cross-app URL-opening mechanism. Closed as not planned with no inline comment. The proposed name is generic and the spec was an individual GitHub page. Combined with no community footprint visible at the time, this hits the "common-word, single-org" rejection profile.
+
+### 2.7. aggregation-service / private-aggregation — Google (2025)
+
+[Issues #62](https://github.com/protocol-registries/well-known-uris/issues/62) and [#61](https://github.com/protocol-registries/well-known-uris/issues/61). Both were Google submissions for the Private Aggregation / Attribution Reporting API stack, both note in the issue body that the suffix "is expected to be followed by an additional path component", and both were closed as not planned by the requester. The closely related [`/.well-known/attribution-reporting`](https://github.com/protocol-registries/well-known-uris/issues/63) remains open, also tagged `waiting for stable reference`. **Pattern: Google's sub-namespace operator pattern stalled or was withdrawn.** Google has registered three deprecated entries (`privacy-sandbox-attestations.json`, `related-website-set.json`, `tpcd`), suggesting the registry is comfortable with provisional vendor names *only when there is a stable specification commitment*.
+
+### 2.8. hosting-provider — Automattic (Issue #5, open since July 2020)
+
+[Issue #5](https://github.com/protocol-registries/well-known-uris/issues/5) is six years stale, labelled `iana pub requested` and `new registration`. The fact that the issue is *labelled* `iana pub requested` but has not been published suggests an IANA-side blocker, not a substantive rejection. Still, six years is a soft no.
+
+### 2.9. enterprise-network-security — ETSI via mnot (Issue #6, open since July 2020)
+
+[Issue #6](https://github.com/protocol-registries/well-known-uris/issues/6): mnot himself filed this on behalf of ETSI TC CYBER, and it has been stuck on `waiting for stable reference` ever since. **Pattern: even the DE's own filing stalls when the reference is a paywalled standards-body PDF without a public URL.**
+
+### 2.10. appspecific — Bruce Leban (2021, REGISTERED, comparator)
+
+[Issue #18](https://github.com/protocol-registries/well-known-uris/issues/18) succeeded where many failed. The registered [specification](https://github.com/Vroo/well-known-uri-appspecific/blob/main/well-known-uri-for-application-specific-purposes.txt) defines `/.well-known/appspecific/{reverse-dns}.{ext}` with a strict rule: *"The file name MUST be in Reverse DNS format representing an application domain or subdomain"* and *"The file name MUST be based on a domain name owned or controlled by the application."* This is the only general-purpose sub-namespace operator that made it through, and the reason is structural: every leaf under `/.well-known/appspecific/` is collision-free by construction because each application is forced into its own reverse-DNS-scoped slot. **This is the existence proof that sub-namespace operators *can* be registered — and the template to study line-by-line.**
+
+### 2.11. api-catalog — RFC 9727 (REGISTERED, comparator)
+
+[RFC 9727](https://datatracker.ietf.org/doc/rfc9727/) registered `api-catalog` permanent. It survived because (a) it went through an IETF working group (httpapi) before registration, (b) the suffix returns a single Linkset document — not an open sub-tree, and (c) it explicitly recommends "republish at each API domain" rather than imposing a sub-namespace structure. It is the contrast case for the software-status DE deflection: same review desk, different procedural posture, different outcome.
+
+### 2.12. posh / brski / cmp / masque (REGISTERED sub-namespace operators)
+
+According to the [text-format IANA registry](https://www.iana.org/assignments/well-known-uris/well-known-uris.txt), all four operate as sub-namespaces with bounded leaves: `posh` requires `/.well-known/posh/{service}.json`, while `brski`, `cmp`, and `masque` each cite a sub-registry at IANA (`brski-parameters`, `cmp`, `masque`) that enumerates allowed sub-suffixes. The pattern is uniform: **a registered sub-namespace operator has either (a) a strict naming rule that prevents collision, or (b) a sub-registry that lists allowed leaves.** Open sub-namespaces with neither do not exist in the registry.
+
+### 2.13. agents.txt — Srijal Dutta (expired, 2026)
+
+[draft-srijal-agents-policy-00](https://datatracker.ietf.org/doc/draft-srijal-agents-policy/) expired April 10, 2026 without a -01. No mailing-list review thread. This is the dominant failure mode in 2025–26: individual drafts in the AI-agent discovery space that nobody picks up. There are reportedly 11 competing agent-discovery drafts, none registered. **Pattern: expiry without resubmission, often because the author never engaged the wellknown-uri-review list.**
+
+## 3. Rejection Pattern Clusters
+
+Synthesising across the cases above, eight clusters appear repeatedly. The first four are the Fielding/Nottingham canon; the last four are operational failure modes that look softer but kill proposals just as effectively.
+
+1. **The Fielding "you already have a URL" objection** — contribute.json. The proposer assumes the client only knows the origin; Fielding objects that the client knows the homepage, and structured data should ride there. Cited verbatim above.
+2. **Generic / common-word names** — codified in [draft-nottingham-rfc8615bis-02 §3.1](https://www.ietf.org/archive/id/draft-nottingham-rfc8615bis-02.html): *"A request for provisional registration can be denied by the experts if they find that it uses a URI suffix that is overly generic or of potential community value in the future."* The [registry README](https://github.com/protocol-registries/well-known-uris/blob/main/README.md) goes further: *"Examples of requests for names that are likely to be rejected (unless made by a recognised standards organisation) include a single common word, either bare or with a suffix"*, with explicit warnings for `ai`/`agent` prefixes.
+3. **Specification not stable enough** — by far the dominant cluster among open-but-stalled issues (BIMI #38, ohttp-gateway #35, CDMI #56, knx-stale-ref #43, erik #67, mcp-registry-auth #68). The `waiting for stable reference` label is the registry's polite indefinite hold.
+4. **Procedural deflection to a working group** — software-status #2026, dispatched to SCITT before any technical review. Triggered when the proposal is an individual submission with implicit standards ambition.
+5. **False or weak change-controller attribution** — casper #53 named "IETF" with no IETF document; protocol-handler #34 named a tiny org as if it spoke for the Fediverse. Closure without comment.
+6. **Quality-judgement carve-out (Nottingham 2015)** — Nottingham explicitly *will not* judge whether a proposal is redundant or inefficient, only RFC-8615 conformance. This means a Fielding-style architectural objection is **insufficient on its own** to block registration if RFC 8615 boxes are checked — but it is also a precedent that the DE will not defend against the objection; the proponent must.
+7. **Sub-namespace operator without a collision-prevention rule** — `appspecific` won by mandating reverse-DNS; `posh`/`brski`/`cmp`/`masque` won by maintaining IANA sub-registries; Google's `aggregation-service`/`private-aggregation` (both sub-namespace operators with "expected to be followed by an additional path component") were closed not-planned. **This is the most relevant cluster to `well-known-spec`.**
+8. **Vendor-internal name in global registry** — Google's deprecated entries (`privacy-sandbox-attestations.json`, `tpcd`) show the registry tolerates vendor names *when there is a stable spec*, but the closed-not-planned issues #61/#62 show that ambition-without-spec gets dropped. Note that `tpcd` was registered then explicitly *deprecated* — a registry status worth knowing exists.
+
+## 4. The Single Largest Finding for Sub-Namespace Operators
+
+Every registered general-purpose sub-namespace operator either mandates a naming convention (`appspecific` uses reverse-DNS) or maintains a sub-registry (`posh`, `brski`, `cmp`, `masque`). Open sub-namespace operators *without* either have been closed not-planned (Google `aggregation-service` #62, `private-aggregation` #61) or have stalled indefinitely.
+
+The implication for any proposal that publishes under `/.well-known/{suffix}/{name}/...` is that the §4.5-style origin-binding answer (canonical identifier is `(origin, name, version)`) is correct but addresses only *cross*-origin name collisions. The DE will additionally ask: what stops two organisations from publishing under `/.well-known/{suffix}/openapi/` with conflicting documents on the same origin?
+
+Three template answers have worked, depending on the structure of the sub-namespace:
+
+- **Reverse-DNS naming requirement** (`appspecific` precedent). The leaf name MUST be reverse-DNS form (`com.example.thing`) based on a domain the publisher controls. Eliminates collision at the leaf because each leaf is namespaced to the publisher's own DNS.
+- **Public sub-registry** (`posh`, `brski`, `cmp`, `masque` precedent). The spec author maintains a public list of allowed leaf names at a stable URL (IANA sub-registry for the IETF cases).
+- **Origin binding via the full URL** (this convention's approach). The canonical identifier is the triple `(origin, name, version)`, not the name alone. Two leaves with the same `{name}` at different origins are two different specs by §4.5. The DE-blessed property — each leaf unambiguously identified with one publisher — is satisfied through HTTP origin semantics rather than through name-encoded DNS.
+
+`well-known-spec` takes the third path. The mechanism differs from `appspecific`'s reverse-DNS rule, but the property is the same: each spec is unambiguously identified with its publisher. The argument in `well-known-spec` §4.5 makes this comparison explicit, citing the `appspecific` registration as the cousin solution to the same problem. The DE conversation about collision-prevention is therefore not avoided — it is answered with a different implementation of the same invariant.
+
+## 5. Status: Provisional Implications
+
+Nottingham's draft text in [rfc8615bis-02 §3.2](https://www.ietf.org/archive/id/draft-nottingham-rfc8615bis-02.html) says provisional registrations *"can be promoted to permanent if in broad use"* or *"removed if not in broad use one year or more after registration"*. The `tpcd` deprecation precedent shows the registry actively prunes inactive entries.
+
+A new proposal seeking `provisional` status should pre-commit to evidence criteria within one year — e.g., N independent implementations, M live deployments, or progression to a working group. Pre-committing reduces year-one removal risk and gives the DE a clean evaluation point.
+
+## 6. Bare-Suffix Behavior
+
+The DE will ask what `/.well-known/{suffix}/` itself returns. Precedents differ:
+
+- `posh` registered the suffix without defining the root path explicitly.
+- `api-catalog` requires the root to return the catalog document.
+- `appspecific` is silent on root behavior.
+
+Either "the root MAY return an index, format unspecified" or "the root SHOULD return 404" is fine; leaving it undefined invites a review-thread objection.
+
+## 7. Pre-Submission Checklist
+
+In priority order for any proposal:
+
+1. **If publishing as an open sub-namespace operator: add an explicit collision-prevention rule** — reverse-DNS, sub-registry, or hybrid. This is the single highest-leverage change. Cite `appspecific` and `posh` as precedent.
+2. **Pre-empt the Fielding "you have a URL" objection** by explicitly naming `contribute.json` and explaining why the proposed use case cannot ride in the homepage. Multi-version coexistence, machine-only consumers, and origin-as-trust-anchor are the three most defensible reasons.
+3. **State the change controller explicitly.** Not "IETF" unless it actually is. Name the author or sponsoring org.
+4. **Commit to a public discussion venue** (a non-WG IETF mailing list, GitHub Discussions on the I-D repo, a dispatched WG, or similar) and link to it in the spec.
+5. **Pre-commit to a fallback name** if the proposed name is a common word. Having the rename pre-approved in the draft removes friction from the DE conversation.
+6. **Float the proposal informally on `wellknown-uri-review@ietf.org` two-to-four weeks before the formal request.** Surfaces objections early and recruits supportive implementer voices, mitigating the "Nottingham will not defend against Fielding objections" precedent.
+7. **Specify behaviour of the bare suffix path** explicitly.
+8. **Pre-commit to evidence criteria** within one year for provisional-to-permanent promotion, citing the `tpcd` deprecation precedent.
+
+The most important single observation: the DE has already approved one open-sub-namespace operator (`appspecific`) and the registered registry-pattern operators (`posh`, `brski`, `cmp`, `masque`) all have either a naming rule or a sub-registry. Open sub-namespace operators that adopt the same structural discipline are not hard sells. Those that do not look like `aggregation-service` and `private-aggregation` — open sub-namespace operators that quietly closed not-planned.
+
+</Prose>
+
+</article>
