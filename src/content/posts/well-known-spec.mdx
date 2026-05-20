@@ -84,7 +84,7 @@ The canonical URL MUST be served with a Content-Type appropriate to the document
 
 The canonical URL is immutable. Once published at a given version, the content at that URL MUST NOT change. There are no editorial-change exceptions: typo fixes, clarifications, and any other modification to the document, however small, require a new PATCH version bump (or higher if the change is normative). Consumers MUST be able to rely on the URL identifying a fixed byte sequence; pinning to a version means pinning to its exact content.
 
-Consumers are permitted, and encouraged, to compute and record a cryptographic hash (RECOMMENDED: SHA-256) of any spec document they fetch and pin to. If a subsequent fetch of the same canonical URL yields a document whose hash differs, the publisher has violated the immutability rule of this section; the consumer SHOULD treat the divergence as a contract breach, report it to the publisher, and treat the new content as a distinct document not covered by their original pin. Consumer-side hashing provides tamper-evidence without requiring any publisher-side hash publication.
+Consumers MAY compute and record a cryptographic hash of any spec document they fetch and pin to; doing so is RECOMMENDED. The hash algorithm SHOULD be SHA-256. If a subsequent fetch of the same canonical URL yields a document whose hash differs, the publisher has violated the immutability rule of this section; the consumer SHOULD treat the divergence as a contract breach, report it to the publisher, and treat the new content as a distinct document not covered by their original pin. Consumer-side hashing provides tamper-evidence without requiring any publisher-side hash publication.
 
 ### 4.2. Cache-Control
 
@@ -122,25 +122,21 @@ This convention is about URL location and versioning, not document format. A spe
 
 ### 5.1. Choosing a Format
 
-A spec SHOULD use an existing specification format when one is established for the use case the spec describes. The format choice follows the shape of the thing being specified:
+A spec SHOULD use an existing specification format when one is established for the use case the spec describes. The format choice follows the shape of the thing being specified.
 
-| Use case | Recommended format |
-|---|---|
-| JSON data shape / API payload structure | JSON Schema |
-| Protocol Buffer message types or services | Protobuf (`.proto`) |
-| XML data shape | XSD or RELAX NG |
-| Avro records | Avro schema (`.avsc`) |
-| HTTP API surface | OpenAPI |
-| GraphQL schema | SDL (`.graphql`) |
-| Linked data shapes | SHACL or RDF Schema |
+For specs that describe **data shapes, message structures, or service surfaces**, format-specific specification languages already exist and SHOULD be used. The dominant cases:
 
-When the spec is more abstract — a protocol, a naming convention, a grammar, an algorithm, an architectural pattern, a process — text-based formats are appropriate:
+- **gRPC services and Protocol Buffer messages** — define them in Protobuf `.proto` files. The Protobuf IDL is a text format covering both message shape and RPC service surfaces; it has broad tooling, language support, and a stable canonical syntax. For any specification that ultimately compiles to a Protobuf-described wire format, `.proto` is the right artifact.
+- **JSON data shape** — use [JSON Schema](https://json-schema.org/).
+- **HTTP API surfaces** (request/response shapes, routes, parameters) — use [OpenAPI](https://www.openapis.org/).
+- **XML data shape** — use XSD or RELAX NG.
+- **Avro records** — use the Avro schema language (`.avsc`).
+- **GraphQL schemas** — use the GraphQL Schema Definition Language (`.graphql`).
+- **Linked-data shapes** — use SHACL or RDF Schema.
 
-- Grammars: ABNF ([RFC 5234](https://datatracker.ietf.org/doc/html/rfc5234)) or EBNF.
-- Protocol or convention narratives: Markdown, HTML, plain text.
-- Algorithmic or mathematical specs: Markdown with embedded notation, plain text, PDF.
+For specs that are **more abstract** — a protocol, a naming convention, a grammar, an algorithm, an architectural pattern, a process — text-based formats are appropriate. ABNF ([RFC 5234](https://datatracker.ietf.org/doc/html/rfc5234)) for grammar; Markdown, HTML, plain text, or PDF for narrative. **This document (`well-known-spec`) is in this category**, and is itself published as RFC-style Markdown rather than as a machine-readable data schema — the convention being specified is about URL conventions and versioning rules, not data shape, and choosing a data-shape format would be wrong by the very rule this section recommends.
 
-Specifications using complex binary formats (CBOR, MessagePack, custom binary protocols, etc.) **for the spec document itself** are DISCOURAGED. Specs are read by humans and tooling alike; binary formats hurt both. Use a textual format for the spec, even when the data the spec describes is binary — Protobuf's `.proto` is text that describes binary messages, and that is the right shape. A binary spec document raises the cost of inspection, diff, and review without offering compensating benefits.
+Specifications using **complex binary formats for the spec document itself** are NOT RECOMMENDED. Specs are read by humans and by tooling alike; binary formats hurt both. Use a textual format for the spec document, even when the data the spec describes is binary — Protobuf's `.proto` is text describing binary messages, and that is the right shape. A binary spec document raises the cost of inspection, diff, code review, and porting between hosts without offering compensating benefits.
 
 The convention does not enforce these choices. A publisher MAY use any format they prefer; the SHOULD reflects practical advice for adoption, tooling support, and readability.
 
@@ -249,7 +245,7 @@ This places the convention in the same category as a substantial fraction of `/.
 
 The convention treats the segment immediately after `spec` (the spec name, e.g. `deployment-version`) as a sub-path under the registered suffix, not as its own registered suffix. RFC 8615's ABNF allows multi-segment URLs under a registered prefix (see [RFC 8615 §3](https://datatracker.ietf.org/doc/html/rfc8615#section-3); existing precedent: `/.well-known/acme-challenge/{token}` from [RFC 8555](https://datatracker.ietf.org/doc/html/rfc8555)). Registration of `spec` would therefore suffice for any number of specs published under it.
 
-Adopters concerned about strict RFC 8615 conformance are advised to await registration (preferred) or to deploy a host-specific variant under a known-conformant suffix.
+Adopters concerned about strict RFC 8615 conformance SHOULD await registration; alternatively they MAY deploy a host-specific variant under a known-conformant suffix.
 
 The `application/json` and `application/schema+json` media types are used unchanged. The convention does not define a new media type.
 
