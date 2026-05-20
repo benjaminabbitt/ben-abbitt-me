@@ -1,7 +1,7 @@
 %%%
 title = "well-known-spec: A Convention for Publishing Versioned Specifications under /.well-known/spec/"
 abbrev = "well-known-spec"
-docname = "well-known-spec-v0.1.0-alpha-e237ea"
+docname = "well-known-spec-v0.1.0-alpha.1"
 category = "info"
 ipr = "none"
 area = "General"
@@ -10,7 +10,7 @@ date = 2026-05-20T00:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
-value = "well-known-spec-v0.1.0-alpha-e237ea"
+value = "well-known-spec-v0.1.0-alpha.1"
 status = "informational"
 stream = "independent"
 
@@ -27,9 +27,7 @@ uri = "https://ben.abbitt.me/"
 
 There is no widely-adopted convention for publishing versioned specifications on a website. OpenAPI documents live wherever the publisher feels like; JSON Schemas live wherever the $id says; community conventions live in blog posts or GitHub READMEs, sometimes with version-pinned URLs and sometimes not. This document proposes a small, opt-in, format-agnostic convention: publish versioned specifications at /.well-known/spec/{name}/v{x.y.z}.{ext}, where {ext} matches the served Content-Type. References to a spec MUST pin to a specific version. This document is itself published per the convention it describes.
 
-The version "0.1.0-alpha-e237ea" deliberately exercises Section 5.5 on this spec itself: the "-alpha-" prefix is a standard semver pre-release identifier, and the trailing six hex characters are the first six chars of SHA-256 of this document's source.
-
-A note on the chicken-and-egg problem: a file cannot literally embed its own SHA -- changing the SHA changes the file's bytes, which changes its hash, ad infinitum, with no fixed point. The pragmatic workaround is to hash a normalized form of the source, with all v0.1.0-* self-references replaced by a fixed placeholder string before hashing. The embedded SHA is the hash of the normalized form, not of the file as published. Anyone verifying the version label MUST apply the same normalization before hashing. Formally, the SHA represents "the SHA-256 of this document's source with all version self-references stripped" -- two source files that differ only in their embedded SHA-versions normalize identically and therefore claim the same SHA, which is the correct semantic because they describe the same content modulo the self-reference.
+The version "0.1.0-alpha.1" exercises Section 5.5 on this spec itself. "alpha.1" is a standard semver 2.0.0 pre-release identifier: a non-numeric "alpha" followed by a numeric counter. Subsequent drafts are 0.1.0-alpha.2, 0.1.0-alpha.3, etc. -- each a distinct, immutable version at its own canonical URL, monotonically ordered per semver Section 11. When the content stabilizes, the suffix is dropped and 0.1.0 is published as the stable release; the preceding alpha.N drafts are then superseded.
 
 {mainmatter}
 
@@ -189,7 +187,7 @@ This is a SHOULD, not a MUST. The canonical URL is always the URL itself, regard
 
 ## Companion Format-Specific Specs
 
-A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical well-known-spec-json-schema companion could require JSON Schema documents to carry $schema, $id, and title (rules applicable specifically to JSON Schemas published under well-known-spec). A well-known-spec-openapi companion could require specific info fields. Such companion specs are out of scope for well-known-spec v0.1.0-alpha-e237ea; they may be developed independently and referenced from the documents they constrain.
+A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical well-known-spec-json-schema companion could require JSON Schema documents to carry $schema, $id, and title (rules applicable specifically to JSON Schemas published under well-known-spec). A well-known-spec-openapi companion could require specific info fields. Such companion specs are out of scope for well-known-spec v0.1.0-alpha.1; they may be developed independently and referenced from the documents they constrain.
 
 ## What This Convention Does Not Require
 
@@ -226,7 +224,7 @@ This convention does not standardize validation tooling. Whether a spec document
 
 Companion specs (see [@companion-format-specific-specs]) MAY provide additional structural constraints for specific formats and accompanying validators. None are required by this convention.
 
-This document, well-known-spec v0.1.0-alpha-e237ea, is itself in IETF plain text and RFC-style Markdown (see [@choosing-a-format]) and has no machine validator. The only properties this convention enforces on a spec document are that it is reachable at its canonical URL and immutable. Consumers needing integrity assurance beyond reachability MAY use consumer-side hashing or rely on a publisher-side hash sidecar if published.
+This document, well-known-spec v0.1.0-alpha.1, is itself in IETF plain text and RFC-style Markdown (see [@choosing-a-format]) and has no machine validator. The only properties this convention enforces on a spec document are that it is reachable at its canonical URL and immutable. Consumers needing integrity assurance beyond reachability MAY use consumer-side hashing or rely on a publisher-side hash sidecar if published.
 
 Multiple hosts MAY publish their own copies of well-known-spec or any other spec. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
 
@@ -265,7 +263,7 @@ Crawlers and search engines generally do not index /.well-known/ paths by defaul
 
 # IANA Considerations
 
-This convention, as currently published, is not fully conformant with [@!RFC8615]'s registration requirements. RFC 8615 Section 3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The "spec" suffix used by this convention is unregistered as of v0.1.0-alpha-e237ea.
+This convention, as currently published, is not fully conformant with [@!RFC8615]'s registration requirements. RFC 8615 Section 3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The "spec" suffix used by this convention is unregistered as of v0.1.0-alpha.1.
 
 The authors fully intend to file provisional registration of "spec" as a well-known URI suffix via Expert Review per RFC 8615 Section 3 before this spec is published as a stable v1.0.0. Registration is on the roadmap, not contingent on adoption growth -- the spec will not be marked stable while it remains unregistered. Until that filing, this places the convention in the same category as a substantial fraction of /.well-known/ usage in the wild: practical, recognizable, technically unregistered.
 
@@ -277,10 +275,10 @@ The application/json, application/schema+json, text/markdown, text/plain, and ot
 
 # Reference Implementation
 
-The publishing host ben.abbitt.me is a working implementation of well-known-spec v0.1.0-alpha-e237ea. The live artifacts on that host demonstrate multi-format coexistence (see [@multiple-formats-at-the-same-version]):
+The publishing host ben.abbitt.me is a working implementation of well-known-spec v0.1.0-alpha.1. The live artifacts on that host demonstrate multi-format coexistence (see [@multiple-formats-at-the-same-version]):
 
-* IETF plain text: https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt -- this document, generated via mmark and xml2rfc from a kramdown-rfc source.
-* RFC-style Markdown: https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md -- the same normative content in Markdown.
+* IETF plain text: https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt -- this document, generated via mmark and xml2rfc from a kramdown-rfc source.
+* RFC-style Markdown: https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md -- the same normative content in Markdown.
 * HTML narrative companion: https://ben.abbitt.me/posts/well-known-spec/ -- rendered via the site's Astro layout.
 
 All three URLs serve the same normative content as required by [@multiple-formats-at-the-same-version]. Differences are presentational only.
@@ -374,7 +372,7 @@ The narrative companion is at https://ben.abbitt.me/posts/deployment-version/.
 
 ## Astro static endpoint
 
-The current site's reference implementation serves the canonical IETF text via an Astro endpoint that fetches a pre-generated text file (produced offline via mmark + xml2rfc) and serves it with text/plain Content-Type and a one-year immutable Cache-Control header. The endpoint source is at src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt.ts in the publisher's repository.
+The current site's reference implementation serves the canonical IETF text via an Astro endpoint that fetches a pre-generated text file (produced offline via mmark + xml2rfc) and serves it with text/plain Content-Type and a one-year immutable Cache-Control header. The endpoint source is at src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt.ts in the publisher's repository.
 
 The parallel Markdown URL is served by an analogous endpoint that returns the post body raw as text/markdown.
 

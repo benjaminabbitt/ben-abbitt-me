@@ -3,18 +3,18 @@ title: "well-known-spec: A Convention for Publishing Versioned Specifications un
 description: "An optional, format-agnostic convention proposing that versioned specifications be published under /.well-known/spec/{name}/v{x.y.z}.{ext}. References pin to a specific version. Designed for individuals and small projects who want to publish a convention without filing an Internet-Draft."
 publishDate: "2026-05-20T18:00:00-05:00"
 tags: ["standards", "http", "well-known-spec", "spec"]
-marginalia: "A draft (v0.1.0-alpha-e237ea) meta-convention — the SHA-keyed suffix demonstrates §5.5. Canonical artifacts: pixel-perfect IETF [`v0.1.0-alpha-e237ea.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt) and parallel [`v0.1.0-alpha-e237ea.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md)."
+marginalia: "A draft (v0.1.0-alpha.1) meta-convention — the alpha.N suffix demonstrates §5.5. Canonical artifacts: pixel-perfect IETF [`v0.1.0-alpha.1.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt) and parallel [`v0.1.0-alpha.1.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md)."
 visibility: draft
 ---
 
 | | |
 |---|---|
-| **Status** | Draft (v0.1.0-alpha-e237ea) |
+| **Status** | Draft (v0.1.0-alpha.1) |
 | **Category** | Community Specification — Independent Submission |
 | **Author** | Ben Abbitt |
 | **Published** | 2026-05-20 |
 | **License** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
-| **Canonical URLs** | IETF plain text: [`/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt)<br/>Markdown: [`/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md) |
+| **Canonical URLs** | IETF plain text: [`/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt)<br/>Markdown: [`/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md) |
 | **Narrative (HTML)** | [`/posts/well-known-spec/`](/posts/well-known-spec/) |
 | **Format** | Pixel-perfect IETF plain text + RFC-style Markdown (this is an abstract convention, see §5.1; both forms describe the same spec per §4.4) |
 
@@ -25,8 +25,8 @@ There is no widely-adopted convention for publishing versioned specifications on
 The canonical artifacts are at:
 
 ```
-https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt   (pixel-perfect IETF)
-https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md    (RFC-style Markdown)
+https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt   (pixel-perfect IETF)
+https://ben.abbitt.me/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md    (RFC-style Markdown)
 ```
 
 The convention is recursive: this specification is itself published at the URLs it specifies, in formats that follow its own §5.1 format-selection rule (text-based, since the convention is abstract and not a data shape), and demonstrates §4.4 by publishing the same normative content in two formats at the same name and version.
@@ -35,15 +35,11 @@ Publishing is opt-in. Nothing here mandates that any host publish anything.
 
 ## Status of This Memo
 
-This is `well-known-spec` v0.1.0-alpha-e237ea, status `draft`. The major version is 0; per [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), this signals a pre-stable spec that may change incompatibly in subsequent 0.x releases. There is no working group, no certification, and no IANA registration. The document is published under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+This is `well-known-spec` v0.1.0-alpha.1, status `draft`. The major version is 0; per [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), this signals a pre-stable spec that may change incompatibly in subsequent 0.x releases. There is no working group, no certification, and no IANA registration. The document is published under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 This document is itself published per the convention it describes — at the canonical URLs above, in pixel-perfect IETF plain text and RFC-style Markdown.
 
-The version `0.1.0-alpha-e237ea` deliberately exercises [§5.5](#55-what-this-convention-does-not-require) on this spec itself. The `-alpha-` prefix is a standard semver pre-release identifier; the trailing six hex characters are the first six chars of SHA-256 of this document's source. Every change to the source produces a new pre-release version with a different SHA suffix; the previous version's URLs remain immutable per [§4.1](#41-canonical-versioned-url) (subject to host retention). The base name `0.1.0` is the target version; when the content stabilizes, the suffix is dropped and `0.1.0` is published as the stable release.
-
-> **A note on chicken-and-egg.** A file cannot literally embed its own SHA: changing the SHA changes the file's bytes, which changes its hash, ad infinitum — there is no fixed point. The pragmatic workaround used here is to hash a *normalized form* of the source, with all `v0.1.0-*` self-references replaced by a fixed placeholder string before hashing. The embedded SHA is the hash of the normalized form, not of the file as published. Anyone verifying the version label MUST apply the same normalization before hashing. Formally, the SHA represents *"the SHA-256 of this document's source with all version self-references stripped"* — two source files that differ only in their embedded SHA-versions normalize identically and claim the same SHA, which is the correct semantic because they describe the same content modulo the self-reference.
-
-> **A note on semver intent.** Semver 2.0.0 designed pre-release identifiers for monotonically-orderable progression (`alpha < alpha.1 < beta < rc.1 < 1.0.0`), so a consumer can compare two pre-release versions and ask "which is newer?". An identifier like `alpha-e237ea` is syntactically valid (a single non-numeric pre-release identifier per semver §9), but the SHA does not monotonically order. `0.1.0-alpha-e237ea` and `0.1.0-alpha-f1a2b3` are semver-comparable lexically, but the comparison says nothing about which spec is newer. This document is using the *syntax* of semver pre-release while not respecting its *ordering semantics*. For a stable release the suffix is dropped (`0.1.0`), and ordering is well-defined again. The choice to break ordering for the draft period is deliberate, in the same spirit as the chicken-and-egg accommodation above: a `v0.x` draft is allowed to play loose with rules the spec itself will respect once stable.
+The version `0.1.0-alpha.1` exercises [§5.5](#55-what-this-convention-does-not-require) on this spec itself. `alpha.1` is a standard semver 2.0.0 pre-release identifier: a non-numeric `alpha` followed by a numeric counter. Subsequent drafts are `0.1.0-alpha.2`, `0.1.0-alpha.3`, ... — each a distinct, immutable version at its own canonical URL, monotonically ordered per semver §11. When the content stabilizes, the suffix is dropped and `0.1.0` is published as the stable release; the preceding `alpha.N` drafts are then superseded.
 
 ## Table of Contents
 
@@ -238,7 +234,7 @@ This is a SHOULD, not a MUST. The canonical URL is always the URL itself, regard
 
 ### 5.4. Companion Format-Specific Specs
 
-A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical `well-known-spec-json-schema` companion could require JSON Schema documents to carry `$schema`, `$id`, and `title` (the rules `well-known-spec` v0.1.0-alpha-e237ea itself happens to validate, applied as a constraint). A `well-known-spec-openapi` could require specific `info` fields. Such companion specs are out of scope for `well-known-spec` v0.1.0-alpha-e237ea; they may be developed independently and referenced from the documents they constrain.
+A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical `well-known-spec-json-schema` companion could require JSON Schema documents to carry `$schema`, `$id`, and `title` (the rules `well-known-spec` v0.1.0-alpha.1 itself happens to validate, applied as a constraint). A `well-known-spec-openapi` could require specific `info` fields. Such companion specs are out of scope for `well-known-spec` v0.1.0-alpha.1; they may be developed independently and referenced from the documents they constrain.
 
 ### 5.5. What This Convention Does Not Require
 
@@ -275,7 +271,7 @@ This convention does not standardize validation tooling. Whether a spec document
 
 Companion specs ([§5.4](#54-companion-format-specific-specs)) MAY provide additional structural constraints for specific formats and accompanying validators. None are required by this convention.
 
-This document, `well-known-spec` v0.1.0-alpha-e237ea, is itself in RFC-style Markdown (see [§5.1](#51-choosing-a-format)) and has no machine validator. The only properties this convention enforces on a spec document are that it is reachable at its canonical URL and immutable per §4.1. Consumers needing integrity assurance beyond reachability MAY use [§4.1](#41-canonical-versioned-url)'s consumer-side hashing or rely on a publisher-side [hash sidecar](#43-hash-sidecar-optional) if published.
+This document, `well-known-spec` v0.1.0-alpha.1, is itself in RFC-style Markdown (see [§5.1](#51-choosing-a-format)) and has no machine validator. The only properties this convention enforces on a spec document are that it is reachable at its canonical URL and immutable per §4.1. Consumers needing integrity assurance beyond reachability MAY use [§4.1](#41-canonical-versioned-url)'s consumer-side hashing or rely on a publisher-side [hash sidecar](#43-hash-sidecar-optional) if published.
 
 Multiple hosts MAY publish their own copies of `well-known-spec` or any other spec. Hosts SHOULD use the same content for the same version; this is by convention, not by enforcement.
 
@@ -314,7 +310,7 @@ Crawlers and search engines generally do not index `.well-known/` paths by defau
 
 ## 10. IANA Considerations
 
-This convention, as currently published, is **not fully conformant with [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)'s registration requirements.** RFC 8615 §3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The `spec` suffix used by this convention is unregistered as of v0.1.0-alpha-e237ea.
+This convention, as currently published, is **not fully conformant with [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615)'s registration requirements.** RFC 8615 §3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The `spec` suffix used by this convention is unregistered as of v0.1.0-alpha.1.
 
 **The authors fully intend to file provisional registration of `spec` as a well-known URI suffix** via Expert Review per RFC 8615 §3 before this spec is published as a stable v1.0.0. Registration is on the roadmap, not contingent on adoption growth — the spec will not be marked stable while it remains unregistered. Until that filing, this places the convention in the same category as a substantial fraction of `/.well-known/` usage in the wild: practical, recognizable, technically unregistered.
 
@@ -326,22 +322,22 @@ The `application/json` and `application/schema+json` media types are used unchan
 
 ## 11. Reference Implementation
 
-This site is a working implementation of `well-known-spec` v0.1.0-alpha-e237ea. The live artifacts on this host demonstrate [§4.4](#44-multiple-formats-at-the-same-version) in action: the same spec, at the same name and version, presented in three formats:
+This site is a working implementation of `well-known-spec` v0.1.0-alpha.1. The live artifacts on this host demonstrate [§4.4](#44-multiple-formats-at-the-same-version) in action: the same spec, at the same name and version, presented in three formats:
 
-- **Pixel-perfect IETF plain text:** [`/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt) — generated via [`mmark`](https://mmark.miek.nl/) + [`xml2rfc`](https://datatracker.ietf.org/doc/html/rfc7991) from a kramdown-rfc-style Markdown source. Carries the IETF aesthetic: header columns, centered title, dotted-leader TOC with page numbers, page footers, `Section X.Y` cross-references, `[RFCnnnn]` reference style.
-- **RFC-style Markdown:** [`/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md) — the post body served as `text/markdown`. Same normative content; richer in narrative.
+- **Pixel-perfect IETF plain text:** [`/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt) — generated via [`mmark`](https://mmark.miek.nl/) + [`xml2rfc`](https://datatracker.ietf.org/doc/html/rfc7991) from a kramdown-rfc-style Markdown source. Carries the IETF aesthetic: header columns, centered title, dotted-leader TOC with page numbers, page footers, `Section X.Y` cross-references, `[RFCnnnn]` reference style.
+- **RFC-style Markdown:** [`/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md`](/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md) — the post body served as `text/markdown`. Same normative content; richer in narrative.
 - **HTML narrative:** [`/posts/well-known-spec/`](/posts/well-known-spec/) — rendered via the site's Astro layout.
 
-Per §4.4, all three URLs describe the same spec — `well-known-spec v0.1.0-alpha-e237ea` — and the normative content is identical between them. Differences are presentational only.
+Per §4.4, all three URLs describe the same spec — `well-known-spec v0.1.0-alpha.1` — and the normative content is identical between them. Differences are presentational only.
 
 A separate spec (`deployment-version`) is published under the same convention at [`/.well-known/spec/deployment-version/v0.1.0.json`](/.well-known/spec/deployment-version/v0.1.0.json) ([narrative](/posts/deployment-version/)). That spec describes a JSON manifest shape and is correctly published as a JSON Schema per [§5.1](#51-choosing-a-format).
 
 Source on GitHub (Astro static site):
 
 - Markdown source (RFC-style, drives the HTML post and the `.md` URL): [`src/content/posts/well-known-spec.mdx`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/content/posts/well-known-spec.mdx)
-- Markdown endpoint (serves post body raw as `text/markdown`): [`src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.md.ts)
-- IETF mmark source (drives the `.txt`, kramdown-rfc dialect): [`src/lib/specs/well-known-spec-v0.1.0-alpha-e237ea.mmark.md`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/well-known-spec-v0.1.0-alpha-e237ea.mmark.md)
-- Pre-generated IETF text (committed at the canonical URL): [`public/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/public/.well-known/spec/well-known-spec/v0.1.0-alpha-e237ea.txt)
+- Markdown endpoint (serves post body raw as `text/markdown`): [`src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md.ts`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/pages/.well-known/spec/well-known-spec/v0.1.0-alpha.1.md.ts)
+- IETF mmark source (drives the `.txt`, kramdown-rfc dialect): [`src/lib/specs/well-known-spec-v0.1.0-alpha.1.mmark.md`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/src/lib/specs/well-known-spec-v0.1.0-alpha.1.mmark.md)
+- Pre-generated IETF text (committed at the canonical URL): [`public/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/public/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt)
 
 The `.txt` is pre-generated locally via `mmark src.md | xml2rfc --text` and committed to `public/`. Because v0.1.0 is byte-immutable per §4.1, the generated `.txt` for this version is generated once and never changes; future versions get regenerated and committed.
 
