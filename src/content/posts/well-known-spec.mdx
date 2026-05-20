@@ -78,9 +78,9 @@ where:
 - `{host}` is the publishing origin (scheme, host, and optional port per [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454)).
 - `{name}` is the spec name. It MUST match the pattern `^[a-z][a-z0-9-]*$` (lowercase kebab-case, starting with a letter).
 - `{x.y.z}` is the spec version, a [semver 2.0.0](https://semver.org/spec/v2.0.0.html) string. The leading `v` is REQUIRED.
-- `{ext}` is the file extension matching the document's served Content-Type (see §5.1).
+- `{ext}` is the file extension matching the document's served Content-Type (see §5.2).
 
-The canonical URL MUST be served with a Content-Type appropriate to the document's format (see §5.1).
+The canonical URL MUST be served with a Content-Type appropriate to the document's format (see §5.2).
 
 The canonical URL is immutable. Once published at a given version, the content at that URL MUST NOT change. There are no editorial-change exceptions: typo fixes, clarifications, and any other modification to the document, however small, require a new PATCH version bump (or higher if the change is normative). Consumers MUST be able to rely on the URL identifying a fixed byte sequence; pinning to a version means pinning to its exact content.
 
@@ -120,7 +120,31 @@ Note that a hash sidecar protects against transit-level corruption (CDN errors, 
 
 This convention is about URL location and versioning, not document format. A spec document MAY be in any format addressable as a single file at the canonical URL.
 
-### 5.1. File Extension and Content-Type
+### 5.1. Choosing a Format
+
+A spec SHOULD use an existing specification format when one is established for the use case the spec describes. The format choice follows the shape of the thing being specified:
+
+| Use case | Recommended format |
+|---|---|
+| JSON data shape / API payload structure | JSON Schema |
+| Protocol Buffer message types or services | Protobuf (`.proto`) |
+| XML data shape | XSD or RELAX NG |
+| Avro records | Avro schema (`.avsc`) |
+| HTTP API surface | OpenAPI |
+| GraphQL schema | SDL (`.graphql`) |
+| Linked data shapes | SHACL or RDF Schema |
+
+When the spec is more abstract — a protocol, a naming convention, a grammar, an algorithm, an architectural pattern, a process — text-based formats are appropriate:
+
+- Grammars: ABNF ([RFC 5234](https://datatracker.ietf.org/doc/html/rfc5234)) or EBNF.
+- Protocol or convention narratives: Markdown, HTML, plain text.
+- Algorithmic or mathematical specs: Markdown with embedded notation, plain text, PDF.
+
+Specifications using complex binary formats (CBOR, MessagePack, custom binary protocols, etc.) **for the spec document itself** are DISCOURAGED. Specs are read by humans and tooling alike; binary formats hurt both. Use a textual format for the spec, even when the data the spec describes is binary — Protobuf's `.proto` is text that describes binary messages, and that is the right shape. A binary spec document raises the cost of inspection, diff, and review without offering compensating benefits.
+
+The convention does not enforce these choices. A publisher MAY use any format they prefer; the SHOULD reflects practical advice for adoption, tooling support, and readability.
+
+### 5.2. File Extension and Content-Type
 
 The `{ext}` segment of the canonical URL MUST match the served Content-Type. Common pairings:
 
@@ -138,7 +162,7 @@ The `{ext}` segment of the canonical URL MUST match the served Content-Type. Com
 
 The table is illustrative. Any IANA-registered media type and corresponding well-known file extension MAY be used.
 
-### 5.2. Identity Declaration
+### 5.3. Identity Declaration
 
 A spec document SHOULD declare its identity (name, version, canonical URL) in a format-appropriate way, so that consumers fetching the document by other means (local cache, mirror, forked copy) can identify it without relying on its filesystem location.
 
@@ -151,11 +175,11 @@ Examples:
 
 This is a SHOULD, not a MUST. The canonical URL is always the URL itself, regardless of whether the document internally references it.
 
-### 5.3. Companion Format-Specific Specs
+### 5.4. Companion Format-Specific Specs
 
 A separate spec MAY define additional structural requirements for documents in a particular format. For example, a hypothetical `well-known-spec-json-schema` companion could require JSON Schema documents to carry `$schema`, `$id`, and `title` (the rules `well-known-spec` v0.1.0 itself happens to validate, applied as a constraint). A `well-known-spec-openapi` could require specific `info` fields. Such companion specs are out of scope for `well-known-spec` v0.1.0; they may be developed independently and referenced from the documents they constrain.
 
-### 5.4. What This Convention Does Not Require
+### 5.5. What This Convention Does Not Require
 
 A conforming spec document is **NOT REQUIRED** to:
 
@@ -173,7 +197,7 @@ The deliberate minimalism reflects that the value of `well-known-spec` is in the
 
 `well-known-spec` v0.1.0 is itself published as a JSON Schema (draft 2020-12). It defines `$schema`/`$id`/`title` as structural requirements **for spec documents that happen to be JSON Schemas.** Because `well-known-spec` v0.1.0 is itself a JSON Schema, it self-validates: the schema accepts itself as a conforming document.
 
-This is a property of the JSON-Schema sub-case, not a requirement of the broader convention. Spec documents in other formats (Markdown, OpenAPI, HTML, etc.) cannot self-validate against this JSON Schema; they may have format-specific validation through a [companion spec](#53-companion-format-specific-specs) or none at all.
+This is a property of the JSON-Schema sub-case, not a requirement of the broader convention. Spec documents in other formats (Markdown, OpenAPI, HTML, etc.) cannot self-validate against this JSON Schema; they may have format-specific validation through a [companion spec](#54-companion-format-specific-specs) or none at all.
 
 A tool that wants to verify a JSON-Schema-format spec document at `/.well-known/spec/{name}/v{x.y.z}.json` is conformant to `well-known-spec` can:
 
