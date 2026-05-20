@@ -47,6 +47,22 @@ This document proposes such a pattern: /.well-known/spec/{name}/v{x.y.z}.{ext} i
 
 The convention is format-agnostic. A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, or anything else textual addressable as a single file at the canonical URL. The convention is about where specs live and how they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; well-known-spec itself does not.
 
+## Design Intent: A Space for Site-Local and Community-Local Specs
+
+The /.well-known/spec/ namespace is deliberately an open sub-namespace. Each {name} slot is publisher-defined; IANA does not govern its children. This is a feature.
+
+Most specifications in the world are not, and should not be, IETF standards. They are:
+
+* Site-local conventions: schemas, manifest shapes, internal contracts that one organization or one site publishes for its own consumers. They benefit from being versioned and addressable at a stable URL without needing IETF consensus.
+* Community-local conventions: small-group standards that work for a niche tooling ecosystem, a research group, a protocol family of two implementations, or a working draft a few authors are iterating on. They benefit from a publishing convention without needing standards-body adoption.
+* Drafts in practice: most specs spend most of their life as drafts. Some stabilize. Some are superseded. Some are abandoned. All of them benefit from being publishable, fetchable, hashable, and versioned during that life, without conditioning on a future maturity milestone. This document itself, at version 0.1.0-alpha.1, is an example.
+
+The convention exists to give all three a low-ceremony publishing pattern. The {name} namespace is open precisely so any publisher can use it without coordination. Coordination, when it is needed, happens between publisher and consumer (the people actually depending on the spec), not through a central registry. Cross-origin name collisions are resolved by [@canonical-identifier-and-origin-binding]: the canonical identifier of a spec is the full URL, which includes the publishing origin, so the same {name} at different origins is, by definition, two different specs.
+
+This design choice is the substantive one to evaluate well-known-spec on. The alternative -- requiring every site-local schema, every internal manifest, every working draft to either pick an arbitrary path under its own site, or to seek IETF/IANA blessing for a custom well-known suffix -- is what currently exists, and is what the OpenAPI community has been debating since 2019 without resolution. well-known-spec accepts the open sub-namespace as the cost of avoiding both options.
+
+A second-order effect: containing site-local and community-local specs under a single well-known suffix is a namespace-pollution-reduction strategy for the top-level well-known registry itself. Without this convention, the natural pressure is for every small-community spec, every site-internal manifest, and every working draft that wants a stable well-known URL to seek its own top-level suffix -- incrementally polluting the well-known registry with single-purpose names whose semantics are governed by tiny groups or single authors. well-known-spec provides a containment surface: the long tail lives under spec/{name}/, and the top-level registry stays sparse and reserved for items with broad, cross-origin, interoperability-justifying significance. Bigger-picture items -- those used by many implementations across origins, with stable semantics worth standardizing -- SHOULD still pursue their own well-known suffix via the RFC 8615 process. well-known-spec is explicitly for everything below that threshold.
+
 # Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all capitals, as shown here, and only as constraints on spec documents that opt in to this convention. Nothing in this document requires any host to publish a spec.
@@ -114,7 +130,7 @@ The sidecar establishes integrity at fetch time. The consumer-hash record (see [
 
 Note that a hash sidecar protects against transit-level corruption (CDN errors, intermediary mutation) and accidental publisher mistakes, but cannot detect deliberate tampering by a publisher who controls both the spec and its sidecar. Cryptographic signatures (out of scope for this version) would be needed for that threat model.
 
-## Multiple Formats at the Same Version
+## Multiple Formats at the Same Version {#multiple-formats-at-the-same-version}
 
 Different file extensions of the same spec -- at the same {name} and same {x.y.z} -- MAY coexist as separate canonical URLs. A publisher MAY publish, simultaneously:
 
@@ -137,7 +153,22 @@ Differences MUST NOT be contradictions. If the .proto declares a required field 
 
 If a publisher needs the content to differ semantically -- if the .proto actually describes a different version of the data shape than the .md narrative -- they MUST use a different version identifier on at least one of them. Two semantically-different documents at the same name+version is a contract violation, on the same footing as mutating the content of a canonical URL.
 
-This rule is what makes the multi-format flexibility safe. A consumer who pins to "foo v0.1.0" can switch between .md, .txt, .proto, and .html and rely on getting the same spec, in different forms.
+This rule is what makes the multi-format flexibility safe. A consumer who pins to "foo v0.1.0" at a given origin can switch between .md, .txt, .proto, and .html and rely on getting the same spec, in different forms.
+
+## Canonical Identifier and Origin Binding {#canonical-identifier-and-origin-binding}
+
+The canonical identifier of a spec under this convention is the full URL, not the {name} and {x.y.z} alone. The publishing origin is a load-bearing part of the identity.
+
+Formally: the canonical identifier of a spec is the triple (origin, name, version), where origin is the scheme-host-port tuple defined by [@!RFC6454]. Two URLs that share a {name} and {x.y.z} but differ in origin identify two different specs. They are not the same spec; they are not in conflict; they are not subject to the cross-format consistency rule of [@multiple-formats-at-the-same-version] (which applies only within a single origin). Each origin is sovereign over its own /.well-known/spec/ subtree.
+
+Concretely:
+
+* https://example.com/.well-known/spec/foo/v0.1.0.json and https://other.com/.well-known/spec/foo/v0.1.0.json are different specs. They may describe entirely unrelated things; they may agree by coincidence or by deliberate adoption; this convention takes no position. The same {name} at two origins is not a collision and not a defect -- it is the expected outcome of an open sub-namespace.
+* A consumer that adopts a spec from one origin MUST track the origin as part of the pin. Pinning to "foo v0.1.0" without origin is incomplete and MUST NOT be treated as a canonical reference. Recording (origin, name, version) -- or simply the full URL -- is the only correct form.
+
+Within a single origin, the {name} and {x.y.z} are unambiguous by construction (the URL is unique), and shorthand of the form "foo v0.1.0" is acceptable in informal contexts when the origin is implicit and unambiguous from context. Cross-origin or out-of-context references MUST use the full URL or the full triple.
+
+This origin-binding rule is what makes the open {name} namespace safe. There is no global registry of {name} values, no name-resolution authority, and no need for one -- because the names are never asked to function as global identifiers. The URL is the identifier. The convention is a publishing pattern, not a naming authority.
 
 # Spec Document Format
 
@@ -269,7 +300,7 @@ This convention does NOT specify a discovery endpoint listing all specs a host p
 
 Crawlers and search engines generally do not index /.well-known/ paths by default. Hosts that want their spec documents to be discoverable to general search MAY explicitly link them from publicly-indexable pages.
 
-# IANA Considerations
+# IANA Considerations {#iana-considerations}
 
 This convention, as currently published, is not fully conformant with [@!RFC8615]'s registration requirements. RFC 8615 Section 3 requires that any name used as a well-known URI suffix MUST be registered with IANA via the Expert Review process. The "spec" suffix used by this convention is unregistered as of v0.1.0-alpha.1.
 
