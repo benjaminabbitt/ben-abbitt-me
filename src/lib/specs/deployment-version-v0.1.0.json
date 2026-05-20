@@ -1,0 +1,115 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://ben.abbitt.me/.well-known/spec/deployment-version/v0.1.0.json",
+	"title": "deployment-version v0.1.0",
+	"description": "Manifest schema for HTTP-served deployments exposing deploy/build version information. Conforming servers publish a manifest at /.well-known/deployment-version.json and MAY emit a Deployment-Version response header; HTML responses MAY include a <meta name=\"deployment-version\"> tag. Narrative at https://ben.abbitt.me/posts/deployment-version/.",
+	"type": "object",
+	"required": ["spec", "elements"],
+	"properties": {
+		"spec": {
+			"type": "object",
+			"required": ["name", "version", "url"],
+			"properties": {
+				"name": {
+					"const": "deployment-version",
+					"description": "MUST be the literal string 'deployment-version'."
+				},
+				"version": {
+					"type": "string",
+					"pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+					"description": "Semver 2.0.0 version of the deployment-version spec this manifest conforms to. The pattern is the official semver 2.0.0 regex."
+				},
+				"url": {
+					"type": "string",
+					"format": "uri",
+					"description": "Canonical versioned URL of the deployment-version spec the manifest conforms to."
+				}
+			}
+		},
+		"elements": {
+			"$ref": "#/$defs/elementsArray",
+			"description": "Components of the deployment, each with an independent version. MAY be empty."
+		},
+		"links": {
+			"type": "array",
+			"items": { "$ref": "#/$defs/link" },
+			"description": "OPTIONAL. Outbound links to related resources on this host, in RFC 8288 web-linking style. If the host publishes an api-catalog per RFC 9727, this array SHOULD include a link with rel='api-catalog' pointing to it."
+		}
+	},
+	"$defs": {
+		"link": {
+			"type": "object",
+			"required": ["rel", "href"],
+			"additionalProperties": true,
+			"properties": {
+				"rel": {
+					"type": "string",
+					"minLength": 1,
+					"description": "RFC 8288 link relation type. RECOMMENDED to use an IANA-registered name from the link relation registry, or an extension URI."
+				},
+				"href": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Target URL or URL-reference."
+				},
+				"type": {
+					"type": "string",
+					"description": "OPTIONAL. Media type of the linked resource (RFC 8288 type parameter)."
+				},
+				"title": {
+					"type": "string",
+					"description": "OPTIONAL. Human-readable title for the link (RFC 8288 title parameter)."
+				}
+			}
+		},
+		"element": {
+			"type": "object",
+			"required": ["path", "name", "version"],
+			"properties": {
+				"id": {
+					"type": "string",
+					"pattern": "^[a-z][a-z0-9-]*$",
+					"description": "OPTIONAL. Stable, lowercase-kebab-case identifier addressable as a URL fragment on the manifest URL (e.g. '#forage-atlas'). MUST be unique across all elements in the manifest, including elements nested at any depth. RECOMMENDED for any element that may be cross-referenced from other resources (such as an api-catalog entry). Uniqueness is not enforced by this JSON Schema and is the publisher's responsibility."
+				},
+				"path": {
+					"type": "string",
+					"description": "URL path scoping this element. SHOULD start with '/'. The root element uses '/'."
+				},
+				"name": {
+					"type": "string",
+					"minLength": 1,
+					"description": "Human-readable name of the element."
+				},
+				"version": {
+					"type": "object",
+					"required": ["text"],
+					"additionalProperties": false,
+					"properties": {
+						"text": {
+							"type": "string",
+							"minLength": 1,
+							"description": "REQUIRED. The canonical or display form of this element's version. RECOMMENDED to be the form a human reading the manifest would recognize (e.g. '1.2.3', '2026.05.20', '9063c2a', 'v1.2.3+build.456')."
+						},
+						"scheme": {
+							"type": ["string", "null"],
+							"minLength": 1,
+							"description": "OPTIONAL. Identifier naming the versioning scheme AND the version of that scheme's interpretation, in 'name@version' form (e.g. 'semver@2.0.0', 'git-sha@1.0.0'). SHOULD be a registered entry from the well-known scheme registry maintained in the spec narrative. MAY be a custom name, in which case the name SHOULD be prefixed with the publisher's organization (e.g. 'acme.rolling-calver@1.0.0'). MAY be null to explicitly assert that no scheme applies; this is distinct from omitting the field, which is silence."
+						},
+						"parts": {
+							"type": "object",
+							"description": "OPTIONAL. Implementation-defined parsed structure, typically corresponding to 'scheme'. The shape is not constrained by this spec; common conventions documented in the narrative include semver (major, minor, patch, prerelease, build), CalVer (year, month, day), and Git build metadata (commit, branch). The canonical version remains the 'text' field; consumers MUST NOT assume any particular shape of 'parts'."
+						}
+					}
+				},
+				"elements": {
+					"$ref": "#/$defs/elementsArray",
+					"description": "OPTIONAL nested elements. A child's path SHOULD be a descendant of the parent's path. Producers MAY use either a flat or nested form; consumers MUST handle both."
+				}
+			}
+		},
+		"elementsArray": {
+			"type": "array",
+			"items": { "$ref": "#/$defs/element" }
+		}
+	}
+}
