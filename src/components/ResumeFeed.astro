@@ -1,5 +1,6 @@
 ---
 import MarginaliaLayout from "@/theme/components/MarginaliaLayout.astro";
+import { renderInlineMd } from "@/theme/lib/inlineMd";
 
 interface Engagement {
 	id: string;
@@ -61,6 +62,12 @@ const { roles } = Astro.props;
 								<div class="font-serif-body italic text-[13.5px] text-fg-dim mt-1">
 									notable engagements ↓
 								</div>
+							)}
+							{r.note && (
+								<div
+									class="wide:hidden print:hidden font-serif italic text-[14px] text-accent leading-[1.45] mt-2 [&_a]:underline [&_a]:underline-offset-2"
+									set:html={renderInlineMd(r.note)}
+								/>
 							)}
 						</div>
 						<span class="hidden sm:inline print:inline font-mono text-[10.5px] text-fg-faint text-right max-w-[180px] leading-[1.5]">
