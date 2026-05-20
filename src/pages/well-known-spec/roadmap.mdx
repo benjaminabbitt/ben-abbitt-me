@@ -1,0 +1,136 @@
+---
+layout: ../../theme/layouts/PageLayout.astro
+title: "Registration Roadmap — well-known-spec"
+description: "A cited, step-by-step guide to getting a well-known URI suffix registered with IANA, with concrete examples and lessons learned. Companion document to the well-known-spec proposal."
+current: "index"
+---
+import Prose from "@/theme/components/Prose.astro";
+
+<article class="max-w-[680px] mx-auto">
+
+<header class="mb-10">
+  <div class="font-mono text-[11.5px] text-fg-faint flex gap-2 flex-wrap mb-5">
+    <span>Companion document to <a href="/posts/well-known-spec/" class="text-fg-dim hover:text-accent">well-known-spec</a></span>
+  </div>
+  <h1 class="font-serif font-medium text-[44px] leading-[1.08] tracking-[-0.02em]">
+    Getting a `/.well-known/` URI Suffix Registered with IANA
+  </h1>
+  <p class="font-serif italic text-[17px] text-fg-dim mt-4 max-w-[42em]">
+    A field guide for spec authors, distilled from the normative documents and the public record of who got through and who got stuck.
+  </p>
+</header>
+
+<Prose>
+
+## The Formal Procedure
+
+The registry is maintained by IANA at [`/assignments/well-known-uris/`](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml). It is governed by [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which obsoleted RFC 5785 in 2019, and the policy machinery comes from [RFC 8126](https://datatracker.ietf.org/doc/html/rfc8126).
+
+### What RFC 8615 §3 actually says
+
+RFC 8615 §3.1 designates the registry and says, verbatim: *"Registration requests can be made by following the instructions located there or by sending an email to the [wellknown-uri-review@ietf.org](https://mailarchive.ietf.org/arch/browse/wellknown-uri-review/) mailing list."* Section 5.1 sets the policy: *"Well-known URIs are registered on the advice of one or more experts, with a Specification Required (using terminology from [RFC8126])."* The same section tells the DE to either approve or deny inside **14 days**, and lets a stalled request (longer than 21 days undetermined) be escalated to `iesg@iesg.org`.
+
+The registration template required at submission time (RFC 8615 §3.2) is short: URI suffix, change controller, reference (a URL or RFC), and status (`permanent` or `provisional`). Everything in the template is mechanical; everything that matters is in the reference.
+
+### What "Specification Required" means in §4.6 of RFC 8126
+
+[RFC 8126 §4.6](https://datatracker.ietf.org/doc/html/rfc8126#section-4.6) defines Specification Required as Expert Review **plus** a "permanent and readily available public specification, in sufficient detail so that interoperability between independent implementations is possible." Two things in that sentence are load-bearing:
+
+- **Permanent and readily available.** RFC 8126 explicitly accepts "documents published outside of the RFC path, including informal documentation" — but only if "a document can reasonably be expected to be findable and retrievable long after IANA assignment." A personal site is on the wrong side of this test by default; see lessons below.
+- **Interoperability between independent implementations.** This is what the DE will silently grade you against. A spec with one implementation is not disqualifying, but it raises the bar on textual clarity, because the DE has to imagine the second implementer.
+
+§4.5 of RFC 8126 also lays out the DE's job: "ensure that the request makes sense ... that the proposed identifier doesn't conflict with existing or reserved values, and that the documentation is sufficient." DEs are explicitly *not* gatekeepers on whether the idea is good — only on whether the registration is sound.
+
+### The mailing list and the GitHub repo
+
+The list — [wellknown-uri-review@ietf.org](https://mailman3.ietf.org/mailman3/lists/wellknown-uri-review@ietf.org/) — is the formal address of record and is active; recent threads in 2025–2026 include CDMI, broadband-labels, easy-proxy, and `mcp-registry-auth`. But the actual mechanism most current requests run through is the GitHub registry [`protocol-registries/well-known-uris`](https://github.com/protocol-registries/well-known-uris). Its README states bluntly: **"filing an issue is the preferred method."** Issue threads become the public review record and IANA staff merge the resulting CSV.
+
+### Designated Expert(s)
+
+The current Designated Expert is **Mark Nottingham** (editor of RFC 8615 and the original RFC 5785). The IANA page does not publicly name him, but the [GitHub registry README](https://github.com/protocol-registries/well-known-uris) does ("the expert reviewer is @mnot"), and the mail archive shows him performing essentially every review from 2010 forward. There is no publicly listed second DE; the IESG appoints, and could appoint another at any time without notice.
+
+### Internet-Draft as a parallel path
+
+You can file an Internet-Draft via the [datatracker](https://datatracker.ietf.org/submit/) under the naming convention `draft-{author}-{name}-NN` (NN starts at 00; you bump it with each revision). Cutoffs follow IETF meeting cycles but individual drafts can be submitted any time outside the pre-meeting freeze.
+
+What an I-D **gets you**: a permanent, citable URL (`datatracker.ietf.org/doc/draft-...`) that satisfies "readily available" trivially; a six-month auto-expiry that forces you to revise; and an obvious channel to request working group adoption later. What it **doesn't get you**: any standing whatsoever. An expired individual draft is not a "stable reference" — see the `enterprise-network-security` issue ([#6](https://github.com/protocol-registries/well-known-uris/issues), open since July 2020, still blocked on this).
+
+## Five Concrete Precedents
+
+### 1. `acme-challenge` — RFC 8555 (March 2019)
+
+Registered by the **IETF ACME Working Group**. IETF stream, Proposed Standard. The ACME WG was [chartered in February 2015](https://en.wikipedia.org/wiki/Automatic_Certificate_Management_Environment); Let's Encrypt was already in public beta on the pre-standard "ACMEv1" before the WG existed. Registration was uncontroversial because (a) it ran through a working group with explicit IESG sign-off, (b) there were already multiple shipping CA and client implementations by the time of last call, and (c) the security considerations section is unusually detailed. **Lesson: a WG-stream RFC sails through registration as a side-effect of normal IETF process.**
+
+### 2. `security.txt` — RFC 9116 (April 2022)
+
+Registered by **Edwin Foudil and Yakov Shafranovich** as individual contributors in the Security area, not a WG. The [draft history](https://datatracker.ietf.org/doc/rfc9116/history/) shows `draft-foudil-securitytxt-00` filed September 10, 2017 and RFC 9116 published April 27, 2022 — **roughly 4.5 years, 13 revisions** (`-00` through `-12`), [Informational](https://datatracker.ietf.org/doc/rfc9116/), responsible AD Benjamin Kaduk. Public discussion was extensive; an [archived appeal-adjacent thread](https://datatracker.ietf.org/doc/html/draft-foudil-securitytxt-09) shows multiple security-area directorate reviews that drove the file's format from freeform to PGP-signed UTF-8 with specific field grammar. Registration itself was an IANA Considerations section of the RFC — the cost was entirely in the years of IETF process. **Lesson: individual-stream RFCs are possible without a WG, but you should expect a multi-year cycle and substantive directorate review on Security Considerations.**
+
+### 3. `api-catalog` — RFC 9727 (June 2025)
+
+Registered by the **IETF HTTPAPI Working Group**. [`draft-ietf-httpapi-api-catalog-00`](https://datatracker.ietf.org/doc/rfc9727/history/) was filed September 12, 2023 and RFC 9727 published in June 2025 — about **21 months, 9 revisions**, Proposed Standard. Worth studying because, like `well-known-spec`, it is a *namespace-operator* pattern: the spec defines a directory under which arbitrary follow-on resources live (in api-catalog's case, linkset documents pointing at API definitions). The acceptance argument — that putting a discovery root at the well-known location is a meaningfully different thing than putting a single document there — is the same one any sub-namespace spec has to make. **Lesson: a clearly bounded sub-namespace passes muster if you articulate why a directory is the right shape.**
+
+### 4. `change-password` — W3C, IANA-registered (provisional)
+
+Registered by the **W3C Web Application Security Working Group**, with status `provisional`, referencing the [W3C draft](https://w3c.github.io/webappsec-change-password-url/). The reference document is on `w3.org`, an institutionally permanent host with versioned snapshots — this is what made it acceptable as a "stable, publicly available specification" without an RFC. The W3C Process supplies the "independent implementations" gloss through CR (Candidate Recommendation) implementation reports. **Lesson: a recognized standards body other than the IETF is a first-class path, but you need the institutional weight, not just a public Markdown file.**
+
+### 5. `openid-configuration` — OpenID Foundation
+
+Registered with the **OpenID Foundation Artifact Binding Working Group** as change controller, referencing [OpenID Connect Discovery 1.0](https://openid.net/specs/openid-connect-discovery-1_0.html). Provisional status. Like `change-password`, this is a non-RFC stable doc — accepted because OIDF is a recognized industry consortium with a published process and persistent hosting. Note the explicit contrast: the IETF's equivalent (`oauth-authorization-server`, [RFC 8414](https://datatracker.ietf.org/doc/html/rfc8414)) was registered separately and is `permanent`. **Lesson: provisional is fine and common; "permanent" is reserved for IETF/IAB/IRTF stream RFCs.**
+
+### Negative example: `contribute.json`
+
+Submitted by Paul McLanahan of Mozilla. The [public thread](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/tf4EY_QCSlunyUZ1pbkGhKT6jQI/) contains Roy Fielding's objection that "reserving a universal location for this purpose doesn't make any sense" since clients already know the homepage and can fetch a linked document. The request stalled. **Lesson: "this is just metadata you could put anywhere" is a fatal objection. The spec needs an answer to *why must it be well-known* — i.e., why does a discovery agent that has nothing but an origin need to find this exact resource.**
+
+## Lessons Learned (Synthesized)
+
+### What blocks requests in practice
+
+Surveying [currently-open issues](https://github.com/protocol-registries/well-known-uris/issues) — 12 open as of early 2026, several years old — the **single dominant blocker is "stable reference"**: a single-owner GitHub repo, a personal blog, an expired individual I-D, or a "we'll publish it on our website" promise. The README is explicit: *"single-owner GitHub repositories are not suitable specification references."* In open issues like [#67 `erik`](https://github.com/protocol-registries/well-known-uris/issues/67), [#63 `attribution-reporting`](https://github.com/protocol-registries/well-known-uris/issues/63), [#58 `resolver`](https://github.com/protocol-registries/well-known-uris/issues/58), [#56 `CDMI`](https://github.com/protocol-registries/well-known-uris/issues/56), and [#38 BIMI](https://github.com/protocol-registries/well-known-uris/issues/38), the label is literally "waiting for stable reference."
+
+### What mnot checks first
+
+Reading two decades of his review comments, the pattern is consistent:
+
+1. **Is the name precise?** The README warns: *"Single common words ... extremely short names ... terms like `ai`, `agent` due to broad interest, [or] misleading names or those falsely claiming 'standard' status"* are rejected. `spec` is in the danger zone here — see the tactical section.
+2. **Is the path semantics unambiguous?** In the [pki-validation thread](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/-M2LLbt2abx-iGi6CrlntlgVAho/), he objected to use of "directory" without clarifying whether clients append path components, query strings, or only fetch the exact path. For `well-known-spec`, this is the central design choice and the DE will land on it immediately.
+3. **Why does this need to be well-known at all?** The Fielding/`contribute.json` objection. The spec needs a paragraph justifying the discovery model.
+4. **Security considerations.** Even informational specs get a security considerations section pass. For a publishing convention, "what does an attacker gain by serving a hostile document at this path" is the question to answer in writing.
+
+### Multiple implementations
+
+Helps, not required. RFC 8126 §4.6 talks about "interoperability between independent implementations" as a property of the spec, not the artifact. But in the easy-proxy and broadband-labels threads, the DE explicitly invited implementer feedback before approving — having even one external user is a credibility signal.
+
+### Stream choice: WG &gt; individual RFC &gt; non-RFC stable doc
+
+- **WG-stream RFC** is the easiest path *to registration*, because IANA-Considerations registration happens automatically at publication and the DE rarely re-litigates a WG consensus.
+- **Individual-stream RFC** works (security.txt, oauth-related drafts), but cost is years and the AD-sponsored process is uncertain — most individual drafts die.
+- **Independent Submission** (RSE-stream, [RFC 4846](https://datatracker.ietf.org/doc/html/rfc4846) process) is technically available and would produce a citable RFC, but is rarely used for `/.well-known/` registrations specifically.
+- **Non-RFC stable doc** is fine for `provisional` if the host is institutional (W3C, OIDF, OASIS, FIDO Alliance). It is *not* fine if the host is a personal site, a single-owner repo, or a vendor's documentation portal.
+
+### Provisional vs permanent
+
+Don't fight for `permanent` if you don't have an RFC. Roughly half the registry is `provisional` and it works identically in practice — browsers, clients, and tooling do not distinguish. Asking for `provisional` removes an entire class of objection.
+
+## Tactical Checklist for `well-known-spec`
+
+The current state is a single-author, single-implementation, sub-namespace-operator spec. Here is the honest assessment.
+
+- **Rename watch.** `spec` is a generic English word. Expect pushback per the README's "single common words" rule. Defensible alternatives if challenged: `published-spec`, `wks-spec`, or naming the suffix after the spec's purpose rather than what it contains. Be ready with a renaming proposal in your first message.
+- **Write the "why well-known" paragraph.** A discovery agent with only an origin needs to enumerate the specs an entity publishes without out-of-band knowledge. State this; do not assume.
+- **Nail the sub-namespace semantics.** Write down explicitly: clients MUST treat `/.well-known/spec/` as a directory; the next path segment is the spec name; the final segment is `v{x.y.z}.{ext}`. Define what happens when a client requests a non-existent version and content negotiation between `{ext}` variants. This is the question the DE will ask first.
+- **Security Considerations section.** Concretely: (a) malicious specs at this path could attempt to mislead automated tooling — clients SHOULD verify origin authority; (b) version-rollback attacks if `{x.y.z}` is selected by latest-wins; (c) MIME sniffing risks if servers misconfigure types for `{ext}`. A page is enough; absence is the problem.
+- **File the Internet-Draft.** Submit `draft-abbitt-well-known-spec-00` via [datatracker](https://datatracker.ietf.org/submit/). This is free, gives a permanent citable URL, and is the cheapest way to satisfy "stable reference." Refresh every six months until it either gets adopted or you stop caring. The draft URL is what you cite in the registration template.
+- **File the GitHub issue, not the email.** Use [`protocol-registries/well-known-uris`](https://github.com/protocol-registries/well-known-uris/issues/new). Request `provisional`. Reference the I-D, not the personal site. Set realistic expectations: one round of substantive review within a couple of weeks, then iterate.
+- **Expect 1–3 rounds.** The 14-day clock in RFC 8615 §5.1 is a target, not a guarantee; in practice mnot replies fast on first contact, then the back-and-forth on wording is what takes weeks-to-months.
+- **Things likely to be hard, in order:** (1) the `spec` name itself, (2) the "why must this be well-known" framing if the paragraph isn't written, (3) sub-namespace semantics if not pinned down, (4) "where will this document live in 10 years" — the personal site is the weakest link, the I-D fixes it.
+- **Things likely to be easy:** the formal template, the mailing list mechanics, getting a first response, getting `provisional` status if the above are clean.
+
+The whole process, optimistically, is one to three months from a complete first submission to a merged CSV entry. Pessimistically, it is open-ended — see the issues that have sat for six years. The difference is almost entirely about how seriously the author takes the "stable reference" requirement at submission time.
+
+---
+
+Primary normative sources: [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), [RFC 8126](https://datatracker.ietf.org/doc/html/rfc8126). Primary process sources: [IANA Well-Known URIs registry](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml), [`protocol-registries/well-known-uris`](https://github.com/protocol-registries/well-known-uris), [wellknown-uri-review archive](https://mailarchive.ietf.org/arch/browse/wellknown-uri-review/).
+
+</Prose>
+
+</article>

@@ -46,12 +46,16 @@ The version `0.1.0-alpha.1` exercises [§5.5](#55-what-this-convention-does-not-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
+   - [1.1. Design Intent: A Space for Site-Local and Community-Local Specs](#11-design-intent-a-space-for-site-local-and-community-local-specs)
 2. [Conventions and Terminology](#2-conventions-and-terminology)
 3. [Optionality and Scope](#3-optionality-and-scope)
 4. [URL Convention](#4-url-convention)
    - [4.1. Canonical Versioned URL](#41-canonical-versioned-url)
    - [4.2. Cache-Control](#42-cache-control)
    - [4.3. Hash Sidecar (Optional)](#43-hash-sidecar-optional)
+   - [4.4. Multiple Formats at the Same Version](#44-multiple-formats-at-the-same-version)
+   - [4.5. Canonical Identifier and Origin Binding](#45-canonical-identifier-and-origin-binding)
+   - [4.6. Path Semantics and Client Behavior](#46-path-semantics-and-client-behavior)
 5. [Spec Document Format](#5-spec-document-format)
    - [5.1. Choosing a Format](#51-choosing-a-format)
    - [5.2. File Extension and Content-Type](#52-file-extension-and-content-type)
@@ -87,6 +91,32 @@ What is missing is a casual, low-ceremony pattern for any individual or small pr
 This document proposes such a pattern: `/.well-known/spec/{name}/v{x.y.z}.{ext}` is the canonical URL, and the only URL. The choice of `.well-known/` is grounded in [RFC 8615](https://datatracker.ietf.org/doc/html/rfc8615), which reserves the path prefix for site-wide metadata. No new IANA registration is required, because the spec documents are leaf files under `.well-known/`, not new well-known URI suffixes.
 
 The convention is **format-agnostic.** A spec document MAY be a JSON Schema, an OpenAPI document, a Markdown file, an HTML page, an ABNF grammar, plain text, or anything else textual addressable as a single file at the canonical URL. The convention is about *where* specs live and *how* they are versioned, not what they look like inside. Companion specs MAY define format-specific structural requirements; `well-known-spec` itself does not.
+
+**Why `.well-known/`?** Roy Fielding's [objection to `contribute.json`](https://mailarchive.ietf.org/arch/msg/wellknown-uri-review/tf4EY_QCSlunyUZ1pbkGhKT6jQI/) — that "reserving a universal location for this purpose doesn't make any sense" when clients could fetch a linked document from a homepage — applies to any well-known proposal and must be answered. The answer for `well-known-spec`:
+
+A consumer that needs to validate against, or interoperate with, a specification an origin publishes typically has only the origin URL. It has no homepage to crawl (machines do not crawl), no out-of-band registry to consult (none exists for site-local and community-local specs by definition), and no link relation to follow (the spec document is not linked from arbitrary HTML pages; it is the contract the origin publishes for tooling consumption). Without a well-known location, the consumer has no path from `https://example.com/` to "the `foo` spec example.com publishes" except by guessing — `/openapi.json`, `/api-docs`, `/foo.json`, `/spec/foo`, etc. — which is the exact problem this convention exists to solve.
+
+A well-known URL provides an unguessable-becomes-knowable contract: a consumer that knows only the origin and the spec name can construct the canonical URL deterministically. This is the discoverability property well-known URIs exist to provide, and it is the same property `.well-known/openid-configuration`, `.well-known/security.txt`, and `.well-known/api-catalog` rely on. The objection that "you could just link to it" applies in a browser-driven world; it does not apply in a machine-driven world where the consumer has only an origin and a name.
+
+**The gap is already implied by adjacent standards.** Several IETF and industry standards reference "where the spec for this API lives" without defining where that is, leaving each publisher to pick a path. [RFC 9727 (api-catalog)](https://www.rfc-editor.org/rfc/rfc9727.html) defines a discovery root that enumerates an origin's API definitions and links to them — but the linkset entries point at publisher-chosen URLs, and the RFC does not define a convention for versioning, immutability, or path structure of the referenced documents. The OpenAPI Initiative has been [explicitly debating a well-known location for OpenAPI documents since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851) without resolution. AsyncAPI, JSON Schema (`$id` URIs), and similar specifications face the same gap: they describe what a specification document looks like and what it identifies, but they do not say where to put it.
+
+`well-known-spec` is the path-structure convention that fills this gap, designed to compose with — not replace — existing discovery layers. An `api-catalog` linkset entry can point at `/.well-known/spec/{name}/v{x.y.z}.{ext}` URLs, gaining versioning, immutability, format-selection, and origin-binding semantics for free; the discovery layer handles "what specs and what current versions does this origin advertise" while the publishing layer handles "where does each version-pinned document live, and how is it referenced." The two layers compose cleanly because they answer different questions. The need for the publishing layer is not hypothetical; it is documented in adjacent standards as a gap they declined to fill.
+
+### 1.1. Design Intent: A Space for Site-Local and Community-Local Specs
+
+The `/.well-known/spec/` namespace is **deliberately an open sub-namespace.** Each `{name}` slot is publisher-defined; IANA does not govern its children. This is a feature.
+
+Most specifications in the world are not, and should not be, IETF standards. They are:
+
+- **Site-local conventions** — schemas, manifest shapes, internal contracts that one organization or one site publishes for its own consumers. They benefit from being versioned and addressable at a stable URL without needing IETF consensus.
+- **Community-local conventions** — small-group standards that work for a niche tooling ecosystem, a research group, a protocol family of two implementations, or a working draft a few authors are iterating on. They benefit from a publishing convention without needing standards-body adoption.
+- **Drafts in practice** — most specs spend most of their life as drafts. Some stabilize. Some are superseded. Some are abandoned. All of them benefit from being publishable, fetchable, hashable, and versioned during that life, without conditioning on a future maturity milestone. This document itself, at version `0.1.0-alpha.1`, is an example.
+
+The convention exists to give all three a low-ceremony publishing pattern. The `{name}` namespace is open precisely so any publisher can use it without coordination. Coordination, when it is needed, happens *between publisher and consumer* (the people actually depending on the spec), not through a central registry. Cross-origin name collisions are resolved by §4.5: the canonical identifier of a spec is the full URL, which includes the publishing origin, so the same `{name}` at different origins is, by definition, two different specs.
+
+This design choice is the substantive one to evaluate `well-known-spec` on. The alternative — requiring every site-local schema, every internal manifest, every working draft to either pick an arbitrary path under its own site, or to seek IETF/IANA blessing for a custom well-known suffix — is what currently exists, and is what the OpenAPI community [has been debating since 2019](https://github.com/OAI/OpenAPI-Specification/issues/1851) without resolution. `well-known-spec` accepts the open sub-namespace as the cost of avoiding both options.
+
+A second-order effect: containing site-local and community-local specs under a single well-known suffix is **a namespace-pollution-reduction strategy** for the top-level well-known registry itself. Without this convention, the natural pressure is for every small-community spec, every site-internal manifest, and every working draft that wants a stable well-known URL to seek its own top-level suffix — incrementally polluting the well-known registry with single-purpose names whose semantics are governed by tiny groups or single authors. `well-known-spec` provides a containment surface: the long tail lives under `spec/{name}/`, and the top-level registry stays sparse and reserved for items with broad, cross-origin, interoperability-justifying significance. Bigger-picture items — those used by many implementations across origins, with stable semantics worth standardizing — SHOULD still pursue their own well-known suffix via the RFC 8615 process. `well-known-spec` is explicitly for everything below that threshold.
 
 ## 2. Conventions and Terminology
 
@@ -174,11 +204,56 @@ Different file extensions of the same spec — at the same `{name}` and same `{x
 
 The byte contents at these URLs MAY differ. The Markdown may carry narrative, examples, and rationale; the `.proto` may be pure source; the `.html` may add headers, styling, and navigation. Each URL is independently fetchable and independently immutable per [§4.1](#41-canonical-versioned-url). Consumers MAY use whichever format best suits their use case.
 
-**Cross-format consistency (normative).** Documents at the same `{name}` and same `{x.y.z}` MUST describe the same thing. They are not independent specs that happen to share a base name; they are different presentations of one spec. A publisher who publishes both `/.well-known/spec/foo/v0.1.0.md` and `/.well-known/spec/foo/v0.1.0.proto` represents both as `foo v0.1.0`, and the normative content (rules, data shape, structural requirements) MUST agree between them. Where the formats differ — narrative prose present in one and absent in another, machine-checkable schema present in one and not in another — the differences MUST be additions or presentational choices, never contradictions.
+**Different formats carry different content — by design.** The byte content at each URL is expected to differ, sometimes substantially. Narrative formats (`.md`, `.txt`, `.html`, `.pdf`) typically include prose, rationale, examples, references, and discussion that the format permits. Machine-readable formats (`.proto`, `.json`, `.yaml` for OpenAPI/JSON Schema/etc., `.cddl`, `.asn1`) are tightly bound to the data shape they describe; rationale typically lives in comments or is absent entirely. A consumer fetching `.proto` is asking for the IDL; a consumer fetching `.md` is asking for the IDL *and* the prose explaining it. Both are valid views of the same spec.
+
+**Cross-format consistency (normative).** Documents at the same `{name}` and same `{x.y.z}` MUST describe the same thing. They are not independent specs that happen to share a base name; they are different presentations — at different levels of formality and detail — of one spec. The normative content (rules, data shape, structural requirements, identifiers, version constraints) MUST agree across formats. Differences MUST be one of:
+
+- **Additions.** Prose, rationale, examples, references, diagrams, or commentary present in a narrative format and absent from a machine-readable format. These are permitted and expected; the narrative is the rationale layer over the same underlying spec.
+- **Presentation.** Styling, layout, anchors, pagination, table-of-contents rendering. The same content arranged for the medium.
+- **Format-imposed structure.** A `.proto` file expresses the same shape as a `.md` description of that shape, in the syntax `.proto` requires. The shape is the same; the surface is different.
+
+Differences MUST NOT be contradictions. If the `.proto` declares a `required` field and the `.md` says it is optional, that is a contract violation. If the `.json` schema permits a value the `.md` forbids, that is a contract violation. The machine-readable form and the narrative form must describe the same normative reality.
 
 If a publisher needs the content to differ semantically — if the `.proto` actually describes a different version of the data shape than the `.md` narrative — they MUST use a different version identifier on at least one of them. Two semantically-different documents at the same name+version is a contract violation, on the same footing as mutating the content of a canonical URL (a §4.1 violation).
 
-This rule is what makes the multi-format flexibility safe. A consumer who pins to `foo v0.1.0` can switch between `.md`, `.txt`, `.proto`, and `.html` and rely on getting the same spec, in different forms.
+This rule is what makes the multi-format flexibility safe. A consumer who pins to `foo v0.1.0` at a given origin can switch between `.md`, `.txt`, `.proto`, and `.html` and rely on getting the same spec, in different forms.
+
+### 4.5. Canonical Identifier and Origin Binding
+
+The canonical identifier of a spec under this convention is **the full URL**, not the `{name}` and `{x.y.z}` alone. The publishing origin is a load-bearing part of the identity.
+
+Formally: the canonical identifier of a spec is the triple `(origin, name, version)`, where `origin` is the scheme-host-port tuple defined by [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454). Two URLs that share a `{name}` and `{x.y.z}` but differ in `origin` identify **two different specs.** They are not the same spec; they are not in conflict; they are not subject to the §4.4 cross-format consistency rule (which applies only within a single origin). Each origin is sovereign over its own `/.well-known/spec/` subtree.
+
+Concretely:
+
+- `https://example.com/.well-known/spec/foo/v0.1.0.json` and `https://other.com/.well-known/spec/foo/v0.1.0.json` are different specs. They may describe entirely unrelated things; they may agree by coincidence or by deliberate adoption; this convention takes no position. The same `{name}` at two origins is not a collision and not a defect — it is the expected outcome of an open sub-namespace.
+- A consumer that adopts a spec from one origin MUST track the origin as part of the pin. Pinning to `foo v0.1.0` without origin is incomplete and MUST NOT be treated as a canonical reference. Recording `(origin, name, version)` — or simply the full URL — is the only correct form.
+
+Within a single origin, the `{name}` and `{x.y.z}` are unambiguous by construction (the URL is unique), and shorthand of the form `foo v0.1.0` is acceptable in informal contexts when the origin is implicit and unambiguous from context. Cross-origin or out-of-context references MUST use the full URL or the full triple.
+
+This origin-binding rule is what makes the open `{name}` namespace safe. There is no global registry of `{name}` values, no name-resolution authority, and no need for one — because the names are never asked to function as global identifiers. The URL is the identifier. The convention is a publishing pattern, not a naming authority.
+
+### 4.6. Path Semantics and Client Behavior
+
+This convention treats `/.well-known/spec/` as a structured path with three segments after the prefix. Client behavior is determined entirely by exact URL match; this section makes the semantics explicit so implementers and reviewers do not have to infer them.
+
+**Path structure.** A spec document is addressable only at the full canonical URL of the form `/.well-known/spec/{name}/v{x.y.z}.{ext}`. The segments are:
+
+- `/.well-known/spec/` — the convention root. A request to this exact path is NOT REQUIRED to return any meaningful response; a host MAY return 404, MAY return an index document for human navigation, and MAY return a 403. No client behavior depends on what is served here.
+- `/.well-known/spec/{name}/` — the per-spec directory. As above: NOT REQUIRED to return anything meaningful. A client MUST NOT construct or rely on a request to this path; the directory exists only as a URL-path organizational device.
+- `/.well-known/spec/{name}/v{x.y.z}.{ext}` — the only URL with normative semantics. A client requesting this exact path either receives the spec document at exactly that version and format, or receives 404.
+
+**No path traversal beyond the leaf.** This convention does not define semantics for any path under `/.well-known/spec/{name}/v{x.y.z}.{ext}` — i.e., paths with additional segments appended. Hosts MAY serve content at deeper paths for unrelated purposes; clients MUST NOT interpret deeper paths as part of this convention.
+
+**404 is informative.** A 404 from the canonical URL means exactly one thing: this host does not publish this name at this version in this format. It is not an error condition for the client to recover from; it is a meaningful negative answer. Clients SHOULD treat 404 as "spec is unavailable from this origin" and proceed accordingly. Clients MUST NOT retry with different versions, different extensions, or different name spellings as a fallback unless their own configuration explicitly directs them to.
+
+**No format negotiation via the `Accept` header.** Format selection in this convention is done via the `{ext}` segment of the URL, not via HTTP content negotiation. A client requesting `/.well-known/spec/foo/v0.1.0.json` is asking for the JSON form of foo v0.1.0; a client requesting `/.well-known/spec/foo/v0.1.0.md` is asking for the Markdown form. Servers MAY ignore the `Accept` header for these URLs; servers MUST NOT serve a `.md` document at a `.json` URL even if the `Accept` header would otherwise direct them to. The `{ext}` is the format selector; the `Accept` header is advisory at most. This is a deliberate departure from HTTP content negotiation for the same reason `.well-known/security.txt` and `.well-known/openid-configuration` use a fixed extension: it makes clients' URLs trivially constructable from `(origin, name, version, format)` without runtime negotiation.
+
+**No version selection via `latest` or any other alias.** The `{x.y.z}` segment MUST be a literal semver string. There is no alias, no symbolic name (`latest`, `stable`, `current`), and no redirect from an unversioned URL to a versioned one. A client that wants the latest published version of a spec MUST obtain that information out of band (for example, from an `api-catalog` entry; see §9). This convention does not provide a mechanism for asking "what is the newest foo." That question belongs to discovery layers above this convention.
+
+**Cache and `Cache-Control`.** The canonical versioned URL is immutable per §4.1 and SHOULD be served with `Cache-Control: public, max-age=31536000, immutable` per §4.2. The "directory" paths (the convention root and the per-spec directory) have no caching guidance because they have no normative semantics.
+
+**No automatic listings.** Hosts MUST NOT auto-generate directory listings at `/.well-known/spec/` or `/.well-known/spec/{name}/` and represent them as conformant artifacts of this convention. A host MAY serve an index document for human discoverability, but such an index is informational only and MUST NOT be interpreted by clients as authoritative over which specs and versions a host publishes. The authoritative answer to "does this host publish foo v0.1.0 in JSON?" is the response to a request for the exact canonical URL.
 
 ## 5. Spec Document Format
 
@@ -289,13 +364,48 @@ A spec document MAY identify the version of `well-known-spec` it conforms to in 
 
 ## 8. Security Considerations
 
-The security surface of this convention is small.
+The security surface of this convention is small but not zero. Spec documents are read by tooling that may make decisions based on their content; the threats below are the ones a reviewer is likely to ask about.
 
-Publishing spec documents at predictable URLs is a discoverability feature, not a security concern. The spec documents themselves carry no operational data — they describe formats, protocols, or conventions, but do not contain credentials, user data, or runtime state. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
+### 8.1. Spec Documents Carry No Operational Data
 
-Hosts publishing spec documents MUST ensure those documents are immutable at their canonical versioned URL. A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL.
+Publishing spec documents at predictable URLs is a discoverability feature, not a security concern in itself. The spec documents themselves carry no operational data — they describe formats, protocols, or conventions, but do not contain credentials, user data, or runtime state. A consumer fetching `https://example.com/.well-known/spec/deployment-version/v0.1.0.json` learns that this host publishes the `deployment-version` convention; whether they fetch a corresponding manifest at `/.well-known/deployment-version.json` is a separate question with separate security considerations (see [`deployment-version` §9](/posts/deployment-version/)).
 
-Cross-host references to spec documents may be subject to TLS, DNS, and routing trust. Consumers validating against a spec document at a remote URL SHOULD use HTTPS. Every reference under this convention pins to a specific version (the canonical versioned URL), which is the right default for reproducible validation.
+### 8.2. Hostile Spec Documents and Origin Authority
+
+A host that controls `/.well-known/spec/{name}/v{x.y.z}.{ext}` controls the spec a consumer sees at that URL. A compromised, hostile, or simply mistaken host can publish a spec document that misleads automated tooling — for example, a `.proto` that declares fields not present in the actual service, or a JSON Schema that permits values the service does not accept. The threat model here is the same as for any origin-served metadata: the origin is the authority on what it publishes; consumers MUST verify the origin via TLS and SHOULD treat the origin as the trust anchor for the spec's contents.
+
+Clients fetching specs from origins they do not control SHOULD:
+
+- Require HTTPS. The convention does not define HTTP-served variants; reading a spec from `http://` exposes the consumer to in-path tampering.
+- Validate the TLS certificate against the expected origin per [RFC 6454](https://datatracker.ietf.org/doc/html/rfc6454). A spec at `https://example.com/.well-known/spec/foo/v0.1.0.json` is authoritative only when served by `example.com` over a valid certificate chain.
+- Pin to a specific version per §4.1. A consumer that records the canonical URL plus a SHA-256 hash of the fetched document (per §4.1) is protected against subsequent silent modification by the origin.
+
+### 8.3. Version Selection and Rollback
+
+This convention has no `latest` alias, no symbolic version names, and no redirect from unversioned to versioned URLs (§4.6). Clients MUST request specific versions. This eliminates one class of attack: there is no version-selection logic for an attacker to manipulate, because the client's URL contains the full version literally.
+
+A discovery layer above this convention (such as `api-catalog`, see §9) MAY advertise a specific version as "current." If consumers follow such advertisements, the discovery layer is the surface where rollback or selection attacks could be staged — not this convention. Implementers of discovery layers SHOULD consider rollback explicitly; this convention takes no position because version selection happens outside its scope.
+
+### 8.4. Content-Type and Sniffing
+
+The `{ext}` segment of the URL and the served `Content-Type` MUST agree (§5.2). A host that serves `.json` URLs with `Content-Type: text/html`, or `.md` URLs with `Content-Type: application/json`, has misconfigured its server in a way that may cause clients or intermediaries to misinterpret the content. Misinterpretation is the precondition for several known attack classes:
+
+- **MIME sniffing.** Some HTTP clients and browsers will sniff content type when the served type is generic (`application/octet-stream`, `text/plain`) or absent. A spec document fetched as `text/plain` but sniffed as `text/html` could in theory be rendered as HTML and execute embedded script if surfaced to a browser context. Hosts SHOULD send `X-Content-Type-Options: nosniff` on spec documents to inhibit this.
+- **Confusion attacks.** A consumer that parses `.json` strictly will reject a misserved Markdown document; a consumer that parses leniently might accept it as a degenerate JSON value (e.g., a string). Strict parsing is the right default; lenient parsing of spec documents is NOT RECOMMENDED.
+
+Clients that fetch spec documents SHOULD validate that the `Content-Type` returned matches the `{ext}` they requested per §5.2 and SHOULD reject responses where it does not. Treating a `Content-Type` mismatch as a parse error is appropriate.
+
+### 8.5. Immutability and Cache Poisoning
+
+Hosts MUST ensure spec documents are immutable at their canonical versioned URL (§4.1). A host that publishes content at `/.well-known/spec/{name}/v0.1.0.json` and later silently replaces it with different content has broken the contract that pinned references depend on. Such a host harms consumers who pinned to the URL, and is in violation of this convention's normative requirements.
+
+Consumer-side SHA-256 hashing (§4.1) provides tamper-evidence against subsequent silent modification, whether by the publisher or by an intermediary. Where threat model warrants, consumers SHOULD record and verify hashes.
+
+The long `Cache-Control` recommended in §4.2 has a security consequence: an attacker that successfully poisons a CDN cache for an immutable URL has poisoned it for the full TTL, potentially a year. Publishers controlling intermediate caches SHOULD have a documented purge procedure for the rare case where a published spec must be withdrawn (e.g., to correct an immutability violation already in flight). Consumers cannot rely on publishers' caches; consumer-side hashing remains the durable defense.
+
+### 8.6. Cross-Origin Confusion
+
+Per §4.5, the canonical identifier of a spec is the triple `(origin, name, version)`. A consumer that treats `{name} v{version}` as a global identifier — fetching from one origin and assuming agreement with another origin's spec of the same name — has misused the convention and exposes itself to confusion attacks where two origins publish unrelated specs with colliding names. This is not a convention defect; it is a consumer-side requirement to track origin as part of every spec pin. Implementations MUST record the full origin alongside the name and version of any spec they adopt.
 
 ## 9. Discoverability
 
@@ -322,6 +432,22 @@ Adopters concerned about strict RFC 8615 conformance SHOULD await registration; 
 
 The `application/json` and `application/schema+json` media types are used unchanged. The convention does not define a new media type.
 
+### 10.1. Naming Considerations and Renaming Provision
+
+The current proposed suffix is `spec`. The authors acknowledge that this is a generic English word and that the well-known URIs registry [README](https://github.com/protocol-registries/well-known-uris) explicitly warns against single common words: *"Single common words ... extremely short names ... terms like `ai`, `agent` due to broad interest, [or] misleading names or those falsely claiming 'standard' status"* are subject to rejection.
+
+The arguments for `spec` are: it is the most direct word in English for the thing being published; it is unambiguous in context (the path segment after `/.well-known/` is by construction not a generic word but a registered identifier); and the convention's content is in fact specifications, not some euphemism. The convention does not claim to be *the* spec convention — it claims to be *a* publishing convention for specifications, and the registry's role is to make that claim coherent at the URL layer.
+
+The arguments against are real. If the Designated Expert determines that `spec` is too generic or too broad, the authors are prepared to rename. Defensible alternatives include:
+
+- **`published-spec`** — explicit, slightly longer, unambiguous.
+- **`wks-spec`** — short, prefixed with a stable acronym (`wks` ≈ well-known-spec), unlikely to collide.
+- **`spec-doc`** — emphasizes the document nature of the artifact.
+
+A rename does not require a new version of this convention. The convention is about path structure and document semantics, not the literal suffix string. A v0.2.0 of `well-known-spec` could change the registered suffix without changing any other normative content; adopters would migrate their URLs and `Cache-Control` immutability per §4.1 ensures the old URLs remain valid identifiers for the documents they pointed at.
+
+The authors expect to file the registration request using the suffix `spec` and to engage in DE-mediated renaming if the request runs into the "single common words" rule. The registration roadmap (see the [companion roadmap document](/well-known-spec/roadmap)) discusses the registration process and the precedents it draws from.
+
 ## 11. Reference Implementation
 
 This site is a working implementation of `well-known-spec` v0.1.0-alpha.1. The live artifacts on this host demonstrate [§4.4](#44-multiple-formats-at-the-same-version) in action: the same spec, at the same name and version, presented in three formats:
@@ -342,6 +468,16 @@ Source on GitHub (Astro static site):
 - Pre-generated IETF text (committed at the canonical URL): [`public/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt`](https://github.com/benjaminabbitt/ben-abbitt-me/blob/main/public/.well-known/spec/well-known-spec/v0.1.0-alpha.1.txt)
 
 The `.txt` is pre-generated locally via `mmark src.md | xml2rfc --text` and committed to `public/`. Because v0.1.0 is byte-immutable per §4.1, the generated `.txt` for this version is generated once and never changes; future versions get regenerated and committed.
+
+### 11.1. Publish Your Own
+
+Next time you have a spec to publish on a site you control, put it at:
+
+```
+/.well-known/spec/{your-name}/v{MAJOR}.{MINOR}.{PATCH}.{ext}
+```
+
+That's the only URL the convention defines. Pick a format from [§5.1](#51-choosing-a-format), pick a version per [§7](#7-versioning), and you are publishing per `well-known-spec` v0.1.0-alpha.1. If you publish more than one format at the same name+version, [§4.4](#44-multiple-formats-at-the-same-version) tells you what has to stay equivalent across them.
 
 ## 12. References
 
