@@ -122,6 +122,26 @@ The **Devoted Actor framework** integrates identity fusion with sacred values: t
 
 This explains why facts don't work (they threaten identity), why rejection backfires (it intensifies fusion), and why intelligent people aren't immune (analytical capacity is deployed for defense, not evaluation).
 
+#### How common is fusion? Evidence from ordinary populations
+
+Identity fusion is easy to read as a clinical condition that applies to cult members, suicide bombers, and January 6th rioters — and not to ordinary people. The empirical record says otherwise. Fusion measures from the Swann/Whitehouse program have been applied to populational samples across multiple non-pathological domains, and prevalence is not small.
+
+**Football fans.** A field survey of 465 Brazilian football supporters found that fans fused with their club — especially members of the *torcidas organizadas* — were the most willing to fight or die for it ([Newson et al., 2018](#ref-newson-2018)). A separate sample of 140 British football fans (mean age 37) showed that feeling self-shaped by shared club events, not raw time invested, produced fusion, with both euphoric and dysphoric events contributing ([Newson, Buhrmester & Whitehouse, 2016](#ref-newson-2016)). A field study at the 2014 World Cup measured cortisol release in ordinary Brazilian fans and found that fusion, not mere identification, predicted the physiological response ([Newson et al., 2020](#ref-newson-2020)). These are weekend supporters, not extremists.
+
+**Military units.** Among 179 male Libyan revolutionaries, 97% reported fusion with their battalion, and 45% of frontline combatants felt *more* fused with their battalion than with their own family ([Whitehouse et al., 2014](#ref-whitehouse-2014)). The mechanism is not unique to combat: shared dysphoric experience (boot camp, hazing, painful initiation, sustained collective hardship) is the general route by which institutions manufacture fusion in ordinary recruits ([Whitehouse & Lanman, 2014](#ref-whitehouse-lanman-2014)). Military cohesion is engineered fusion, applied at population scale.
+
+**Cult and new-religious-movement converts.** Going back to the foundational Lofland-Stark "World-Saver" model, the sociology-of-conversion literature has repeatedly found that conversion to high-commitment groups is not explained by pre-existing pathology but by ordinary network ties intersecting with life-transition timing ([Lofland & Stark, 1965](#ref-lofland-1965); [Snow, Zurcher & Ekland-Olson, 1980](#ref-snow-1980)). Eileen Barker's seven-year study of Unification Church recruits found them to be young, well-educated, middle-class people in transitions; the "brainwashing" model could not explain the data, since most attendees did not join and many who joined later left ([Barker, 1984](#ref-barker-1984)). Janja Lalich's comparative case studies of Heaven's Gate and the Democratic Workers Party reach the same finding: cult members are "normal, intelligent, educated people" whose commitments emerge from a structural condition, not personal pathology ([Lalich, 2004](#ref-lalich-2004)). The "they must be a particular kind of person" intuition is empirically wrong.
+
+**Mass religious revival.** Pentecostal and charismatic Christianity has grown from a fringe movement at the turn of the 20th century to an estimated 500–600 million adherents today, concentrated in *urban* mainstream populations across Africa, Latin America, and Asia ([Anderson, 2014](#ref-anderson-2014); [Cox, 1995](#ref-cox-1995)). Pew's ten-country survey of Pentecostal populations found that between 56% and 87% of adherents in every country reported personally experiencing or witnessing divine healing — a populational-scale, fusion-like experiential commitment ([Pew, 2006](#ref-pew-2006)). High-fusion religious identity scales to roughly half a billion ordinary people.
+
+**Brand communities.** Consumer-research ethnographies of the Harley-Davidson Owners Group, Apple Mac users, and Saab and Ford Bronco owners established two decades ago that ordinary consumers form non-geographic communities around brands, with shared rituals, moral obligations to fellow members, and consciousness of kind ([Muniz & O'Guinn, 2001](#ref-muniz-2001); [McAlexander, Schouten & Koenig, 2002](#ref-mcalexander-2002)). A cross-community study across nine brand communities identified twelve recurring value-creating practices through which ordinary consumers transform brand affiliation into collective identity ([Schau, Muñiz & Arnould, 2009](#ref-schau-2009)). The "tribal marketing" literature treats this as a mass-population phenomenon of late modernity, not a marginal one ([Cova & Cova, 2002](#ref-cova-2002)).
+
+**Ordinary partisans.** The affective polarization literature has documented at survey-population scale that American partisans experience the out-party with visceral hostility, with that hostility growing largely independent of issue-position movement ([Iyengar, Sood & Lelkes, 2012](#ref-iyengar-2012)). Implicit-association and behavioral-economic experiments show that partisan in/out-group bias in ordinary voters now exceeds racial bias on several measures ([Iyengar & Westwood, 2015](#ref-iyengar-2015)), and a comprehensive review establishes affective polarization as a mass-public phenomenon, not an elite-or-activist one ([Iyengar et al., 2019](#ref-iyengar-2019)). Mason synthesizes decades of ANES survey data to show that for ordinary American voters, partisanship has fused with race, religion, and culture into a single mega-identity ([Mason, 2018](#ref-mason-2018)).
+
+**Network marketing.** Pratt's multi-year ethnography of Amway documented the organization deliberately producing "sensebreaking" and "sensegiving" practices to engineer organizational identification in ordinary middle-class distributors — a documented mechanism by which a mundane company transforms mundane people into fused believers ([Pratt, 2000](#ref-pratt-2000)).
+
+The contexts vary widely — military and sacred-value conflict at one end, partisan and religious identity in the middle, consumer brand and weekend fandom at the other — but the construct measured is the same, and the instrument detects it across all of them. The cognitive vulnerability the rest of this argument trades on is not a marker of extremism. It is a property of normal human group cognition, operating at different intensities depending on what the institutional and historical context does with it. The political case studies that follow are not exceptions to ordinary cognition; they are ordinary cognition under specific conditions.
+
 ### 5. Smarter people defend sacred beliefs more effectively, not more accurately
 
 The mechanism does not impair cognition. It redirects it. The **Expressive Rationality Model** demonstrates that among individuals with strong identity commitments, *higher* cognitive ability produces *more* identity-consistent reasoning. Analytical capacity gets deployed to defend sacred commitments rather than evaluate them. Greater cognitive ability does not overcome the sacred-value block; it fortifies it ([Bayrak et al., 2025](#ref-bayrak-2025)).
@@ -663,6 +683,9 @@ The donor class thought they were using populism. Trump thought he was using the
 <a id="ref-baumeister-1995"></a>
 **Baumeister, R. F., & Leary, M. R. (1995).** The need to belong: Desire for interpersonal attachments as a fundamental human motivation. *Psychological Bulletin*, 117(3), 497–529. https://doi.org/10.1037/0033-2909.117.3.497
 
+<a id="ref-anderson-2014"></a>
+**Anderson, A. H. (2014).** *An Introduction to Pentecostalism: Global Charismatic Christianity* (2nd ed.). Cambridge University Press. https://doi.org/10.1017/CBO9781139583450
+
 <a id="ref-atran-2016"></a>
 **Atran, S. (2016).** The devoted actor: Unconditional commitment and intractable conflict across cultures. *Current Anthropology*, 57(S13), S192–S203. https://www.journals.uchicago.edu/doi/full/10.1086/685495
 
@@ -674,6 +697,9 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-atran-ginges-2012"></a>
 **Atran, S., & Ginges, J. (2012).** Religious and sacred imperatives in human conflict. *Science*, 336(6083), 855–857. https://www.science.org/doi/10.1126/science.1216902
+
+<a id="ref-barker-1984"></a>
+**Barker, E. (1984).** *The Making of a Moonie: Choice or Brainwashing?* Oxford: Blackwell. ISBN 0-631-13246-5.
 
 <a id="ref-baron-1997"></a>
 **Baron, J., & Spranca, M. (1997).** Protected values. *Organizational Behavior and Human Decision Processes*, 70(1), 1–16. https://www.sciencedirect.com/science/article/abs/pii/S074959789792690X
@@ -719,6 +745,12 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-cooper-2019"></a>
 **Cooper, J., Feldman, L. A., & Blackman, S. F. (2019).** Influencing Republicans' and Democrats' attitudes toward Obamacare. *Journal of Social Psychology*, 159(1), 112–117. https://pubmed.ncbi.nlm.nih.gov/29659334/
+
+<a id="ref-cova-2002"></a>
+**Cova, B., & Cova, V. (2002).** Tribal marketing: The tribalisation of society and its impact on the conduct of marketing. *European Journal of Marketing*, 36(5/6), 595–620. https://doi.org/10.1108/03090560210423023
+
+<a id="ref-cox-1995"></a>
+**Cox, H. (1995).** *Fire from Heaven: The Rise of Pentecostal Spirituality and the Reshaping of Religion in the Twenty-First Century*. Reading, MA: Addison-Wesley. ISBN 978-0-201-62656-8.
 
 <a id="ref-cremer-2023"></a>
 **Cremer, T. (2023).** *The Godless Crusade: Religion, Populism and Right-Wing Identity Politics in the West*. Cambridge University Press.
@@ -795,6 +827,15 @@ The donor class thought they were using populism. Trump thought he was using the
 <a id="ref-iannaccone-1994"></a>
 **Iannaccone, L. R. (1994).** Why strict churches are strong. *American Journal of Sociology*, 99(5), 1180–1211. https://www.journals.uchicago.edu/doi/abs/10.1086/230409
 
+<a id="ref-iyengar-2012"></a>
+**Iyengar, S., Sood, G., & Lelkes, Y. (2012).** Affect, not ideology: A social identity perspective on polarization. *Public Opinion Quarterly*, 76(3), 405–431. https://doi.org/10.1093/poq/nfs038
+
+<a id="ref-iyengar-2015"></a>
+**Iyengar, S., & Westwood, S. J. (2015).** Fear and loathing across party lines: New evidence on group polarization. *American Journal of Political Science*, 59(3), 690–707. https://doi.org/10.1111/ajps.12152
+
+<a id="ref-iyengar-2019"></a>
+**Iyengar, S., Lelkes, Y., Levendusky, M., Malhotra, N., & Westwood, S. J. (2019).** The origins and consequences of affective polarization in the United States. *Annual Review of Political Science*, 22, 129–146. https://doi.org/10.1146/annurev-polisci-051117-073034
+
 <a id="ref-janis-1972"></a>
 **Janis, I. L. (1972).** *Victims of Groupthink: A Psychological Study of Foreign-Policy Decisions and Fiascoes*. Houghton Mifflin.
 
@@ -828,11 +869,23 @@ The donor class thought they were using populism. Trump thought he was using the
 <a id="ref-kunst-2019"></a>
 **Kunst, J. R., Dovidio, J. F., & Thomsen, L. (2019).** Fusion with political leaders predicts willingness to persecute immigrants and political opponents. *Nature Human Behaviour*, 3(11), 1180–1189. https://www.nature.com/articles/s41562-019-0708-1
 
+<a id="ref-lalich-2004"></a>
+**Lalich, J. (2004).** *Bounded Choice: True Believers and Charismatic Cults*. Berkeley: University of California Press. ISBN 978-0-520-24018-6.
+
+<a id="ref-lofland-1965"></a>
+**Lofland, J., & Stark, R. (1965).** Becoming a world-saver: A theory of conversion to a deviant perspective. *American Sociological Review*, 30(6), 862–875. https://doi.org/10.2307/2090965
+
 <a id="ref-malesevic-2024"></a>
 **Malešević, S. (2024).** Grounding civic nationhood: The rise and fall of Yugoslav nationalism, 1918–91. *Canadian Slavonic Papers*. https://doi.org/10.1080/00085006.2024.2357057
 
 <a id="ref-martel-2024"></a>
 **Martel, F. A., Moniz, P., Ashokkumar, A., & Swann, W. B. (2024).** Identity fusion and support for political authoritarianism: Lessons from the U.S. insurrection of 2021. *Political Psychology*. https://onlinelibrary.wiley.com/doi/abs/10.1111/pops.12979
+
+<a id="ref-mason-2018"></a>
+**Mason, L. (2018).** *Uncivil Agreement: How Politics Became Our Identity*. University of Chicago Press. ISBN 978-0-226-52454-2.
+
+<a id="ref-mcalexander-2002"></a>
+**McAlexander, J. H., Schouten, J. W., & Koenig, H. F. (2002).** Building brand community. *Journal of Marketing*, 66(1), 38–54. https://doi.org/10.1509/jmkg.66.1.38.18451
 
 <a id="ref-medin-2009"></a>
 **Medin, D. L., & Sachdeva, S. (2009).** Group Identity Salience in Sacred Value Based Cultural Conflict. *Proceedings of the 31st Annual Conference of the Cognitive Science Society*. https://escholarship.org/uc/item/87h4g4q5
@@ -843,6 +896,18 @@ The donor class thought they were using populism. Trump thought he was using the
 <a id="ref-moniz-2025"></a>
 **Moniz, P., & Swann, W. B. (2025).** The power of Trump's big lie: Identity fusion, internalizing misinformation, and support for Trump. *PS: Political Science & Politics*. https://www.cambridge.org/core/journals/ps-political-science-and-politics/article/power-of-trumps-big-lie-identity-fusion-internalizing-misinformation-and-support-for-trump/AF2A0DBE08319E0E3944825E187EDBCC
 
+<a id="ref-muniz-2001"></a>
+**Muniz, A. M., Jr., & O'Guinn, T. C. (2001).** Brand community. *Journal of Consumer Research*, 27(4), 412–432. https://doi.org/10.1086/319618
+
+<a id="ref-newson-2016"></a>
+**Newson, M., Buhrmester, M., & Whitehouse, H. (2016).** Explaining lifelong loyalty: The role of identity fusion and self-shaping group events. *PLoS ONE*, 11(8), e0160427. https://doi.org/10.1371/journal.pone.0160427
+
+<a id="ref-newson-2018"></a>
+**Newson, M., Bortolini, T., Buhrmester, M., da Silva, S. R., da Aquino, J. N. Q., & Whitehouse, H. (2018).** Brazil's football warriors: Social bonding and intergroup violence. *Evolution and Human Behavior*, 39(6), 675–683. https://doi.org/10.1016/j.evolhumbehav.2018.06.010
+
+<a id="ref-newson-2020"></a>
+**Newson, M., Shiramizu, V., Buhrmester, M., Hattori, W., Jong, J., Yamamoto, M. E., & Whitehouse, H. (2020).** Devoted fans release more cortisol when watching live soccer matches. *Stress and Health*, 36(2), 220–227. https://doi.org/10.1002/smi.2924
+
 <a id="ref-norenzayan-2013"></a>
 **Norenzayan, A. (2013).** *Big gods: How religion transformed cooperation and conflict*. Princeton University Press.
 
@@ -851,6 +916,9 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-ozzano-2025"></a>
 **Ozzano, L. (2025).** Right-wing populist parties as agents of religionization or secularization? *Religions*, 16(12), 1521. https://www.mdpi.com/2077-1444/16/12/1521
+
+<a id="ref-pew-2006"></a>
+**Pew Research Center. (2006).** *Spirit and Power: A 10-Country Survey of Pentecostals*. Pew Forum on Religion & Public Life. https://www.pewresearch.org/religion/2006/10/05/spirit-and-power/
 
 <a id="ref-pew-2015"></a>
 **Pew Research Center. (2015).** America's Changing Religious Landscape. https://www.pewresearch.org/religion/2015/05/12/americas-changing-religious-landscape/
@@ -864,6 +932,9 @@ The donor class thought they were using populism. Trump thought he was using the
 <a id="ref-posner-2007"></a>
 **Posner, D. N. (2007).** Regime change and ethnic cleavages in Africa. *Comparative Political Studies*, 40(11), 1302–1327. http://danielnposner.com/wp-content/uploads/2015/11/Posner-2007.pdf
 
+<a id="ref-pratt-2000"></a>
+**Pratt, M. G. (2000).** The good, the bad, and the ambivalent: Managing identification among Amway distributors. *Administrative Science Quarterly*, 45(3), 456–493. https://doi.org/10.2307/2667106
+
 <a id="ref-rfi"></a>
 **Religious Freedom Institute.** Proselytism or a global ethic? https://religiousfreedominstitute.org/2016-7-12-proselytism-or-a-global-ethic/
 
@@ -872,6 +943,9 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-salloukh-2015"></a>
 **Salloukh, B. F., et al. (2015).** *The Politics of Sectarianism in Postwar Lebanon*. Pluto Press.
+
+<a id="ref-schau-2009"></a>
+**Schau, H. J., Muñiz, A. M., Jr., & Arnould, E. J. (2009).** How brand community practices create value. *Journal of Marketing*, 73(5), 30–51. https://doi.org/10.1509/jmkg.73.5.30
 
 <a id="ref-schaafsma-2012"></a>
 **Schaafsma, J., & Williams, K. D. (2012).** Exclusion, intergroup hostility, and religious fundamentalism. *Journal of Experimental Social Psychology*, 48(4), 829–837. https://doi.org/10.1016/j.jesp.2012.02.015
@@ -887,6 +961,9 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-sheikh-2016"></a>
 **Sheikh, H., Gómez, Á., & Atran, S. (2016).** Empirical evidence for the devoted actor model. *Current Anthropology*, 57(S13), S204–S209. https://www.journals.uchicago.edu/doi/full/10.1086/686221
+
+<a id="ref-snow-1980"></a>
+**Snow, D. A., Zurcher, L. A., Jr., & Ekland-Olson, S. (1980).** Social networks and social movements: A microstructural approach to differential recruitment. *American Sociological Review*, 45(5), 787–801. https://doi.org/10.2307/2094895
 
 <a id="ref-soyfer-1994"></a>
 **Soyfer, V. N. (1994).** *Lysenko and the Tragedy of Soviet Science*. Rutgers University Press.
@@ -908,6 +985,12 @@ The donor class thought they were using populism. Trump thought he was using the
 
 <a id="ref-voas-2012"></a>
 **Voas, D., & Storm, I. (2012).** The intergenerational transmission of religious service attendance. *Nordic Journal of Religion and Society*, 25(2), 131–150. https://www.scup.com/doi/10.18261/ISSN1890-7008-2012-02-02
+
+<a id="ref-whitehouse-2014"></a>
+**Whitehouse, H., McQuinn, B., Buhrmester, M., & Swann, W. B., Jr. (2014).** Brothers in arms: Libyan revolutionaries bond like family. *Proceedings of the National Academy of Sciences*, 111(50), 17783–17785. https://doi.org/10.1073/pnas.1416284111
+
+<a id="ref-whitehouse-lanman-2014"></a>
+**Whitehouse, H., & Lanman, J. A. (2014).** The ties that bind us: Ritual, fusion, and identification. *Current Anthropology*, 55(6), 674–695. https://doi.org/10.1086/678698
 
 <a id="ref-whitfield-1991"></a>
 **Whitfield, S. J. (1991).** *The Culture of the Cold War*. Johns Hopkins University Press.
