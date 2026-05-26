@@ -71,9 +71,7 @@ The antisocial contract inverts each term:
 | **What it produces** | Cooperation across group boundaries | Sacralization within group boundaries |
 | **What it costs** | Some individual autonomy | The capacity to reason about the group's commitments |
 
-The need to belong motivates signing. Cognitive ease makes the terms feel costless. Fear of ostracism makes defection unthinkable. Collective narcissism makes the whole package feel like elevation rather than submission. The result is a population that holds group positions with conviction disproportionate to their independent evaluation, and that will punish members who break the silence. This is the precondition for step 4: once enough members hold a belief with enough apparent conviction, the belief becomes sacred. Not because anyone decided it should be, but because the social dynamics made questioning it too costly and defending it too easy.
-
-The social contract enables strangers to cooperate. The antisocial contract enables groups to stop thinking.
+The need to belong motivates signing. Cognitive ease makes the terms feel costless. Fear of ostracism makes defection unthinkable. Collective narcissism makes the whole package feel like elevation rather than submission. The result is a population that holds group positions with conviction disproportionate to their independent evaluation, and that will punish members who break the silence. This is the precondition for step 4: once enough members hold a belief with enough apparent conviction, the belief becomes sacred — not because anyone decided it should be, but because the social dynamics made questioning it too costly and defending it too easy.
 
 ### 4. Offering people money to compromise on sacred values makes them angrier, not more flexible
 
@@ -124,6 +122,26 @@ The **Devoted Actor framework** integrates identity fusion with sacred values: t
 
 This explains why facts don't work (they threaten identity), why rejection backfires (it intensifies fusion), and why intelligent people aren't immune (analytical capacity is deployed for defense, not evaluation).
 
+#### How common is fusion? Evidence from ordinary populations
+
+Identity fusion is easy to read as a clinical condition that applies to cult members, suicide bombers, and January 6th rioters — and not to ordinary people. The empirical record says otherwise. Fusion measures from the Swann/Whitehouse program have been applied to populational samples across multiple non-pathological domains, and prevalence is not small.
+
+**Football fans.** A field survey of 465 Brazilian football supporters found that fans fused with their club — especially members of the *torcidas organizadas* — were the most willing to fight or die for it ([Newson et al., 2018](#ref-newson-2018)). A separate sample of 140 British football fans (mean age 37) showed that feeling self-shaped by shared club events, not raw time invested, produced fusion, with both euphoric and dysphoric events contributing ([Newson, Buhrmester & Whitehouse, 2016](#ref-newson-2016)). A field study at the 2014 World Cup measured cortisol release in ordinary Brazilian fans and found that fusion, not mere identification, predicted the physiological response ([Newson et al., 2020](#ref-newson-2020)). These are weekend supporters, not extremists.
+
+**Military units.** Among 179 male Libyan revolutionaries, 97% reported fusion with their battalion, and 45% of frontline combatants felt *more* fused with their battalion than with their own family ([Whitehouse et al., 2014](#ref-whitehouse-2014)). The mechanism is not unique to combat: shared dysphoric experience (boot camp, hazing, painful initiation, sustained collective hardship) is the general route by which institutions manufacture fusion in ordinary recruits ([Whitehouse & Lanman, 2014](#ref-whitehouse-lanman-2014)). Military cohesion is engineered fusion, applied at population scale.
+
+**Cult and new-religious-movement converts.** Going back to the foundational Lofland-Stark "World-Saver" model, the sociology-of-conversion literature has repeatedly found that conversion to high-commitment groups is not explained by pre-existing pathology but by ordinary network ties intersecting with life-transition timing ([Lofland & Stark, 1965](#ref-lofland-1965); [Snow, Zurcher & Ekland-Olson, 1980](#ref-snow-1980)). Eileen Barker's seven-year study of Unification Church recruits found them to be young, well-educated, middle-class people in transitions; the "brainwashing" model could not explain the data, since most attendees did not join and many who joined later left ([Barker, 1984](#ref-barker-1984)). Janja Lalich's comparative case studies of Heaven's Gate and the Democratic Workers Party reach the same finding: cult members are "normal, intelligent, educated people" whose commitments emerge from a structural condition, not personal pathology ([Lalich, 2004](#ref-lalich-2004)). The "they must be a particular kind of person" intuition is empirically wrong.
+
+**Mass religious revival.** Pentecostal and charismatic Christianity has grown from a fringe movement at the turn of the 20th century to an estimated 500–600 million adherents today, concentrated in *urban* mainstream populations across Africa, Latin America, and Asia ([Anderson, 2014](#ref-anderson-2014); [Cox, 1995](#ref-cox-1995)). Pew's ten-country survey of Pentecostal populations found that between 56% and 87% of adherents in every country reported personally experiencing or witnessing divine healing — a populational-scale, fusion-like experiential commitment ([Pew, 2006](#ref-pew-2006)). High-fusion religious identity scales to roughly half a billion ordinary people.
+
+**Brand communities.** Consumer-research ethnographies of the Harley-Davidson Owners Group, Apple Mac users, and Saab and Ford Bronco owners established two decades ago that ordinary consumers form non-geographic communities around brands, with shared rituals, moral obligations to fellow members, and consciousness of kind ([Muniz & O'Guinn, 2001](#ref-muniz-2001); [McAlexander, Schouten & Koenig, 2002](#ref-mcalexander-2002)). A cross-community study across nine brand communities identified twelve recurring value-creating practices through which ordinary consumers transform brand affiliation into collective identity ([Schau, Muñiz & Arnould, 2009](#ref-schau-2009)). The "tribal marketing" literature treats this as a mass-population phenomenon of late modernity, not a marginal one ([Cova & Cova, 2002](#ref-cova-2002)).
+
+**Ordinary partisans.** The affective polarization literature has documented at survey-population scale that American partisans experience the out-party with visceral hostility, with that hostility growing largely independent of issue-position movement ([Iyengar, Sood & Lelkes, 2012](#ref-iyengar-2012)). Implicit-association and behavioral-economic experiments show that partisan in/out-group bias in ordinary voters now exceeds racial bias on several measures ([Iyengar & Westwood, 2015](#ref-iyengar-2015)), and a comprehensive review establishes affective polarization as a mass-public phenomenon, not an elite-or-activist one ([Iyengar et al., 2019](#ref-iyengar-2019)). Mason synthesizes decades of ANES survey data to show that for ordinary American voters, partisanship has fused with race, religion, and culture into a single mega-identity ([Mason, 2018](#ref-mason-2018)).
+
+**Network marketing.** Pratt's multi-year ethnography of Amway documented the organization deliberately producing "sensebreaking" and "sensegiving" practices to engineer organizational identification in ordinary middle-class distributors — a documented mechanism by which a mundane company transforms mundane people into fused believers ([Pratt, 2000](#ref-pratt-2000)).
+
+The contexts vary widely — military and sacred-value conflict at one end, partisan and religious identity in the middle, consumer brand and weekend fandom at the other — but the construct measured is the same, and the instrument detects it across all of them. The cognitive vulnerability the rest of this argument trades on is not a marker of extremism. It is a property of normal human group cognition, operating at different intensities depending on what the institutional and historical context does with it. The political case studies that follow are not exceptions to ordinary cognition; they are ordinary cognition under specific conditions.
+
 ### 5. Smarter people defend sacred beliefs more effectively, not more accurately
 
 The mechanism does not impair cognition. It redirects it. The **Expressive Rationality Model** demonstrates that among individuals with strong identity commitments, *higher* cognitive ability produces *more* identity-consistent reasoning. Analytical capacity gets deployed to defend sacred commitments rather than evaluate them. Greater cognitive ability does not overcome the sacred-value block; it fortifies it ([Bayrak et al., 2025](#ref-bayrak-2025)).
@@ -168,9 +186,9 @@ The practical consequence is that group-based remedies acquire immunity from emp
 
 Campbell and Manning documented the broader cultural shift in which this operates. In what they term "victimhood culture," moral status is conferred by membership in groups defined by historical suffering. Victimhood becomes a social resource that can be mobilized to make demands, win arguments, and foreclose criticism. Critically, this creates competitive dynamics in which even privileged individuals seek to claim victim status ([Campbell & Manning, 2014](#ref-campbell-2014)). The moral framework structurally prevents the question "is this remedy achieving equal outcomes?" from being asked, because asking it challenges the sacred status of the victim group.
 
-This is, in the framework's terms, religious thinking applied to secular policy. Not religious in content, but religious in structure: a moral hierarchy of sacred and profane groups, a set of unchallengeable commitments, and a punishment mechanism (social ostracism, professional consequences) for heresy. The mechanism is identical to every other case in this document. The content is progressive rather than conservative. The cognitive architecture is the same.
+This is, in the framework's terms, religious thinking applied to secular policy — not in content but in structure: a moral hierarchy of sacred and profane groups, a set of unchallengeable commitments, and a punishment mechanism (social ostracism, professional consequences) for heresy. The cognitive architecture is the same as in every other case in this document; only the content has been swapped from conservative to progressive.
 
-The point is not that historical injustice is fabricated, or that remedy is unnecessary. The point is that the sacralization mechanism has captured the *form* of the remedy and made it immune to the empirical evaluation that would tell us whether it is actually producing the equality it claims to pursue. When smart people cannot ask whether a policy is working without being accused of bigotry, analytical capacity has been redirected from evaluation to defense. That is step 5 of the causal chain, operating on the left.
+None of this implies that historical injustice is fabricated or that remedy is unnecessary. The claim is narrower: the sacralization mechanism has captured the *form* of the remedy and made it immune to the empirical evaluation that would tell us whether it is actually producing the equality it claims to pursue. When smart people cannot ask whether a policy is working without being accused of bigotry, analytical capacity has been redirected from evaluation to defense. That is step 5 of the causal chain, operating on the left.
 
 ---
 
@@ -198,9 +216,9 @@ Secular values (human life, health, nature, human rights) produce the same moral
 
 ## Case Study 1: The Cold War (1947–1991)
 
-Two superpowers, each convinced the other was a civilizational threat, spent forty-five years escalating weapons capable of ending civilization — while their best analysts produced confident, technical descriptions of an enemy that did not exist in the shape they were drawing. Bomber gaps. Missile gaps. Domino theory. None of it survived contact with declassified evidence. All of it was treated as obvious at the time, by intelligent people working in good faith. The framework predicts exactly this.
-
 The Cold War is the cleanest test of the framework because it involves two explicitly secular ideologies (Marxism-Leninism and liberal democratic capitalism) producing the same domain-specific rationality suppression documented in the religious sacred-values literature. If the mechanism were religion-specific, it should not appear here. It does.
+
+Two superpowers, each convinced the other was a civilizational threat, spent forty-five years escalating weapons capable of ending civilization while their best analysts produced confident, technical descriptions of an enemy that did not exist in the shape they were drawing — bomber gaps, missile gaps, domino theory. None of it survived contact with declassified evidence. All of it was treated as obvious at the time, by intelligent people working in good faith.
 
 ### Sacralization of secular ideology
 
@@ -222,15 +240,15 @@ Once "anti-communism" became a sacred identity rather than a policy position, an
 
 Vietnam demonstrated the terminal case. By 1967, internal Pentagon analysis showed the war was unwinnable and the domino theory was empirically unsupported. But the sacralized anti-communist identity made withdrawal politically impossible. The sacred value ("we cannot let communism advance") overrode the instrumental assessment ("this war is not achieving its objectives"). Three more years and tens of thousands of additional deaths followed before the sacred-value lock could be broken. Even then, it required a leader (Nixon) whose anti-communist credentials were too strong to challenge. Only Nixon could go to China because only Nixon's sacred-value identity was unassailable enough to survive a heterodox act ([Ellsberg, 2002](#ref-ellsberg-2002)).
 
-The mechanism operates identically in non-democratic systems. Soviet leadership sustained a command economy long past evident failure because abandoning it meant abandoning the sacred narrative. Gorbachev's reforms prompted a coup attempt by hardliners in August 1991, demonstrating that sacred-value constituencies attempt to remove leaders who make rational concessions regardless of formal political structure ([Kornai, 1992](#ref-kornai-1992); [Brown, 1996](#ref-brown-1996)).
+Non-democratic systems show the same pattern. Soviet leadership sustained a command economy long past evident failure because abandoning it meant abandoning the sacred narrative. Gorbachev's reforms prompted a coup attempt by hardliners in August 1991, demonstrating that sacred-value constituencies attempt to remove leaders who make rational concessions regardless of formal political structure ([Kornai, 1992](#ref-kornai-1992); [Brown, 1996](#ref-brown-1996)).
 
 ---
 
 ## Case Study 2: Obama as Sacred Villain (2008–2016)
 
-A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor, swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the Affordable Care Act in greater numbers when they were told fellow Republicans endorsed it — even though the policy's content did not change. This is sacralization in real time, in a population, on a stopwatch. The framework explains why an issue moved 31 points without any of the underlying facts moving at all.
+The eight years of the Obama presidency (2009–2017) constitute the cleanest documented case of *constructing* a sacred villain in modern American politics. Identity-protective cognition, the backfire effect, sacralized boundary-drawing, and the democratic trap are all visible in this case because they ran on television, in real time, with polling data on every step. The MAGA movement documented in the next case study did not invent this architecture; it inherited and occupied it.
 
-The label that produced the swing was "Obamacare." The eight years of the Obama presidency (2009–2017) constitute the cleanest documented case of *constructing* a sacred villain in modern American politics. The mechanism's components — identity-protective cognition, the backfire effect, sacralized boundary-drawing, and the democratic trap — are all visible because they ran on television, in real time, with polling data on every step. The MAGA movement documented in the next case study did not invent this architecture. It inherited and occupied it.
+The Affordable Care Act provides the clearest single data point. A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the same policy in greater numbers when they were told fellow Republicans endorsed it. The content didn't change; the team marker did.
 
 ### Birtherism: sacred belief untouched by evidence
 
@@ -260,7 +278,7 @@ A policy invented by the Heritage Foundation, co-sponsored by 19 Republican sena
 
 On February 13, 2016, Justice Antonin Scalia died. Within hours, Senate Majority Leader Mitch McConnell announced that the Senate would not consider any nominee Obama put forward, regardless of identity or qualifications. On March 16, 2016, Obama nominated Merrick Garland — a moderate jurist whom Republican senators, including Hatch, had previously praised as a consensus figure. The Senate held no hearings, no committee votes, no floor consideration for 293 days. The nomination expired when the new Congress convened on January 3, 2017. There was no clear precedent in modern Supreme Court history for a Senate refusing even to hold hearings on a nominee.
 
-The procedural innovation required the constituency to treat it as legitimate. They did. The same constituency now treats the *reverse* procedure (confirming nominees in an election year when the controlling party holds the Senate) as also legitimate, as demonstrated by the Barrett confirmation in October 2020 — 30 days before the election, with early voting already underway. The principle was never the principle. The principle was *whatever blocks the out-group.* Procedural neutrality has been sacralized in one direction and desacralized in the other, on the same population, within four years.
+The procedural innovation required the constituency to treat it as legitimate, and they did. The same constituency now treats the *reverse* procedure (confirming nominees in an election year when the controlling party holds the Senate) as also legitimate, as demonstrated by the Barrett confirmation in October 2020 — 30 days before the election, with early voting already underway. The stated principle ("the people deserve a voice in an election year") was never the operative principle; the operative principle was *whatever blocks the out-group.* Procedural neutrality was sacralized in one direction and desacralized in the other, on the same population, within four years.
 
 ### Blame-for-everything: attribution as identity-routing
 
@@ -284,15 +302,15 @@ This is Phase 2 of the three-phase pattern documented later in this argument: in
 
 ### Why this matters for the framework
 
-The Obama-hate period is the precondition for MAGA. The sacred-villain identity, the willingness to hold empirically refuted beliefs as loyalty markers, the procedural sacralization, the all-bad-things-route-through-one-person attribution pattern — these were the architecture into which Donald Trump stepped in 2015. He did not build them. He identified the constituency that wanted an explicit champion and named himself that champion. The framework predicts that once exclusionary identity architecture is in place, a charismatic actor will discover and occupy it. The next case study documents the occupation.
+The Obama-hate period is the precondition for MAGA. The sacred-villain identity, the willingness to hold empirically refuted beliefs as loyalty markers, the procedural sacralization, the all-bad-things-route-through-one-person attribution pattern — these were the architecture into which Donald Trump stepped in 2015. He did not build them. He identified the constituency that wanted an explicit champion and named himself that champion. Once exclusionary identity architecture is in place, a charismatic actor will discover and occupy it; the next case study documents the occupation.
 
 ---
 
 ## Case Study 3: MAGA and Western Right-Wing Populism (2015–Present)
 
-On August 8, 2022, the FBI executed a search warrant at Mar-a-Lago. Within days, Trump's primary polling lead expanded, Republican fundraising for him surged, and senators who had been quietly distancing themselves rushed to publicly reaffirm loyalty. A federal law-enforcement action that, in almost any other partisan context, would have been read as evidence of guilt was instead assimilated to the sacred identity as proof of persecution. The corresponding inward purge was already in progress: of the ten House Republicans who voted to impeach Donald Trump for the January 6th Capitol attack on January 13, 2021, eight were out of Congress within two years — four defeated in primaries by Trump-endorsed challengers, four retired under credible threat of one. Liz Cheney, daughter of a Republican Vice President and the third-ranking House Republican, lost her Wyoming primary 28.9% to 66.3%. Her challenger's central qualification was that she had not cast the impeachment vote. Between 2020 and 2024 the Republican policy platform did not move materially. What moved was the in-group boundary: personal loyalty to one man became the sacred marker of belonging, and impeachment was the heresy. The framework predicts both halves — external challenges to a sacred identity strengthen it; internal defectors are purged. Ordinary partisan-coalition models predict neither.
+Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates that religion's identity architecture can persist and function *after the religious belief itself has receded*.
 
-Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates the framework's prediction that religion's identity architecture can persist and function *after the religious belief itself has receded*.
+Two diagnostic events. When the FBI executed a search warrant at Mar-a-Lago on August 8, 2022, Trump's primary polling lead expanded within days, Republican fundraising surged, and senators who had been quietly distancing themselves rushed to publicly reaffirm loyalty. In almost any other partisan context, a federal law-enforcement action would register as evidence of guilt; here it was assimilated to the sacred identity as proof of persecution. Meanwhile, of the ten House Republicans who voted to impeach Trump for the January 6th Capitol attack, eight were out of Congress within two years — four defeated in primaries by Trump-endorsed challengers, four retired under credible threat of one. Liz Cheney, daughter of a Republican Vice President and the third-ranking House Republican, lost her Wyoming primary 28.9% to 66.3% to a challenger whose central qualification was that she had not cast the impeachment vote. Between 2020 and 2024 the Republican policy platform did not move materially. What moved was the in-group boundary: personal loyalty to one man became the sacred marker of belonging, and impeachment was the heresy. External challenges to a sacred identity strengthen it, and internal defectors are purged — exactly what the model predicts and exactly what ordinary partisan-coalition models do not.
 
 ### Religion as identity without belief
 
@@ -339,7 +357,7 @@ The fate of the ten House Republicans who voted to impeach Trump on January 13, 
 
 Eight of ten exited Congress within two years. The two survivors were both in jungle-primary states, where general-election crossover voters can outweigh primary-electorate penalties. In conventional closed-primary Republican districts, the penalty was 100%.
 
-This is the democratic trap in its purest form. Selection pressure runs in the wrong direction: the constituency punishes leaders who break with the sacred commitment, and the resulting cohort is more committed than the population that elected them. The same effect was documented in Atran's interviews with Israeli and Palestinian leaders ([Atran et al., 2007](#ref-atran-2007)) — here operating through American primary elections rather than constituency demonstrations.
+Selection pressure runs in the wrong direction: the constituency punishes leaders who break with the sacred commitment, and the resulting cohort is more committed than the population that elected them. The same effect was documented in Atran's interviews with Israeli and Palestinian leaders ([Atran et al., 2007](#ref-atran-2007)) — here operating through American primary elections rather than constituency demonstrations.
 
 ---
 
@@ -480,11 +498,11 @@ Lebanon demonstrates that *institutionalizing* exclusionary identity produces ch
 | South Sudan | Anti-Khartoum identity | Independence achieved | 2 years | Civil war, 400K dead |
 | Lebanon | Confessional system | Never collapsed | N/A | Chronic state weakness |
 
-**Speed correlates inversely with alternative binding structures.** India/Pakistan and Somalia reverted immediately; Yugoslavia took years because some institutional binding structures persisted.
+*Speed correlates inversely with alternative binding structures.* India/Pakistan and Somalia reverted immediately; Yugoslavia took years because some institutional binding structures persisted.
 
-**The binding structure's nature doesn't matter. Only its removal does.** Empires, personality cults, socialist federations, and shared enemies all function as binding identities. When removed without replacement, reversion occurs.
+The binding structure's nature doesn't appear to matter — only its removal does. Empires, personality cults, socialist federations, and shared enemies all function as binding identities, and when removed without replacement, reversion occurs.
 
-**Success can be as destructive as failure.** South Sudan collapsed because the binding project *succeeded*.
+Success can be as destructive as failure: South Sudan collapsed because the binding project *succeeded*.
 
 ---
 
@@ -500,7 +518,7 @@ Lebanon demonstrates that *institutionalizing* exclusionary identity produces ch
 | **Democratic trap** | Truman constrained | GOP constrained | Cannot report failures | Elites constrained | Leaders constrained |
 | **Religion required?** | No | No | No | Sometimes | Yes (mechanism is identity) |
 
-The mechanism operates identically across all five case categories regardless of whether the content is religious, secular, or hybrid.
+The same mechanism appears in all five categories regardless of whether the content is religious, secular, or hybrid.
 
 ---
 
@@ -588,7 +606,7 @@ But this reveals the deepest version of the trap: **exclusivist groups are selec
 
 If binding institutions prevent exclusivist groups from winning, then exclusivist groups have selective pressure to *undermine* those institutions. Brexit, nationalist attacks on the EU, populist attacks on international organizations, MAGA hostility to "globalism": these are micro-level actors correctly perceiving that macro-level institutions constrain their competitive advantage.
 
-The groups that would win without the referee have every incentive to eliminate the referee.
+Groups that would win without the referee have every incentive to eliminate the referee.
 
 ### The tipping point
 
@@ -599,17 +617,13 @@ The failed states evidence (Yugoslavia, Iraq, Somalia, South Sudan) demonstrates
 3. **The scale of required cooperation exceeds group boundaries.** Modern economies require cooperation networks larger than any exclusivist group can encompass.
 4. **Innovation becomes more important than mobilization.** In environments where adaptation matters more than cohesion, exclusivist groups lose.
 
-The mechanism is optimized for inter-group competition in small-scale societies with stable environments. It is catastrophically mismatched to modern conditions requiring large-scale cooperation, rapid adaptation, and institutional constraint on group competition.
-
-The groups that win the competition destroy the arena in which they are competing.
+The mechanism is optimized for inter-group competition in small-scale societies with stable environments. It is catastrophically mismatched to modern conditions, which require large-scale cooperation, rapid adaptation, and institutional constraint on group competition. The groups that win the local competition destroy the arena that lets the competition happen at all.
 
 ---
 
 ## Intentional Deployment and the Sacralization Escape
 
-Is the exclusionary identity mechanism exploited deliberately by political entrepreneurs, or does it emerge accidentally from structural conditions?
-
-Both. The interaction between them is the framework's most policy-relevant finding. The cognitive substrate is evolved and permanent (accidental). Its exploitation by political entrepreneurs is calculated and strategic (intentional). But once activated beyond a threshold, the mechanism sacralizes and **escapes the control of those who initiated it**.
+Is the exclusionary identity mechanism exploited deliberately by political entrepreneurs, or does it emerge accidentally from structural conditions? Both, and how the two interact is what makes the dynamic so hard to contain. The cognitive substrate is evolved and permanent; its exploitation by political entrepreneurs is calculated and strategic; and once activated beyond a threshold, the mechanism sacralizes and escapes the control of whoever initiated it.
 
 ### Evidence of intentional deployment
 
@@ -629,7 +643,7 @@ Both. The interaction between them is the framework's most policy-relevant findi
 
 The neural mechanism explains why: fMRI studies show that once values become sacred, cost-benefit regions (dlPFC, IFG, parietal cortex) show *diminished* activity while threat-response regions activate ([Hamid et al., 2019](#ref-hamid-2019)). The constituency is no longer calculating; they are defending identity. The entrepreneur's rational de-escalation triggers the same neural response as external attack.
 
-This is the democratic trap closing on the manipulator. Examples: Milošević could not accept peace in 1992–93 even when it would have served his interests. Trump could not concede 2020 because the constituency's commitment had sacralized. Hutu Power escalated to genocide, an outcome serving no instrumental purpose.
+This is the democratic trap closing on the manipulator: Milošević could not accept peace in 1992–93 even when it would have served his interests, Trump could not concede 2020 because the constituency's commitment had sacralized, and Hutu Power escalated to genocide despite the outcome serving no instrumental purpose.
 
 **Phase 3: Autonomous self-reinforcement.** The sacralized identity self-reinforces through the feedback loop. The original instrumental purpose is forgotten. The entrepreneur is either consumed by the fire they started or becomes a figurehead for a movement that has outgrown them. Examples: Milošević at The Hague; Hitler in the bunker; the Kim dynasty maintaining Juche across three generations.
 
@@ -639,15 +653,13 @@ The American two-party system is a *minimal group paradigm at national scale*. I
 
 The "Big Sort" documents the result: Americans have self-segregated along partisan lines so that party identity now correlates with religion, race, geography, education, media consumption, and cultural values simultaneously ([Bishop, 2008](#ref-bishop-2008)). Partisan identity has achieved the structural features of religious identity: comprehensive, hard to exit, and self-reinforcing.
 
-The framework predicts that in a two-party system, political entrepreneurs will always be structurally incentivized to deploy demonization because the binary structure guarantees a ready-made outgroup. The only durable intervention is structural reform (ranked-choice voting, multi-member districts, proportional representation) that creates institutional space for cross-cutting identities.
+In a two-party system, political entrepreneurs are structurally incentivized to deploy demonization, because the binary structure guarantees a ready-made outgroup. The only durable intervention is structural reform (ranked-choice voting, multi-member districts, proportional representation) that creates institutional space for cross-cutting identities.
 
 ### Who controls the mechanism?
 
-The deeper truth is that **both the deployer and the deployed are instruments of the mechanism itself.** The exclusionary identity mechanism does not serve any actor's instrumental purposes once it sacralizes. It serves its own reproductive logic: demonization, then sacralization, then identity hardening, then further demonization.
+Once exclusionary identity sacralizes, it stops serving any actor's instrumental purposes and starts serving its own reproductive logic: demonization, then sacralization, then identity hardening, then further demonization. Both the deployer and the deployed end up subordinate to the dynamic they entered.
 
 The donor class thought they were using populism. Trump thought he was using the Republican Party. The MAGA base thinks it is defending its way of life. All three are correct about their instrumental purposes, and all three are being carried by a mechanism operating independently of their intentions.
-
-The useful idiot is everyone who thinks they are using the mechanism. The mechanism is using them.
 
 ---
 
@@ -671,6 +683,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 <a id="ref-baumeister-1995"></a>
 **Baumeister, R. F., & Leary, M. R. (1995).** The need to belong: Desire for interpersonal attachments as a fundamental human motivation. *Psychological Bulletin*, 117(3), 497–529. https://doi.org/10.1037/0033-2909.117.3.497
 
+<a id="ref-anderson-2014"></a>
+**Anderson, A. H. (2014).** *An Introduction to Pentecostalism: Global Charismatic Christianity* (2nd ed.). Cambridge University Press. https://doi.org/10.1017/CBO9781139583450
+
 <a id="ref-atran-2016"></a>
 **Atran, S. (2016).** The devoted actor: Unconditional commitment and intractable conflict across cultures. *Current Anthropology*, 57(S13), S192–S203. https://www.journals.uchicago.edu/doi/full/10.1086/685495
 
@@ -682,6 +697,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-atran-ginges-2012"></a>
 **Atran, S., & Ginges, J. (2012).** Religious and sacred imperatives in human conflict. *Science*, 336(6083), 855–857. https://www.science.org/doi/10.1126/science.1216902
+
+<a id="ref-barker-1984"></a>
+**Barker, E. (1984).** *The Making of a Moonie: Choice or Brainwashing?* Oxford: Blackwell. ISBN 0-631-13246-5.
 
 <a id="ref-baron-1997"></a>
 **Baron, J., & Spranca, M. (1997).** Protected values. *Organizational Behavior and Human Decision Processes*, 70(1), 1–16. https://www.sciencedirect.com/science/article/abs/pii/S074959789792690X
@@ -727,6 +745,12 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-cooper-2019"></a>
 **Cooper, J., Feldman, L. A., & Blackman, S. F. (2019).** Influencing Republicans' and Democrats' attitudes toward Obamacare. *Journal of Social Psychology*, 159(1), 112–117. https://pubmed.ncbi.nlm.nih.gov/29659334/
+
+<a id="ref-cova-2002"></a>
+**Cova, B., & Cova, V. (2002).** Tribal marketing: The tribalisation of society and its impact on the conduct of marketing. *European Journal of Marketing*, 36(5/6), 595–620. https://doi.org/10.1108/03090560210423023
+
+<a id="ref-cox-1995"></a>
+**Cox, H. (1995).** *Fire from Heaven: The Rise of Pentecostal Spirituality and the Reshaping of Religion in the Twenty-First Century*. Reading, MA: Addison-Wesley. ISBN 978-0-201-62656-8.
 
 <a id="ref-cremer-2023"></a>
 **Cremer, T. (2023).** *The Godless Crusade: Religion, Populism and Right-Wing Identity Politics in the West*. Cambridge University Press.
@@ -803,6 +827,15 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 <a id="ref-iannaccone-1994"></a>
 **Iannaccone, L. R. (1994).** Why strict churches are strong. *American Journal of Sociology*, 99(5), 1180–1211. https://www.journals.uchicago.edu/doi/abs/10.1086/230409
 
+<a id="ref-iyengar-2012"></a>
+**Iyengar, S., Sood, G., & Lelkes, Y. (2012).** Affect, not ideology: A social identity perspective on polarization. *Public Opinion Quarterly*, 76(3), 405–431. https://doi.org/10.1093/poq/nfs038
+
+<a id="ref-iyengar-2015"></a>
+**Iyengar, S., & Westwood, S. J. (2015).** Fear and loathing across party lines: New evidence on group polarization. *American Journal of Political Science*, 59(3), 690–707. https://doi.org/10.1111/ajps.12152
+
+<a id="ref-iyengar-2019"></a>
+**Iyengar, S., Lelkes, Y., Levendusky, M., Malhotra, N., & Westwood, S. J. (2019).** The origins and consequences of affective polarization in the United States. *Annual Review of Political Science*, 22, 129–146. https://doi.org/10.1146/annurev-polisci-051117-073034
+
 <a id="ref-janis-1972"></a>
 **Janis, I. L. (1972).** *Victims of Groupthink: A Psychological Study of Foreign-Policy Decisions and Fiascoes*. Houghton Mifflin.
 
@@ -836,11 +869,23 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 <a id="ref-kunst-2019"></a>
 **Kunst, J. R., Dovidio, J. F., & Thomsen, L. (2019).** Fusion with political leaders predicts willingness to persecute immigrants and political opponents. *Nature Human Behaviour*, 3(11), 1180–1189. https://www.nature.com/articles/s41562-019-0708-1
 
+<a id="ref-lalich-2004"></a>
+**Lalich, J. (2004).** *Bounded Choice: True Believers and Charismatic Cults*. Berkeley: University of California Press. ISBN 978-0-520-24018-6.
+
+<a id="ref-lofland-1965"></a>
+**Lofland, J., & Stark, R. (1965).** Becoming a world-saver: A theory of conversion to a deviant perspective. *American Sociological Review*, 30(6), 862–875. https://doi.org/10.2307/2090965
+
 <a id="ref-malesevic-2024"></a>
 **Malešević, S. (2024).** Grounding civic nationhood: The rise and fall of Yugoslav nationalism, 1918–91. *Canadian Slavonic Papers*. https://doi.org/10.1080/00085006.2024.2357057
 
 <a id="ref-martel-2024"></a>
 **Martel, F. A., Moniz, P., Ashokkumar, A., & Swann, W. B. (2024).** Identity fusion and support for political authoritarianism: Lessons from the U.S. insurrection of 2021. *Political Psychology*. https://onlinelibrary.wiley.com/doi/abs/10.1111/pops.12979
+
+<a id="ref-mason-2018"></a>
+**Mason, L. (2018).** *Uncivil Agreement: How Politics Became Our Identity*. University of Chicago Press. ISBN 978-0-226-52454-2.
+
+<a id="ref-mcalexander-2002"></a>
+**McAlexander, J. H., Schouten, J. W., & Koenig, H. F. (2002).** Building brand community. *Journal of Marketing*, 66(1), 38–54. https://doi.org/10.1509/jmkg.66.1.38.18451
 
 <a id="ref-medin-2009"></a>
 **Medin, D. L., & Sachdeva, S. (2009).** Group Identity Salience in Sacred Value Based Cultural Conflict. *Proceedings of the 31st Annual Conference of the Cognitive Science Society*. https://escholarship.org/uc/item/87h4g4q5
@@ -851,6 +896,18 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 <a id="ref-moniz-2025"></a>
 **Moniz, P., & Swann, W. B. (2025).** The power of Trump's big lie: Identity fusion, internalizing misinformation, and support for Trump. *PS: Political Science & Politics*. https://www.cambridge.org/core/journals/ps-political-science-and-politics/article/power-of-trumps-big-lie-identity-fusion-internalizing-misinformation-and-support-for-trump/AF2A0DBE08319E0E3944825E187EDBCC
 
+<a id="ref-muniz-2001"></a>
+**Muniz, A. M., Jr., & O'Guinn, T. C. (2001).** Brand community. *Journal of Consumer Research*, 27(4), 412–432. https://doi.org/10.1086/319618
+
+<a id="ref-newson-2016"></a>
+**Newson, M., Buhrmester, M., & Whitehouse, H. (2016).** Explaining lifelong loyalty: The role of identity fusion and self-shaping group events. *PLoS ONE*, 11(8), e0160427. https://doi.org/10.1371/journal.pone.0160427
+
+<a id="ref-newson-2018"></a>
+**Newson, M., Bortolini, T., Buhrmester, M., da Silva, S. R., da Aquino, J. N. Q., & Whitehouse, H. (2018).** Brazil's football warriors: Social bonding and intergroup violence. *Evolution and Human Behavior*, 39(6), 675–683. https://doi.org/10.1016/j.evolhumbehav.2018.06.010
+
+<a id="ref-newson-2020"></a>
+**Newson, M., Shiramizu, V., Buhrmester, M., Hattori, W., Jong, J., Yamamoto, M. E., & Whitehouse, H. (2020).** Devoted fans release more cortisol when watching live soccer matches. *Stress and Health*, 36(2), 220–227. https://doi.org/10.1002/smi.2924
+
 <a id="ref-norenzayan-2013"></a>
 **Norenzayan, A. (2013).** *Big gods: How religion transformed cooperation and conflict*. Princeton University Press.
 
@@ -859,6 +916,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-ozzano-2025"></a>
 **Ozzano, L. (2025).** Right-wing populist parties as agents of religionization or secularization? *Religions*, 16(12), 1521. https://www.mdpi.com/2077-1444/16/12/1521
+
+<a id="ref-pew-2006"></a>
+**Pew Research Center. (2006).** *Spirit and Power: A 10-Country Survey of Pentecostals*. Pew Forum on Religion & Public Life. https://www.pewresearch.org/religion/2006/10/05/spirit-and-power/
 
 <a id="ref-pew-2015"></a>
 **Pew Research Center. (2015).** America's Changing Religious Landscape. https://www.pewresearch.org/religion/2015/05/12/americas-changing-religious-landscape/
@@ -872,6 +932,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 <a id="ref-posner-2007"></a>
 **Posner, D. N. (2007).** Regime change and ethnic cleavages in Africa. *Comparative Political Studies*, 40(11), 1302–1327. http://danielnposner.com/wp-content/uploads/2015/11/Posner-2007.pdf
 
+<a id="ref-pratt-2000"></a>
+**Pratt, M. G. (2000).** The good, the bad, and the ambivalent: Managing identification among Amway distributors. *Administrative Science Quarterly*, 45(3), 456–493. https://doi.org/10.2307/2667106
+
 <a id="ref-rfi"></a>
 **Religious Freedom Institute.** Proselytism or a global ethic? https://religiousfreedominstitute.org/2016-7-12-proselytism-or-a-global-ethic/
 
@@ -880,6 +943,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-salloukh-2015"></a>
 **Salloukh, B. F., et al. (2015).** *The Politics of Sectarianism in Postwar Lebanon*. Pluto Press.
+
+<a id="ref-schau-2009"></a>
+**Schau, H. J., Muñiz, A. M., Jr., & Arnould, E. J. (2009).** How brand community practices create value. *Journal of Marketing*, 73(5), 30–51. https://doi.org/10.1509/jmkg.73.5.30
 
 <a id="ref-schaafsma-2012"></a>
 **Schaafsma, J., & Williams, K. D. (2012).** Exclusion, intergroup hostility, and religious fundamentalism. *Journal of Experimental Social Psychology*, 48(4), 829–837. https://doi.org/10.1016/j.jesp.2012.02.015
@@ -895,6 +961,9 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-sheikh-2016"></a>
 **Sheikh, H., Gómez, Á., & Atran, S. (2016).** Empirical evidence for the devoted actor model. *Current Anthropology*, 57(S13), S204–S209. https://www.journals.uchicago.edu/doi/full/10.1086/686221
+
+<a id="ref-snow-1980"></a>
+**Snow, D. A., Zurcher, L. A., Jr., & Ekland-Olson, S. (1980).** Social networks and social movements: A microstructural approach to differential recruitment. *American Sociological Review*, 45(5), 787–801. https://doi.org/10.2307/2094895
 
 <a id="ref-soyfer-1994"></a>
 **Soyfer, V. N. (1994).** *Lysenko and the Tragedy of Soviet Science*. Rutgers University Press.
@@ -916,6 +985,12 @@ The useful idiot is everyone who thinks they are using the mechanism. The mechan
 
 <a id="ref-voas-2012"></a>
 **Voas, D., & Storm, I. (2012).** The intergenerational transmission of religious service attendance. *Nordic Journal of Religion and Society*, 25(2), 131–150. https://www.scup.com/doi/10.18261/ISSN1890-7008-2012-02-02
+
+<a id="ref-whitehouse-2014"></a>
+**Whitehouse, H., McQuinn, B., Buhrmester, M., & Swann, W. B., Jr. (2014).** Brothers in arms: Libyan revolutionaries bond like family. *Proceedings of the National Academy of Sciences*, 111(50), 17783–17785. https://doi.org/10.1073/pnas.1416284111
+
+<a id="ref-whitehouse-lanman-2014"></a>
+**Whitehouse, H., & Lanman, J. A. (2014).** The ties that bind us: Ritual, fusion, and identification. *Current Anthropology*, 55(6), 674–695. https://doi.org/10.1086/678698
 
 <a id="ref-whitfield-1991"></a>
 **Whitfield, S. J. (1991).** *The Culture of the Cold War*. Johns Hopkins University Press.
