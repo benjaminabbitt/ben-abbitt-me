@@ -71,9 +71,7 @@ The antisocial contract inverts each term:
 | **What it produces** | Cooperation across group boundaries | Sacralization within group boundaries |
 | **What it costs** | Some individual autonomy | The capacity to reason about the group's commitments |
 
-The need to belong motivates signing. Cognitive ease makes the terms feel costless. Fear of ostracism makes defection unthinkable. Collective narcissism makes the whole package feel like elevation rather than submission. The result is a population that holds group positions with conviction disproportionate to their independent evaluation, and that will punish members who break the silence. This is the precondition for step 4: once enough members hold a belief with enough apparent conviction, the belief becomes sacred. Not because anyone decided it should be, but because the social dynamics made questioning it too costly and defending it too easy.
-
-The social contract enables strangers to cooperate. The antisocial contract enables groups to stop thinking.
+The need to belong motivates signing. Cognitive ease makes the terms feel costless. Fear of ostracism makes defection unthinkable. Collective narcissism makes the whole package feel like elevation rather than submission. The result is a population that holds group positions with conviction disproportionate to their independent evaluation, and that will punish members who break the silence. This is the precondition for step 4: once enough members hold a belief with enough apparent conviction, the belief becomes sacred — not because anyone decided it should be, but because the social dynamics made questioning it too costly and defending it too easy.
 
 ### 4. Offering people money to compromise on sacred values makes them angrier, not more flexible
 
@@ -168,9 +166,9 @@ The practical consequence is that group-based remedies acquire immunity from emp
 
 Campbell and Manning documented the broader cultural shift in which this operates. In what they term "victimhood culture," moral status is conferred by membership in groups defined by historical suffering. Victimhood becomes a social resource that can be mobilized to make demands, win arguments, and foreclose criticism. Critically, this creates competitive dynamics in which even privileged individuals seek to claim victim status ([Campbell & Manning, 2014](#ref-campbell-2014)). The moral framework structurally prevents the question "is this remedy achieving equal outcomes?" from being asked, because asking it challenges the sacred status of the victim group.
 
-This is, in the framework's terms, religious thinking applied to secular policy. Not religious in content, but religious in structure: a moral hierarchy of sacred and profane groups, a set of unchallengeable commitments, and a punishment mechanism (social ostracism, professional consequences) for heresy. The mechanism is identical to every other case in this document. The content is progressive rather than conservative. The cognitive architecture is the same.
+This is, in the framework's terms, religious thinking applied to secular policy — not in content but in structure: a moral hierarchy of sacred and profane groups, a set of unchallengeable commitments, and a punishment mechanism (social ostracism, professional consequences) for heresy. The cognitive architecture is the same as in every other case in this document; only the content has been swapped from conservative to progressive.
 
-The point is not that historical injustice is fabricated, or that remedy is unnecessary. The point is that the sacralization mechanism has captured the *form* of the remedy and made it immune to the empirical evaluation that would tell us whether it is actually producing the equality it claims to pursue. When smart people cannot ask whether a policy is working without being accused of bigotry, analytical capacity has been redirected from evaluation to defense. That is step 5 of the causal chain, operating on the left.
+None of this implies that historical injustice is fabricated or that remedy is unnecessary. The claim is narrower: the sacralization mechanism has captured the *form* of the remedy and made it immune to the empirical evaluation that would tell us whether it is actually producing the equality it claims to pursue. When smart people cannot ask whether a policy is working without being accused of bigotry, analytical capacity has been redirected from evaluation to defense. That is step 5 of the causal chain, operating on the left.
 
 ---
 
@@ -198,9 +196,9 @@ Secular values (human life, health, nature, human rights) produce the same moral
 
 ## Case Study 1: The Cold War (1947–1991)
 
-Two superpowers, each convinced the other was a civilizational threat, spent forty-five years escalating weapons capable of ending civilization — while their best analysts produced confident, technical descriptions of an enemy that did not exist in the shape they were drawing. Bomber gaps. Missile gaps. Domino theory. None of it survived contact with declassified evidence. All of it was treated as obvious at the time, by intelligent people working in good faith. The framework predicts exactly this.
-
 The Cold War is the cleanest test of the framework because it involves two explicitly secular ideologies (Marxism-Leninism and liberal democratic capitalism) producing the same domain-specific rationality suppression documented in the religious sacred-values literature. If the mechanism were religion-specific, it should not appear here. It does.
+
+Two superpowers, each convinced the other was a civilizational threat, spent forty-five years escalating weapons capable of ending civilization while their best analysts produced confident, technical descriptions of an enemy that did not exist in the shape they were drawing — bomber gaps, missile gaps, domino theory. None of it survived contact with declassified evidence. All of it was treated as obvious at the time, by intelligent people working in good faith.
 
 ### Sacralization of secular ideology
 
@@ -222,15 +220,15 @@ Once "anti-communism" became a sacred identity rather than a policy position, an
 
 Vietnam demonstrated the terminal case. By 1967, internal Pentagon analysis showed the war was unwinnable and the domino theory was empirically unsupported. But the sacralized anti-communist identity made withdrawal politically impossible. The sacred value ("we cannot let communism advance") overrode the instrumental assessment ("this war is not achieving its objectives"). Three more years and tens of thousands of additional deaths followed before the sacred-value lock could be broken. Even then, it required a leader (Nixon) whose anti-communist credentials were too strong to challenge. Only Nixon could go to China because only Nixon's sacred-value identity was unassailable enough to survive a heterodox act ([Ellsberg, 2002](#ref-ellsberg-2002)).
 
-The mechanism operates identically in non-democratic systems. Soviet leadership sustained a command economy long past evident failure because abandoning it meant abandoning the sacred narrative. Gorbachev's reforms prompted a coup attempt by hardliners in August 1991, demonstrating that sacred-value constituencies attempt to remove leaders who make rational concessions regardless of formal political structure ([Kornai, 1992](#ref-kornai-1992); [Brown, 1996](#ref-brown-1996)).
+Non-democratic systems show the same pattern. Soviet leadership sustained a command economy long past evident failure because abandoning it meant abandoning the sacred narrative. Gorbachev's reforms prompted a coup attempt by hardliners in August 1991, demonstrating that sacred-value constituencies attempt to remove leaders who make rational concessions regardless of formal political structure ([Kornai, 1992](#ref-kornai-1992); [Brown, 1996](#ref-brown-1996)).
 
 ---
 
 ## Case Study 2: Obama as Sacred Villain (2008–2016)
 
-A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor, swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the Affordable Care Act in greater numbers when they were told fellow Republicans endorsed it — even though the policy's content did not change. This is sacralization in real time, in a population, on a stopwatch. The framework explains why an issue moved 31 points without any of the underlying facts moving at all.
+The eight years of the Obama presidency (2009–2017) constitute the cleanest documented case of *constructing* a sacred villain in modern American politics. Identity-protective cognition, the backfire effect, sacralized boundary-drawing, and the democratic trap are all visible in this case because they ran on television, in real time, with polling data on every step. The MAGA movement documented in the next case study did not invent this architecture; it inherited and occupied it.
 
-The label that produced the swing was "Obamacare." The eight years of the Obama presidency (2009–2017) constitute the cleanest documented case of *constructing* a sacred villain in modern American politics. The mechanism's components — identity-protective cognition, the backfire effect, sacralized boundary-drawing, and the democratic trap — are all visible because they ran on television, in real time, with polling data on every step. The MAGA movement documented in the next case study did not invent this architecture. It inherited and occupied it.
+The Affordable Care Act provides the clearest single data point. A policy invented by Republicans, co-sponsored by 19 Republican senators, and implemented by a Republican governor swung 20–31 points in Republican approval based solely on whether it carried a Democratic president's name. Republican voters supported the same policy in greater numbers when they were told fellow Republicans endorsed it. The content didn't change; the team marker did.
 
 ### Birtherism: sacred belief untouched by evidence
 
@@ -260,7 +258,7 @@ A policy invented by the Heritage Foundation, co-sponsored by 19 Republican sena
 
 On February 13, 2016, Justice Antonin Scalia died. Within hours, Senate Majority Leader Mitch McConnell announced that the Senate would not consider any nominee Obama put forward, regardless of identity or qualifications. On March 16, 2016, Obama nominated Merrick Garland — a moderate jurist whom Republican senators, including Hatch, had previously praised as a consensus figure. The Senate held no hearings, no committee votes, no floor consideration for 293 days. The nomination expired when the new Congress convened on January 3, 2017. There was no clear precedent in modern Supreme Court history for a Senate refusing even to hold hearings on a nominee.
 
-The procedural innovation required the constituency to treat it as legitimate. They did. The same constituency now treats the *reverse* procedure (confirming nominees in an election year when the controlling party holds the Senate) as also legitimate, as demonstrated by the Barrett confirmation in October 2020 — 30 days before the election, with early voting already underway. The principle was never the principle. The principle was *whatever blocks the out-group.* Procedural neutrality has been sacralized in one direction and desacralized in the other, on the same population, within four years.
+The procedural innovation required the constituency to treat it as legitimate, and they did. The same constituency now treats the *reverse* procedure (confirming nominees in an election year when the controlling party holds the Senate) as also legitimate, as demonstrated by the Barrett confirmation in October 2020 — 30 days before the election, with early voting already underway. The stated principle ("the people deserve a voice in an election year") was never the operative principle; the operative principle was *whatever blocks the out-group.* Procedural neutrality was sacralized in one direction and desacralized in the other, on the same population, within four years.
 
 ### Blame-for-everything: attribution as identity-routing
 
@@ -284,15 +282,15 @@ This is Phase 2 of the three-phase pattern documented later in this argument: in
 
 ### Why this matters for the framework
 
-The Obama-hate period is the precondition for MAGA. The sacred-villain identity, the willingness to hold empirically refuted beliefs as loyalty markers, the procedural sacralization, the all-bad-things-route-through-one-person attribution pattern — these were the architecture into which Donald Trump stepped in 2015. He did not build them. He identified the constituency that wanted an explicit champion and named himself that champion. The framework predicts that once exclusionary identity architecture is in place, a charismatic actor will discover and occupy it. The next case study documents the occupation.
+The Obama-hate period is the precondition for MAGA. The sacred-villain identity, the willingness to hold empirically refuted beliefs as loyalty markers, the procedural sacralization, the all-bad-things-route-through-one-person attribution pattern — these were the architecture into which Donald Trump stepped in 2015. He did not build them. He identified the constituency that wanted an explicit champion and named himself that champion. Once exclusionary identity architecture is in place, a charismatic actor will discover and occupy it; the next case study documents the occupation.
 
 ---
 
 ## Case Study 3: MAGA and Western Right-Wing Populism (2015–Present)
 
-On August 8, 2022, the FBI executed a search warrant at Mar-a-Lago. Within days, Trump's primary polling lead expanded, Republican fundraising for him surged, and senators who had been quietly distancing themselves rushed to publicly reaffirm loyalty. A federal law-enforcement action that, in almost any other partisan context, would have been read as evidence of guilt was instead assimilated to the sacred identity as proof of persecution. The corresponding inward purge was already in progress: of the ten House Republicans who voted to impeach Donald Trump for the January 6th Capitol attack on January 13, 2021, eight were out of Congress within two years — four defeated in primaries by Trump-endorsed challengers, four retired under credible threat of one. Liz Cheney, daughter of a Republican Vice President and the third-ranking House Republican, lost her Wyoming primary 28.9% to 66.3%. Her challenger's central qualification was that she had not cast the impeachment vote. Between 2020 and 2024 the Republican policy platform did not move materially. What moved was the in-group boundary: personal loyalty to one man became the sacred marker of belonging, and impeachment was the heresy. The framework predicts both halves — external challenges to a sacred identity strengthen it; internal defectors are purged. Ordinary partisan-coalition models predict neither.
+Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates that religion's identity architecture can persist and function *after the religious belief itself has receded*.
 
-Modern Western right-wing populism provides a real-time case of the exclusionary identity mechanism operating through a hybrid of religious identity markers and secular grievance. It demonstrates the framework's prediction that religion's identity architecture can persist and function *after the religious belief itself has receded*.
+Two diagnostic events. When the FBI executed a search warrant at Mar-a-Lago on August 8, 2022, Trump's primary polling lead expanded within days, Republican fundraising surged, and senators who had been quietly distancing themselves rushed to publicly reaffirm loyalty. In almost any other partisan context, a federal law-enforcement action would register as evidence of guilt; here it was assimilated to the sacred identity as proof of persecution. Meanwhile, of the ten House Republicans who voted to impeach Trump for the January 6th Capitol attack, eight were out of Congress within two years — four defeated in primaries by Trump-endorsed challengers, four retired under credible threat of one. Liz Cheney, daughter of a Republican Vice President and the third-ranking House Republican, lost her Wyoming primary 28.9% to 66.3% to a challenger whose central qualification was that she had not cast the impeachment vote. Between 2020 and 2024 the Republican policy platform did not move materially. What moved was the in-group boundary: personal loyalty to one man became the sacred marker of belonging, and impeachment was the heresy. External challenges to a sacred identity strengthen it, and internal defectors are purged — exactly what the model predicts and exactly what ordinary partisan-coalition models do not.
 
 ### Religion as identity without belief
 
@@ -339,7 +337,7 @@ The fate of the ten House Republicans who voted to impeach Trump on January 13, 
 
 Eight of ten exited Congress within two years. The two survivors were both in jungle-primary states, where general-election crossover voters can outweigh primary-electorate penalties. In conventional closed-primary Republican districts, the penalty was 100%.
 
-This is the democratic trap in its purest form. Selection pressure runs in the wrong direction: the constituency punishes leaders who break with the sacred commitment, and the resulting cohort is more committed than the population that elected them. The same effect was documented in Atran's interviews with Israeli and Palestinian leaders ([Atran et al., 2007](#ref-atran-2007)) — here operating through American primary elections rather than constituency demonstrations.
+Selection pressure runs in the wrong direction: the constituency punishes leaders who break with the sacred commitment, and the resulting cohort is more committed than the population that elected them. The same effect was documented in Atran's interviews with Israeli and Palestinian leaders ([Atran et al., 2007](#ref-atran-2007)) — here operating through American primary elections rather than constituency demonstrations.
 
 ---
 
@@ -480,11 +478,11 @@ Lebanon demonstrates that *institutionalizing* exclusionary identity produces ch
 | South Sudan | Anti-Khartoum identity | Independence achieved | 2 years | Civil war, 400K dead |
 | Lebanon | Confessional system | Never collapsed | N/A | Chronic state weakness |
 
-**Speed correlates inversely with alternative binding structures.** India/Pakistan and Somalia reverted immediately; Yugoslavia took years because some institutional binding structures persisted.
+*Speed correlates inversely with alternative binding structures.* India/Pakistan and Somalia reverted immediately; Yugoslavia took years because some institutional binding structures persisted.
 
-**The binding structure's nature doesn't matter. Only its removal does.** Empires, personality cults, socialist federations, and shared enemies all function as binding identities. When removed without replacement, reversion occurs.
+The binding structure's nature doesn't appear to matter — only its removal does. Empires, personality cults, socialist federations, and shared enemies all function as binding identities, and when removed without replacement, reversion occurs.
 
-**Success can be as destructive as failure.** South Sudan collapsed because the binding project *succeeded*.
+Success can be as destructive as failure: South Sudan collapsed because the binding project *succeeded*.
 
 ---
 
@@ -500,7 +498,7 @@ Lebanon demonstrates that *institutionalizing* exclusionary identity produces ch
 | **Democratic trap** | Truman constrained | GOP constrained | Cannot report failures | Elites constrained | Leaders constrained |
 | **Religion required?** | No | No | No | Sometimes | Yes (mechanism is identity) |
 
-The mechanism operates identically across all five case categories regardless of whether the content is religious, secular, or hybrid.
+The same mechanism appears in all five categories regardless of whether the content is religious, secular, or hybrid.
 
 ---
 
@@ -588,7 +586,7 @@ But this reveals the deepest version of the trap: **exclusivist groups are selec
 
 If binding institutions prevent exclusivist groups from winning, then exclusivist groups have selective pressure to *undermine* those institutions. Brexit, nationalist attacks on the EU, populist attacks on international organizations, MAGA hostility to "globalism": these are micro-level actors correctly perceiving that macro-level institutions constrain their competitive advantage.
 
-The groups that would win without the referee have every incentive to eliminate the referee.
+Groups that would win without the referee have every incentive to eliminate the referee.
 
 ### The tipping point
 
@@ -599,17 +597,13 @@ The failed states evidence (Yugoslavia, Iraq, Somalia, South Sudan) demonstrates
 3. **The scale of required cooperation exceeds group boundaries.** Modern economies require cooperation networks larger than any exclusivist group can encompass.
 4. **Innovation becomes more important than mobilization.** In environments where adaptation matters more than cohesion, exclusivist groups lose.
 
-The mechanism is optimized for inter-group competition in small-scale societies with stable environments. It is catastrophically mismatched to modern conditions requiring large-scale cooperation, rapid adaptation, and institutional constraint on group competition.
-
-The groups that win the competition destroy the arena in which they are competing.
+The mechanism is optimized for inter-group competition in small-scale societies with stable environments. It is catastrophically mismatched to modern conditions, which require large-scale cooperation, rapid adaptation, and institutional constraint on group competition. The groups that win the local competition destroy the arena that lets the competition happen at all.
 
 ---
 
 ## Intentional Deployment and the Sacralization Escape
 
-Is the exclusionary identity mechanism exploited deliberately by political entrepreneurs, or does it emerge accidentally from structural conditions?
-
-Both. The interaction between them is the framework's most policy-relevant finding. The cognitive substrate is evolved and permanent (accidental). Its exploitation by political entrepreneurs is calculated and strategic (intentional). But once activated beyond a threshold, the mechanism sacralizes and **escapes the control of those who initiated it**.
+Is the exclusionary identity mechanism exploited deliberately by political entrepreneurs, or does it emerge accidentally from structural conditions? Both, and how the two interact is what makes the dynamic so hard to contain. The cognitive substrate is evolved and permanent; its exploitation by political entrepreneurs is calculated and strategic; and once activated beyond a threshold, the mechanism sacralizes and escapes the control of whoever initiated it.
 
 ### Evidence of intentional deployment
 
@@ -629,7 +623,7 @@ Both. The interaction between them is the framework's most policy-relevant findi
 
 The neural mechanism explains why: fMRI studies show that once values become sacred, cost-benefit regions (dlPFC, IFG, parietal cortex) show *diminished* activity while threat-response regions activate ([Hamid et al., 2019](#ref-hamid-2019)). The constituency is no longer calculating; they are defending identity. The entrepreneur's rational de-escalation triggers the same neural response as external attack.
 
-This is the democratic trap closing on the manipulator. Examples: Milošević could not accept peace in 1992–93 even when it would have served his interests. Trump could not concede 2020 because the constituency's commitment had sacralized. Hutu Power escalated to genocide, an outcome serving no instrumental purpose.
+This is the democratic trap closing on the manipulator: Milošević could not accept peace in 1992–93 even when it would have served his interests, Trump could not concede 2020 because the constituency's commitment had sacralized, and Hutu Power escalated to genocide despite the outcome serving no instrumental purpose.
 
 **Phase 3: Autonomous self-reinforcement.** The sacralized identity self-reinforces through the feedback loop. The original instrumental purpose is forgotten. The entrepreneur is either consumed by the fire they started or becomes a figurehead for a movement that has outgrown them. Examples: Milošević at The Hague; Hitler in the bunker; the Kim dynasty maintaining Juche across three generations.
 
@@ -639,15 +633,13 @@ The American two-party system is a *minimal group paradigm at national scale*. I
 
 The "Big Sort" documents the result: Americans have self-segregated along partisan lines so that party identity now correlates with religion, race, geography, education, media consumption, and cultural values simultaneously ([Bishop, 2008](#ref-bishop-2008)). Partisan identity has achieved the structural features of religious identity: comprehensive, hard to exit, and self-reinforcing.
 
-The framework predicts that in a two-party system, political entrepreneurs will always be structurally incentivized to deploy demonization because the binary structure guarantees a ready-made outgroup. The only durable intervention is structural reform (ranked-choice voting, multi-member districts, proportional representation) that creates institutional space for cross-cutting identities.
+In a two-party system, political entrepreneurs are structurally incentivized to deploy demonization, because the binary structure guarantees a ready-made outgroup. The only durable intervention is structural reform (ranked-choice voting, multi-member districts, proportional representation) that creates institutional space for cross-cutting identities.
 
 ### Who controls the mechanism?
 
-The deeper truth is that **both the deployer and the deployed are instruments of the mechanism itself.** The exclusionary identity mechanism does not serve any actor's instrumental purposes once it sacralizes. It serves its own reproductive logic: demonization, then sacralization, then identity hardening, then further demonization.
+Once exclusionary identity sacralizes, it stops serving any actor's instrumental purposes and starts serving its own reproductive logic: demonization, then sacralization, then identity hardening, then further demonization. Both the deployer and the deployed end up subordinate to the dynamic they entered.
 
 The donor class thought they were using populism. Trump thought he was using the Republican Party. The MAGA base thinks it is defending its way of life. All three are correct about their instrumental purposes, and all three are being carried by a mechanism operating independently of their intentions.
-
-The useful idiot is everyone who thinks they are using the mechanism. The mechanism is using them.
 
 ---
 
