@@ -41,6 +41,8 @@ Sometimes people get so attached to their group that they can't tell the differe
 
 When this happens, any criticism of the group feels like a personal attack. Your brain switches from "let me think about this" to "I need to defend myself."
 
+And this isn't rare. Researchers have measured fusion in weekend football fans, military recruits in boot camp, ordinary religious converts, regular Harley-Davidson owners, and run-of-the-mill American voters. The same pattern shows up in all of them. In one study, 45% of Libyan combatants felt *more* fused with their unit than with their own family ([Whitehouse et al., 2014](/posts/the-antisocial-contract/#ref-whitehouse-2014)). In Brazil, the most fused football fans were the ones most willing to fight or die for the club ([Newson et al., 2018](/posts/the-antisocial-contract/#ref-newson-2018)). The wiring is the same in everyone. Context just changes the volume.
+
 ### Step 4: Ideas Become Untouchable
 
 Once something becomes important to your group's identity, your brain stops treating it like a normal idea. It becomes *sacred* — not in a religious way necessarily, but in a "you can't question this" way.
