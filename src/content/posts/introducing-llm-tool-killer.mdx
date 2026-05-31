@@ -1,0 +1,116 @@
+---
+title: "Introducing llm-tool-killer: keep your agent on the golden path"
+description: "A small, deterministic pre-tool hook that parses what your coding agent is about to run and redirects it to the project's preferred command."
+publishDate: "2026-05-31"
+tags: ["llm", "tooling", "go", "ai-agents"]
+marginalia: "Don't ask the model to remember the rule. Put the rule in a tool that fires every time, parses what's really being run, and points the way."
+visibility: draft
+---
+
+Your coding agent reaches for `go test ./...`. Your project runs tests through
+`just test` — it sets up fixtures, env vars, build tags. The agent doesn't know
+that, so it runs the raw command, the suite behaves differently than CI, and you
+explain the difference for the third time this week.
+
+**[llm-tool-killer](https://github.com/benjaminabbitt/llm-tool-killer)** (`ltk`)
+fixes this the boring, reliable way. It runs as a pre-tool hook, parses the
+command the agent is about to execute, and — if a rule matches — turns it away
+with a reason and the command it *should* have run.
+
+```
+go test ./...  ⟶  ✗ "Run tests through the task runner."  →  agent retries with `just test`
+```
+
+That's the whole idea. Everything else is making it robust.
+
+## Why not just tell the agent in a prompt?
+
+Because prompts are probabilistic and this problem isn't. "Please use `just
+test`" works most of the time, which is exactly the failure mode: the one time
+in twenty it forgets, you're debugging a CI mismatch instead of reading a clear
+"no — use this instead."
+
+That's the thesis of [Building Deterministic Systems with Non-Deterministic
+Tools](/posts/deterministic-systems-non-deterministic-tools): don't ask the model
+for the answer, give it a tool that produces the answer. A hook that always
+fires, parses the same way every time, and returns the same redirect is
+something you can reason about. A line in a system prompt is a hope. `ltk` is
+the deterministic guardrail around the non-deterministic worker.
+
+## It parses, it doesn't grep
+
+The naive version of this is a regex blocklist, and it breaks immediately. An
+agent told "don't run `go test`" will, entirely cooperatively, run
+`bash -c 'go test'`, or `t=test; go $t`, or wrap it in a subshell — not to evade
+you, just because that's a normal way to express the command.
+
+So `ltk` parses. It lowers every shell dialect (bash/zsh/sh via
+[mvdan/sh](https://github.com/mvdan/sh), PowerShell via its native parser,
+cmd.exe via a small lexer) into one command graph, resolves variables it can work
+out statically, re-parses trivial wrappers, and matches rules against the *real*
+command wherever it's buried.
+
+What it deliberately doesn't do is guess. If a command's meaning is only settled
+at runtime — an undefined variable, command output — there's nothing to match,
+and `ltk` leaves it alone rather than blocking on a scary-looking construct. It's
+a cooperative redirect, not a sandbox. For hard guarantees you still want a
+container; `ltk` keeps a *willing* agent on the rails.
+
+## One knob, three positions
+
+Here's a small design decision that came out exactly right, and it's a textbook
+case of something I've written about before.
+
+Rules started with two booleans: `enabled` (is this rule on?) and `confirm` (can
+the agent override it by re-running?). Two booleans give four combinations, and
+one of them — *disabled but confirmable* — is meaningless. The type allowed a
+state the domain doesn't have. That's the trap from [Two Booleans Are an Enum in
+Disguise](/posts/two-booleans-are-an-enum): the same site's `draft`/`unlisted`
+pair collapsed into a single `visibility` enum for exactly this reason.
+
+So the two flags became one enum:
+
+```yaml
+rules:
+  - id: tests-via-task-runner
+    match: { command: [go, test] }
+    mode: confirm        # enable (default) | confirm | disable
+    suggest: "just test"
+```
+
+- **`enable`** (the default) — a firm denial. Repeating the command changes
+  nothing. This is where the destructive guards live: `git reset --hard`,
+  `rm -rf`, `sudo`.
+- **`confirm`** — turn it away once, but if the agent runs the *exact same
+  command again* within a short window, let it through. The "I really mean it"
+  escape hatch for workflow redirects.
+- **`disable`** — keep the rule in the file, documented, but inert.
+
+Three positions on one axis, each meaningful, with no way to write the
+contradictory state — the type no longer has a slot for it. Making illegal states
+unrepresentable isn't a slogan here; it's the difference between a config you can
+misconfigure and one you can't.
+
+`confirm` is deliberately *not* a security control — a determined agent just
+repeats the command. That's fine. The point is a visible, on-purpose "yes"
+without stopping to edit config mid-task. For the things that must never be waved
+through, `enable` keeps them firm.
+
+The project dogfoods itself: its own coding agent runs under these rules, with
+workflow redirects as `confirm` and destructive guards as `enable`. The first
+time the hook turned away the agent building the tool, it worked exactly as
+designed.
+
+## Try it
+
+```sh
+go install github.com/benjaminabbitt/llm-tool-killer/cmd/ltk@latest
+ltk manage install        # detects your agent, writes a starter ruleset
+```
+
+It ships with a default set drawn from the agent footguns people actually report
+— `--no-verify`, `git reset --hard`, blanket `git add -A`, `rm -rf`, `sudo` —
+and you edit it down to your project's golden path from there.
+
+The code, rules reference, and design notes are on
+[GitHub](https://github.com/benjaminabbitt/llm-tool-killer).
