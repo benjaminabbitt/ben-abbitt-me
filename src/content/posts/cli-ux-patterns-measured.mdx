@@ -1,9 +1,9 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T16:03:05-05:00"
+publishDate: "2026-08-09T16:09:31-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
-marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
+marginalia: "The guideline literature gives three different answers to what a bare noun should do. I thought two of them were a same-author contradiction. They were answering different questions."
 visibility: published
 ---
 
@@ -137,8 +137,13 @@ you. Compare `git switch nosucharg`, which fails and says the branch does not
 exist, because switch has an explicit verb and therefore a well-defined failure.
 
 git itself came round to this. `checkout` was ambiguous enough between branches
-and paths that it was split into `switch` and `restore` in 2019, and both halves
-of the split have real error cases where the original had a guess.
+and paths that it was [split into `switch` and
+`restore`](https://github.blog/2019-08-16-highlights-from-git-2-23/#experimental-alternatives-for-git-checkout)
+in 2019 — the [release
+notes](https://github.com/git/git/blob/v2.23.0/Documentation/RelNotes/2.23.0.txt)
+put it plainly: *"Two new commands 'git switch' and 'git restore' are introduced
+to split out of the single 'git checkout' command."* Both halves have real error
+cases where the original had a guess.
 
 The industry direction on implicit verbs is away from them.
 
@@ -155,7 +160,9 @@ someone names a resource after a verb.
 
 ## Destructive defaults: the guides are ahead of the tools
 
-clig.dev says confirm before anything dangerous. Practice is more varied.
+clig.dev says [confirm before anything
+dangerous](https://clig.dev/#arguments-and-flags), with tiers running to
+type-the-name for severe cases. Practice is more varied.
 
 | tool | destructive default |
 |---|---|
@@ -222,24 +229,53 @@ not a virtue.
 This is the part I did not expect and the reason I stopped treating the guides
 as settled.
 
-[clig.dev](https://clig.dev/) says a command needing arguments should print
-concise help when run bare, and warns against catch-all subcommands.
+[clig.dev](https://clig.dev/#help) says a command that needs arguments should
+print concise help when run bare, and [warns against catch-all
+subcommands](https://clig.dev/#future-proofing).
 
-The [Heroku CLI style guide](https://devcenter.heroku.com/articles/cli-style-guide)
-says the root of a topic should list that topic's nouns, and that you should
-never write a `*:list` command.
+The [Heroku CLI style
+guide](https://devcenter.heroku.com/articles/cli-style-guide#naming-the-command)
+says the root of a topic should list that topic's nouns: *"in the case of
+`heroku config`, it will list all the config vars for an app. Never create a
+`*:list` command."*
 
-[12-Factor CLI Apps](https://jdxcode.medium.com/12-factor-cli-apps-dd3c227a0e46)
-says it is always better to list the subcommands or display help than to do some
-default behavior.
+[12-Factor CLI
+Apps](https://jdxcode.medium.com/12-factor-cli-apps-dd3c227a0e46#:~:text=it%27s%20always%20better%20to%20list%20the%20subcommands)
+says *"if the user doesn't pass anything arguments to the CLI, it's always better
+to list the subcommands (for multi) or display the help (for single) rather than
+do some default behavior."*
 
-The last two are opposites, and they were written by the same person. The
-12-Factor piece is by the author of the Heroku CLI, arguing against the guidance
-his company's own style guide sets out. Both documents are widely cited. Neither
-cites the other.
+**I originally wrote that the last two contradict each other, and that the same
+person wrote both. Both halves were wrong, and the correction is more useful than
+the claim was.**
 
-GNU and POSIX conventions get invoked in these arguments too, and they predate
-subcommands entirely. They govern options and operands. They have nothing to say
+They answer different questions. The 12-Factor sentence is about a bare
+invocation of *the whole tool*; the Heroku sentence is about the root of a
+*topic*. Two paragraphs further into the same factor, 12-Factor [endorses the
+Heroku
+rule](https://jdxcode.medium.com/12-factor-cli-apps-dd3c227a0e46#:~:text=we%20list%20all%20the%20domains)
+outright: *"For topic-level commands like `$ heroku domains` we list all the
+domains of an app."* There is no disagreement to explain.
+
+The authorship claim was worse, because it was about a named person. Jeff Dickey
+wrote 12-Factor CLI Apps and was lead architect of the Heroku CLI, both
+verifiable. The style guide has no byline — it is institutional documentation.
+Its own examples contain `/Users/jdickey/` paths, so he very likely had a hand in
+it, but "likely" is not attribution, and I had him arguing against himself on the
+strength of it.
+
+What survives is a genuine divergence between different authors. clig.dev says a
+bare command prints help; the Heroku guide says a bare topic lists. Those are
+different defaults for the same question, and the measurement table above shows
+real tools split along exactly that line. That is the honest version of this
+section, and it is the one that matches the data.
+
+The lesson I would keep: the levels of a command tree are different objects, and
+"what does a bare name do" has a different right answer at each. Two guides only
+look like they disagree if you collapse the levels — which is what I did.
+
+GNU and POSIX conventions get invoked in these arguments too, and they [predate
+subcommands entirely](https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html). They govern options and operands. They have nothing to say
 about noun-verb ordering or bare-namespace behavior, and citing them for it is
 decoration.
 
