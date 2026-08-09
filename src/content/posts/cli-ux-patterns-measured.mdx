@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:46:17-05:00"
+publishDate: "2026-08-09T15:47:41-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -293,8 +293,33 @@ promises a mutation and performs none.
 
 `remote update` in the tool I maintain checked for updates and wrote nothing
 unless you passed `--apply`. The name says it changes something. It does not.
-`git remote update` has the same shape: it fetches, which is a write to your
-clone but not to anything you would call "the remote".
+
+I first wrote that `git remote update` has the same problem, and it does not. In
+git the noun is doing real work: a remote is a relationship you hold with another
+repository, and `git remote update` refreshes that relationship. The object named
+is the object acted on.
+
+Mine was worse in a way the effect-class complaint had obscured. `remote update`
+in my tool inspects *locally installed content* and compares it upstream. It does
+not touch the remote. And once I looked, the noun was carrying two different
+objects:
+
+```
+remote create | delete | list | show | default | discover    a REGISTERED SOURCE
+remote pull   | update | upgrade                             the LOCAL CLOSURE
+```
+
+Six verbs act on a remote as a thing you registered. Three act on the dependency
+graph that happens to have arrived from one. `remote pull` does not pull the
+remote; it installs content you already pinned.
+
+That is a noun problem masquerading as a verb problem, and it is the failure mode
+I would most warn against, because the verb audit finds it late. I spent an hour
+deciding whether `update` should be `check` before noticing that whichever verb I
+picked would still be attached to the wrong noun. A verb can only be as clear as
+the noun it modifies, so audit the nouns for overloading first — one noun holding
+two object types will generate confusing verbs indefinitely, and each one will
+look like an isolated naming mistake.
 
 apt is the canonical version of this and gets it right by convention rather than
 by naming: `apt update` refreshes the index, `apt upgrade` installs. Millions of
