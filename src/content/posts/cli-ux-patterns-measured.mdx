@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:42:20-05:00"
+publishDate: "2026-08-09T15:46:17-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -251,9 +251,9 @@ An alternate name for a concept is a memory tax. If `add` works on one noun
 and `create` on another, knowing what you want does not tell you what to type,
 so you check the help every time. This is the kind worth deleting.
 
-An abbreviation of the canonical name is not. `rm` for `remove`, `ls` for
-`list`. Every noun accepts both, so there is nothing to remember, and the long
-form is discoverable while the short form is fast.
+An abbreviation of the canonical name is not. `ls` for `list`. Every noun accepts
+both, so there is nothing to remember, and the long form is discoverable while
+the short form is fast.
 
 Docker's history is instructive: it kept `docker ps` and `docker images` as
 top-level shortcuts after moving to `docker container ls` and `docker image ls`.
@@ -261,10 +261,30 @@ The shortcuts are the ones people type. The structured forms are the ones that
 make the surface learnable. Both survived because they are different tools for
 different moments.
 
-One trap: `rm` carries a meaning from the shell, and it means destroy. If your
-CLI has both a "detach this member" operation and a "destroy this thing"
-operation, `rm` belongs to the destroyer. Attaching it to the gentle one inverts
-what every user already knows.
+`rm` is where that clean rule broke for me, and I think the break is instructive
+rather than embarrassing.
+
+`rm` means destroy in every shell. So if your CLI distinguishes "detach this
+member, it survives" from "destroy this thing", `rm` has to go on the destroyer,
+or you have inverted what every user already knows. Fine. Except my destroyer is
+called `delete`, and `rm` is not an abbreviation of `delete`. It is an
+abbreviation of `remove`, which is the other verb — the gentle one. So the alias
+I shipped is exactly the alternate-name-for-a-concept I just said to delete.
+
+I shipped it anyway, and the reasoning is the interesting part: a borrowed
+convention that every user already has beats an internal consistency rule they
+have never read. `rm` is not competing with my vocabulary, it is competing with
+thirty years of muscle memory, and my vocabulary loses that fight regardless of
+what I write down.
+
+So the rule needs the exception stated rather than hidden: abbreviations of the
+canonical name, plus borrowings so universal that violating them costs more than
+the inconsistency does. The test for the second category is narrow. If you cannot
+name the external convention and say why it is stronger than yours, you are
+rationalizing a synonym.
+
+The honest alternative was to ship no short form at all, and I would not argue
+hard against it.
 
 ## Names that misreport their effect
 
