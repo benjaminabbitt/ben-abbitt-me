@@ -1,0 +1,339 @@
+---
+title: "What CLIs Actually Do: A Measured Reference"
+description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
+publishDate: "2026-08-09"
+tags: ["cli", "ux", "tools", "design", "reference"]
+marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
+visibility: published
+---
+
+I needed to settle some grammar questions for a CLI I maintain
+([ctxloom](https://ctxloom.dev)), and the usual approach is to read the style
+guides. I did that, and then I went and probed the tools those guides are
+supposedly describing. The two do not match, in ways that change the answers.
+
+None of this came from greenfield design. It came out of a refactor: a surface
+that had grown to 130 commands over two years, being cleaned up ahead of a
+substantially larger version that is in alpha testing now. Everything below is
+what I learned by auditing something already built and already wrong, which is
+the position most people are actually in.
+
+What follows is the measurement. Rows marked *docs* are from documentation
+because I did not have the tool installed; everything else came from running the
+binary and capturing what it did.
+
+## Ordering: noun-verb has won, with one large exception
+
+| tool | order |
+|---|---|
+| gh, docker, gcloud, az, stripe, flyctl | noun-verb (`gh repo list`) |
+| kubectl | verb-noun (`kubectl get pods`) |
+| cargo, npm | verb-first, no nouns |
+| git | mixed, historically accreted |
+| terraform, wrangler | verb-first at the top, noun groups below |
+
+The interesting case is kubectl, which is verb-noun and enormous and beloved,
+so the ordering question is not settled by popularity. What noun-verb buys is
+grouping: every operation on a thing lives under that thing, so `gh repo --help`
+is a complete inventory of what you can do to a repo. Verb-noun buys the
+opposite grouping, which is what you want when the verb is the stable concept
+and the nouns are open-ended. kubectl has hundreds of resource kinds and a dozen
+verbs, so it grouped by the small set.
+
+Pick based on which axis is open-ended. If you will add nouns forever, group by
+noun.
+
+## When a noun contains nouns
+
+`noun verb` stops being enough the moment a noun owns more than one kind of
+thing. The tools that hit this all landed on the same shape: `noun object verb`.
+
+    docker container ls          docker image     rm
+    kubectl config  get-contexts gh      secret   list
+    az storage account create    aws  s3  ls
+
+The sub-noun is not a category folder for tidiness. It appears when the parent
+owns several distinct things with their own lifecycles, and the tell is that the
+sub-noun takes the same verb vocabulary one level down. `docker container ls` and
+`docker image ls` are the same verb applied to different populations.
+
+What took me longest to accept is that a command can carry **both** direct verbs
+and sub-nouns without being inconsistent. `docker` has bare `ps` and also
+`container ls`. A parent verb acts on the parent; a sub-noun is a different
+population that happens to live underneath. Forcing everything down a level
+produces things like `trust item accept` where `trust accept` read fine, and
+invents a noun to hold the verb.
+
+The rule I ended up with: direct verbs act on the noun itself, sub-nouns are
+distinct managed things, and both may coexist.
+
+## What a bare noun does: no consensus at all
+
+This is the question I most expected to have an obvious answer, and it does not.
+
+| behavior | tools |
+|---|---|
+| print help | gh, docker, flyctl *(docs)*, wrangler *(docs)*, stripe *(docs)* |
+| error | gcloud (exit 2), az *(docs)*, aws *(docs)*, terraform (exit 1) |
+| list the things | git's noun-commands, systemctl, heroku *(docs, by doctrine)* |
+
+`git remote`, `git branch` and `git tag` all list, with exit 0. Bare `systemctl`
+is `list-units`. Heroku's style guide mandates listing and forbids a `*:list`
+command outright.
+
+Against that, `gh repo` and `docker image` print usage and exit 0, and gcloud
+errors with a command listing and exit 2.
+
+Five, four, and three. Whatever you pick, most of the field does something else.
+I went with help, because a namespace has no obvious default action and help is
+the answer to the question a user standing at that level is actually asking. But
+the measurement says this is a preference, not a best practice.
+
+## Implicit verbs: nobody does it
+
+Zero of the fifteen accept `tool noun object` as an implicit show. Zero accept a
+trailing verb. This was the pattern I was actually evaluating, and the landscape
+verdict was unanimous in a way nothing else was.
+
+git is the closest, and it is a cautionary tale rather than a precedent. `git
+branch X` and `git tag X` take a positional and *create*, silently, exit 0. That
+is an implicit verb, and the implicit verb is not show. While probing this I
+typed `git branch nosucharg` expecting an error and created a branch in a working
+repository.
+
+The DWIM ancestor of this, `git checkout`, was ambiguous enough between branches
+and paths that git split it into `switch` and `restore` in 2019 specifically to
+stop guessing. The industry direction on implicit verbs is away from them.
+
+What tools do instead is imply the *object*, which is the safe half. `gh repo
+view` with no argument means the repo you are standing in. The verb stays
+explicit and the omitted token is the one with an unbounded value space, so
+nothing can collide.
+
+That asymmetry is the actual pattern: **omit the argument whose value space is
+open, never the one drawn from a closed set you also parse.** A verb comes from
+a closed set the parser knows. An object name does not. Omitting the verb means
+guessing which set a bare token came from, and the guess is wrong exactly when
+someone names a resource after a verb.
+
+## Destructive defaults: the guides are ahead of the tools
+
+clig.dev says confirm before anything dangerous. Practice is more varied.
+
+| tool | destructive default |
+|---|---|
+| kubectl | `delete` acts immediately, no prompt. `--dry-run=client\|server` is opt-in |
+| git | no confirmations. `git clean` refuses without `-f` |
+| docker | `rm`/`rmi` act immediately. Only `prune` prompts y/N |
+| aws *(docs)* | `s3 rm` acts. `--dry-run` on select EC2 operations only |
+| gh | `repo delete` prompts. `--yes` skips it, except deleting the repo you are in |
+| gcloud, az, wrangler *(docs)* | prompt, with `--quiet`/`--yes` to skip |
+| terraform | `destroy` requires typing `yes` |
+| flyctl, heroku *(docs)* | require typing the resource name |
+
+The split falls along blast radius rather than tool philosophy. Deleting a local
+container is instant everywhere; deleting a hosted application makes you type its
+name. That is a defensible line and it is the one I would copy: scale the
+friction to what cannot be undone, not to whether the verb sounds scary.
+
+One pattern worth stealing from gh: `--yes` skips the confirmation for a named
+repository, but not for the repository you are currently inside. The dangerous
+case is the one where the argument was omitted, so that is the case that keeps
+asking.
+
+## Dry run is three different questions
+
+Most tools treat `--dry-run` as one flag. It is really a different question per
+verb class, and the classes want opposite defaults.
+
+| class | examples | dry run |
+|---|---|---|
+| destructive: removes something that existed | delete, purge, prune | **on by default**; a flag turns it off |
+| changing or costing: writes, spends money or time | create, edit, push, pull, upgrade | off by default; `--dry-run` turns it on |
+| read | list, show, search, status | not applicable; a dry run of a read is the read |
+
+The asymmetry is the point. For a changing verb, acting when you meant to
+preview costs you rework. For a destructive verb it costs data you cannot get
+back. Defaults should fail toward the recoverable state, so the two classes take
+opposite defaults and the flag that crosses the line is explicit in both
+directions.
+
+That gives the rule I would now build into anything destructive: **a destructive
+verb is an inherent dry run, and `--yes` is what applies it.** Run it bare and it
+tells you exactly what it would destroy. Nothing is a "preview mode" you have to
+know to ask for, because the safe thing is what happens when you do not ask for
+anything.
+
+terraform already works this way at the plan/apply level, and the tools that
+require typing a resource name are reaching for the same property with a worse
+mechanism, since a typed name proves you can read but not that you know what
+else is in scope.
+
+Two details that decide whether a dry run is worth anything:
+
+**Reads are real, writes and costs are mocked.** The answer must be the truth
+about the world. But an API call that charges you is an effect, so a dry run
+that still spends money is not one. Mock at the boundary where the world
+changes, including the boundary where the bill does.
+
+**It must be verbose.** A dry run that prints little has wasted the run. The
+entire product is the account of what would have happened, so terseness there is
+not a virtue.
+
+## Where the guidelines disagree with themselves
+
+This is the part I did not expect and the reason I stopped treating the guides
+as settled.
+
+[clig.dev](https://clig.dev/) says a command needing arguments should print
+concise help when run bare, and warns against catch-all subcommands.
+
+The [Heroku CLI style guide](https://devcenter.heroku.com/articles/cli-style-guide)
+says the root of a topic should list that topic's nouns, and that you should
+never write a `*:list` command.
+
+[12-Factor CLI Apps](https://jdxcode.medium.com/12-factor-cli-apps-dd3c227a0e46)
+says it is always better to list the subcommands or display help than to do some
+default behavior.
+
+The last two are opposites, and they were written by the same person. The
+12-Factor piece is by the author of the Heroku CLI, arguing against the guidance
+his company's own style guide sets out. Both documents are widely cited. Neither
+cites the other.
+
+GNU and POSIX conventions get invoked in these arguments too, and they predate
+subcommands entirely. They govern options and operands. They have nothing to say
+about noun-verb ordering or bare-namespace behavior, and citing them for it is
+decoration.
+
+## Aliases: two different things wear the same word
+
+Tools mean at least two things by "alias", and they have opposite costs.
+
+An **alternate name for a concept** is a memory tax. If `add` works on one noun
+and `create` on another, knowing what you want does not tell you what to type,
+so you check the help every time. This is the kind worth deleting.
+
+An **abbreviation of the canonical name** is not. `rm` for `remove`, `ls` for
+`list`. Every noun accepts both, so there is nothing to remember, and the long
+form is discoverable while the short form is fast.
+
+Docker's history is instructive: it kept `docker ps` and `docker images` as
+top-level shortcuts after moving to `docker container ls` and `docker image ls`.
+The shortcuts are the ones people type. The structured forms are the ones that
+make the surface learnable. Both survived because they are different tools for
+different moments.
+
+One trap: `rm` carries a meaning from the shell, and it means destroy. If your
+CLI has both a "detach this member" operation and a "destroy this thing"
+operation, `rm` belongs to the destroyer. Attaching it to the gentle one inverts
+what every user already knows.
+
+## Names that misreport their effect
+
+The failure I found most often, in my own tool and others, is a verb that
+promises a mutation and performs none.
+
+`remote update` in the tool I maintain checked for updates and wrote nothing
+unless you passed `--apply`. The name says it changes something. It does not.
+`git remote update` has the same shape: it fetches, which is a write to your
+clone but not to anything you would call "the remote".
+
+apt is the canonical version of this and gets it right by convention rather than
+by naming: `apt update` refreshes the index, `apt upgrade` installs. Millions of
+people have memorized that pair, which is evidence that a confusing name can be
+survived, not that it is good.
+
+The test I now apply: if the verb ran with no flags and did nothing observable,
+would a reader be surprised? If yes, the name is wrong, whatever the convention.
+
+## Build the vocabulary before the commands
+
+This is the one I would tell my past self, and it is the reason for everything
+above.
+
+I had a glossary. It defined the project's nouns carefully: what a session is,
+what a profile is, what an agent is as distinct from the vendor's use of that
+word, and why each term beat its alternatives. It had a section on the
+invariants those terms carry.
+
+It said nothing about verbs.
+
+So the noun half stayed disciplined for two years and the verb half drifted,
+because there was nothing to check a new command against. When I finally
+enumerated the surface, it had 47 distinct words in verb position across 130
+leaves. Eleven of them were not verbs at all, they were sub-nouns. And there were
+**seven different spellings of "undo"**: uninstall, unhold, unregister, reject,
+forget, revoke, delete.
+
+Every one of those was locally reasonable. `unhold` pairs with `hold`. `forget`
+reads better than `delete` for a consent record. `reject` is the right word for a
+review decision. Each was a defensible call by someone who had not been handed a
+list of the words already in use, because no such list existed.
+
+A glossary of nouns without verbs is half a vocabulary, and it is the half that
+does not drift on its own. Nouns are load-bearing in the data model, so they get
+argued about. Verbs get chosen one command at a time by whoever is writing that
+command, and nothing forces two authors months apart to make the same choice.
+
+Write both. For each verb, say what effect class it names and what it does not,
+the way you would define a noun. Then a new command is a lookup rather than a
+judgment call, and the review question becomes "is this word in the vocabulary"
+instead of "does this name seem fine to you".
+
+The order matters too. Doing this after the surface exists means every fix is a
+breaking change, which is how you end up with `apt update` and `apt upgrade`
+memorized by millions of people instead of named clearly once.
+
+### A vocabulary nothing enforces is a convention, and conventions rot
+
+Writing it down is necessary and it is not sufficient. I know this because the
+project already had a document saying, in as many words, *anything not in this
+table is a violation; new commands must pick from the spine first.* Commands
+drifted anyway. Prose cannot fail a build, and the person adding a command six
+months later is not reading a design document, they are copying the nearest
+existing command.
+
+What actually holds is a test that walks the command tree and fails on a verb
+that is not in the vocabulary. It is maybe thirty lines. It cannot be forgotten,
+it cannot be skipped in review, and it produces the one thing prose never does:
+a red build with the offending word in the message, at the moment the word is
+introduced rather than a year later during an audit.
+
+The same shape works for structural rules. The most useful test I have in this
+area asserts that every namespace either has its own behavior or is explicitly
+guarded, which is what stopped a class of commands from silently doing nothing
+when given an unknown subcommand. The rule had been written down before that.
+Writing it down had not helped.
+
+Two properties make these tests worth having rather than annoying. They must
+derive from the tree rather than from a hand-maintained list, because a list of
+commands to check is itself something that goes stale and a walk of the real
+tree cannot. And the failure message should name the vocabulary entry the author
+should have used, so the test teaches instead of merely blocking.
+
+The general version: every convention you intend to keep needs a mechanical
+check, and if you cannot think of one, you have a preference rather than a rule.
+Be honest about which you are writing down.
+
+## What I would actually copy
+
+Write the verb vocabulary before the commands, next to the nouns, with the same
+rigor. Group by the axis that stays closed. Use `noun object verb` when a noun
+owns several populations, and let direct verbs and sub-nouns coexist. Print help
+on a bare namespace, accepting that the field is split. Imply objects, never
+verbs. Make destructive verbs an inherent dry run that `--yes` applies, and scale
+the friction to blast radius rather than to how alarming the verb sounds. Keep
+abbreviations, delete synonyms. And name a verb for what it does when you run it
+with no flags at all, because that is the invocation a reader will assume.
+
+The guides are worth reading. They are not worth citing as settled, because the
+tools they describe do not agree with them and in one case do not agree with each
+other under the same author's name.
+
+---
+
+The tool this came from is [ctxloom](https://ctxloom.dev). A much larger version
+is in alpha now, and this audit was part of clearing the ground for it. If you
+want the short version of everything above: write the verbs down next to the
+nouns before you need them, and put a test on it.
