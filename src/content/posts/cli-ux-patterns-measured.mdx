@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:39:05-05:00"
+publishDate: "2026-08-09T15:42:20-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -119,9 +119,28 @@ is an implicit verb, and the implicit verb is not show. While probing this I
 typed `git branch nosucharg` expecting an error and created a branch in a working
 repository.
 
-The DWIM ancestor of this, `git checkout`, was ambiguous enough between branches
-and paths that git split it into `switch` and `restore` in 2019 specifically to
-stop guessing. The industry direction on implicit verbs is away from them.
+Every developer reading this knows those are creates. I knew it. That is exactly
+why the pattern is worth arguing against rather than excusing, because knowing it
+does not protect you from it.
+
+Look at what the arity does. `git branch` lists, and `git branch X` writes. Same
+word, opposite effect class, decided by whether an argument is present. So there
+is no way to ask "does this branch exist" in that grammar: the natural probing
+gesture is the creating one. And a typo cannot be caught, because there is no
+such thing as an invalid argument — every misspelling is a valid new name. The
+command has no error case to report, so it reports none.
+
+That is the part knowledge does not help with. Understanding the semantics
+protects you from misunderstanding them; it does not protect you from a
+fat-fingered branch name, and the design has removed the feedback that would tell
+you. Compare `git switch nosucharg`, which fails and says the branch does not
+exist, because switch has an explicit verb and therefore a well-defined failure.
+
+git itself came round to this. `checkout` was ambiguous enough between branches
+and paths that it was split into `switch` and `restore` in 2019, and both halves
+of the split have real error cases where the original had a guess.
+
+The industry direction on implicit verbs is away from them.
 
 What tools do instead is imply the *object*, which is the safe half. `gh repo
 view` with no argument means the repo you are standing in. The verb stays
