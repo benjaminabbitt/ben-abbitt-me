@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:34:00-05:00"
+publishDate: "2026-08-09T15:37:15-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -48,9 +48,14 @@ noun.
 `noun verb` stops being enough the moment a noun owns more than one kind of
 thing. The tools that hit this all landed on the same shape: `noun object verb`.
 
-    docker container ls          docker image     rm
-    kubectl config  get-contexts gh      secret   list
-    az storage account create    aws  s3  ls
+```
+docker  container  ls
+docker  image      rm
+kubectl config     get-contexts
+gh      secret     list
+az      storage    account create
+aws     s3         ls
+```
 
 The sub-noun is not a category folder for tidiness. It appears when the parent
 owns several distinct things with their own lifecycles, and the tell is that the
