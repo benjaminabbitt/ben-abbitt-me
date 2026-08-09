@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T16:44:12-05:00"
+publishDate: "2026-08-09T16:54:19-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature gives three different answers to what a bare noun should do. Two of them only look like a contradiction until you notice they are talking about different levels of the command tree."
 visibility: published
@@ -102,8 +102,14 @@ a positional argument, so `tool search help` cannot mean both "search for the
 string help" and "explain search" — one of them has to lose, and whichever loses
 is silently unreachable. A flag lives in a different namespace from operands
 entirely, so it collides with nothing and stays available even on commands whose
-arguments are open-ended text. The bare word is still fine on containers, which
-have no positionals to compete with, but it cannot be the universal rule.
+arguments are open-ended text.
+
+You could carve out an exception for containers, which have no positionals to
+compete with, and let the bare word work there. I would not. An affordance that
+exists on some levels and not others is one the user has to model instead of
+just using, and the whole value of this rule is that it needs no model. One
+spelling, everywhere, no exceptions to learn — including the exception that
+would have been in the user's favour.
 
 The flag also gets you the "always" for free, which is the part that matters
 most. Registered once as a universal flag, every command inherits it, including
