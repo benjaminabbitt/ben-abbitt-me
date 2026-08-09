@@ -1,0 +1,122 @@
+---
+title: "Your Canonical Copy Is a Symlink"
+description: "A tool of mine promised it owned my session transcripts. It had stored 4,550 symlinks into a directory the vendor prunes on its own schedule. 96% of them pointed at nothing, and nothing had ever said so."
+publishDate: "2026-08-09"
+tags: ["storage", "llm", "ai-agents", "durability", "tools"]
+marginalia: "A reference to a file is not a copy of a file. The difference only shows up on the day you need it."
+visibility: draft
+---
+
+I went looking for a disk-space problem last night and found a data-loss problem
+instead.
+
+The tool is mine, which makes this worse rather than better. It records agent
+sessions, and one of the things it advertises is that the transcript of a
+session becomes yours: converted out of whatever private format the vendor CLI
+writes, into a canonical shape you can read later. Session archaeology. What did
+we decide in March.
+
+The store was 8.6 GB across 4,625 session directories, so I started measuring
+before deleting anything.
+
+## The number that stopped me
+
+```
+transcript.jsonl entries          4550
+  stored as symlinks              4550   (100%)
+  now dangling                    4387   (96%)
+sessions with a distilled essence   59
+```
+
+Every canonical transcript was a symlink. Not a copy, a pointer, into the
+vendor's own storage directory. The vendor had since cleaned that directory up,
+the way tools do, and taken 96% of my recorded history with it.
+
+Nothing errored when that happened. Nothing errors now. A dangling symlink is a
+perfectly ordinary filesystem object, and the code that created these had a
+warning path for a link it could not resolve, so the failure had been observed,
+logged at warning level, and moved past. The file is simply not there when you
+go to read it, which is exactly the day you find out.
+
+## What "own" turned out to mean
+
+I had written a design decision months ago that said the right thing: capture
+runner-side into our own canonical format, so we do not depend on scraping
+formats that belong to somebody else. The reasoning was about format stability.
+Vendors change their private schemas without telling you, so read them at the
+boundary and store what you control.
+
+What shipped on this path was a symlink.
+
+The gap between those two is not sloppiness in the implementation of the idea.
+It is a different idea wearing the same words. Both of them can be described as
+"we have the transcript." Only one survives the vendor's retention policy.
+
+The distinction I did not have language for at the time is between a *reference*
+and a *copy*, and it maps onto a question worth asking about any durability
+claim: whose retention policy is this depending on? If the answer is anyone
+else's, the guarantee is a lease, and nobody told you the term.
+
+There is a portability version of the same bug sitting next to it. The call that
+creates these links has no platform guard, and a failure to create one is
+handled as a warning rather than an error. Symlink creation on Windows needs
+Developer Mode or administrator rights. So on Windows, every session silently
+gets no transcript at all: exit zero, one line on stderr, nothing recorded. I
+have not run it there. I did not need to; the code says so plainly once you look
+at what it does when it fails.
+
+## The cleanup that would have made it worse
+
+Having established that most of the store was dead pointers, the obvious move
+was to delete the empty directories. I wrote a predicate: a directory is a shell
+if it has no essence, no artifacts, no plan file, and no resolvable transcript.
+Four conditions, and I checked one directory by hand to make sure the rule
+matched what was actually on disk.
+
+Then I checked what filenames existed across a sample of the ones I was about to
+remove, and found `transcript.acp.jsonl` in some of them.
+
+That is a different file. It is the transcript for sessions captured through a
+protocol where the tool owns the stream directly, so there is no vendor file to
+point at and the bytes are written for real. Those are the good ones. They are
+the only sessions in the entire store where the durability claim was true, and
+my predicate did not mention that filename, so it classified all of them as
+empty.
+
+Ninety-seven directories. The rule was stated over an incomplete enumeration of
+the thing it was reasoning about, and every one of the four conditions was
+individually correct.
+
+I rewrote it to keep any directory containing any resolvable file at any depth,
+which is a rule I can check by construction rather than by remembering a list of
+names. It deleted 4,305 directories and reclaimed almost nothing, because
+dangling symlinks occupy no space. The 8.2 GB turned out to be in a directory of
+agent working products that nothing had ever enumerated, five sessions deep.
+
+## The part I keep thinking about
+
+I wrote the near-miss into a planning document so it would not happen again.
+Later the same night, reviewing that document, I found the same class of error
+inside it. The plan's model of the data said `transcript.jsonl` means a vendor
+symlink and `transcript.acp.jsonl` means a real capture. That had been true when
+I measured it and was no longer true generally, because the canonical filename
+had been renamed to `transcript.jsonl` at some point and the old name demoted to
+a legacy fallback.
+
+So a live capture and a dead pointer now share a basename, and any rule keyed on
+the name cannot tell them apart. The correct predicate has to key on directory
+and on whether the entry is a symlink. The existing code that classifies these
+files gets it right, and it gets it right by enumerating both names in both
+locations, which is the kind of thing that looks like redundancy until you know
+why it is there.
+
+Twice in one night, in the same direction, with the second instance inside the
+document written to prevent the first. That is not a lapse of attention. It is
+what happens when a rule is stated over a set you enumerated once, and the set
+moves.
+
+The lesson I am taking is not "be more careful with predicates." It is that a
+rule which names its members is a rule with an expiry date, and the fix is to
+state it over a property instead. *Any resolvable file at any depth* cannot go
+stale when someone adds a filename. *These four filenames* went stale in about a
+week.
