@@ -1,9 +1,9 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T16:18:25-05:00"
+publishDate: "2026-08-09T16:44:12-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
-marginalia: "The guideline literature gives three different answers to what a bare noun should do. I thought two of them were a same-author contradiction. They were answering different questions."
+marginalia: "The guideline literature gives three different answers to what a bare noun should do. Two of them only look like a contradiction until you notice they are talking about different levels of the command tree."
 visibility: published
 ---
 
@@ -91,21 +91,45 @@ errors with a command listing and exit 2.
 
 Five, four, and three. Whatever you pick, most of the field does something else.
 
-I went with help, and it was close. I started on list, and what moved me was an
-asymmetry in who can recover cheaply. An expert who wants the listing can type
-`ls`, which is two characters and which I was adding anyway. A newcomer who
-wants to know what a noun can do has no equivalent shortcut if the bare form
-prints data at them, because they do not yet know what to ask for. So the bare
-form goes to the person with less information, and the person with more
-information pays two keystrokes.
+I went with list, on the heroku side of that split. What makes it work is a
+second rule rather than the choice itself: `--help` is a universal suffix,
+present on every command at every depth. `ctxloom bundle --help`, `ctxloom trust
+signer --help`, `ctxloom run --help`. Always, with no exceptions to learn.
 
-That generalizes past this decision. When two defaults are genuinely close, give
-the default to whoever cannot recover from the other choice cheaply. It also
-helps that `help` is easy to type and easy to guess, which is not true of most
-things you might put there.
+It has to be the flag rather than a bare `help` word, and the reason is
+addressability. A bare word in suffix position is competing for the same slot as
+a positional argument, so `tool search help` cannot mean both "search for the
+string help" and "explain search" — one of them has to lose, and whichever loses
+is silently unreachable. A flag lives in a different namespace from operands
+entirely, so it collides with nothing and stays available even on commands whose
+arguments are open-ended text. The bare word is still fine on containers, which
+have no positionals to compete with, but it cannot be the universal rule.
 
-I would not argue hard against list. The measurement says this is a preference,
-not a best practice, and heroku's CLI has shipped the opposite call for years.
+The flag also gets you the "always" for free, which is the part that matters
+most. Registered once as a universal flag, every command inherits it, including
+the ones nobody has written yet. That is a structural guarantee rather than a
+convention someone has to remember at each new command — and per the last
+section of this post, conventions that depend on remembering are the ones that
+rot.
+
+The two rules serve two audiences separately, which is why both can win. Someone
+who knows the tool types a noun many times a day and already knows what it
+holds; charging them ` ls` every time is three keystrokes for information they
+were always going to ask for. Someone meeting the tool needs teaching
+everywhere, without knowing in advance which commands are generous. A suffix
+they can append to anything gives them that, and its value comes entirely from
+being unconditional. Help on most commands is help you still have to test for.
+
+That is what makes listing affordable. The teaching surface is not lost when the
+bare form stops printing help, because it moved somewhere explicit and
+permanent.
+
+The general form is a preference order rather than a single answer. A bare noun
+gives the safest useful thing it has: a listing where one exists, a summary
+where a listing does not fit, help when the noun genuinely has nothing to show.
+Never an error. Erroring spends the user's keystroke to tell them the keystroke
+was wasted, and it is the one option in that table nothing recommends and four
+tools ship regardless.
 
 ## Implicit verbs: nobody does it
 
@@ -224,10 +248,9 @@ It must be verbose. A dry run that prints little has wasted the run. The
 entire product is the account of what would have happened, so terseness there is
 not a virtue.
 
-## Where the guidelines disagree with themselves
+## Where the guidelines disagree, and where they only appear to
 
-This is the part I did not expect and the reason I stopped treating the guides
-as settled.
+This is the part that stopped me treating the guides as settled.
 
 [clig.dev](https://clig.dev/#help) says a command that needs arguments should
 print concise help when run bare, and [warns against catch-all
@@ -245,34 +268,31 @@ says *"if the user doesn't pass anything arguments to the CLI, it's always bette
 to list the subcommands (for multi) or display the help (for single) rather than
 do some default behavior."*
 
-**I originally wrote that the last two contradict each other, and that the same
-person wrote both. Both halves were wrong, and the correction is more useful than
-the claim was.**
-
-They answer different questions. The 12-Factor sentence is about a bare
-invocation of *the whole tool*; the Heroku sentence is about the root of a
-*topic*. Two paragraphs further into the same factor, 12-Factor [endorses the
-Heroku
+Those last two look like a flat contradiction. They are not, and the reason is
+worth more than the contradiction would have been: they answer different
+questions. The 12-Factor sentence is about a bare invocation of *the whole
+tool*; the Heroku sentence is about the root of a *topic*. Two paragraphs
+further into the same factor, 12-Factor [endorses the Heroku
 rule](https://jdxcode.medium.com/12-factor-cli-apps-dd3c227a0e46#:~:text=we%20list%20all%20the%20domains)
 outright: *"For topic-level commands like `$ heroku domains` we list all the
-domains of an app."* There is no disagreement to explain.
+domains of an app."*
 
-The authorship claim was worse, because it was about a named person. Jeff Dickey
-wrote 12-Factor CLI Apps and was lead architect of the Heroku CLI, both
-verifiable. The style guide has no byline: it is institutional documentation.
-Its own examples contain `/Users/jdickey/` paths, so he very likely had a hand in
-it, but "likely" is not attribution, and I had him arguing against himself on the
-strength of it.
+It is tempting to go further and call it one author contradicting himself, and
+that does not survive checking either. Jeff Dickey wrote 12-Factor CLI Apps and
+was lead architect of the Heroku CLI, both verifiable. The style guide has no
+byline; it is institutional documentation. Its own examples contain
+`/Users/jdickey/` paths, so he very likely had a hand in it — but "likely" is
+not attribution, and it is a thin basis for putting words in a named person's
+mouth.
 
-What survives is a genuine divergence between different authors. clig.dev says a
-bare command prints help; the Heroku guide says a bare topic lists. Those are
+The real divergence is between different authors. clig.dev says a bare command
+prints help; the Heroku guide says a bare topic lists. Those are genuinely
 different defaults for the same question, and the measurement table above shows
-real tools split along exactly that line. That is the honest version of this
-section, and it is the one that matches the data.
+real tools split along exactly that line.
 
-The lesson I would keep: the levels of a command tree are different objects, and
-"what does a bare name do" has a different right answer at each. Two guides only
-look like they disagree if you collapse the levels. That is what I did.
+The lesson worth keeping: the levels of a command tree are different objects,
+and "what does a bare name do" has a different right answer at each. Two guides
+only look like they disagree if you collapse the levels.
 
 GNU and POSIX conventions get invoked in these arguments too, and they [predate
 subcommands entirely](https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html). They govern options and operands. They have nothing to say
@@ -297,16 +317,12 @@ The shortcuts are the ones people type. The structured forms are the ones that
 make the surface learnable. Both survived because they are different tools for
 different moments.
 
-`rm` is where that clean rule broke for me, and I think the break is instructive
-rather than embarrassing.
+`rm` is where that clean rule breaks, and the break is instructive.
 
-`rm` means destroy in unix shells, so it has to go on the destroyer or you invert
-what those users already know. I had two verbs to choose between: `delete`, which
-destroyed, and `remove`, which detached a member and left it alive. I put `rm` on
-`delete`, wrote a paragraph about borrowed conventions beating internal rules,
-and shipped it.
-
-It was a trap, and the shape of it is worth seeing:
+`rm` means destroy in unix shells, so it has to sit on the destroyer or it
+inverts what those users already know. Put it on a verb called `delete` while a
+second verb called `remove` detaches a member and leaves it alive, and you get
+this:
 
 ```
 rm      ->  delete    destroys
@@ -314,32 +330,31 @@ remove  ->            detaches, survives
 ```
 
 `rm` is the conventional abbreviation of the word *remove*. So the alias and its
-own expansion pointed at different verbs with opposite destructiveness. Someone
+own expansion point at different verbs with opposite destructiveness. Someone
 who learns that `rm` destroys, reasons that `remove` must be the long form, and
-types `remove` gets a detach. The alias teaches a wrong expansion. That is the
-exact "name promises an effect it does not have" defect this whole exercise was
-about, committed by the exercise.
+types `remove` gets a detach. The alias teaches a wrong expansion — the exact
+"name promises an effect it does not have" defect this whole exercise is about,
+committed by the exercise.
 
-In a unix shell there is no command called `remove`, so `rm` is just the
-destroyer's name and nothing mis-teaches. The collision was mine: I had both
-words meaning opposite things.
+In a unix shell there is no command called `remove`, so `rm` is simply the
+destroyer's name and nothing mis-teaches. The collision is self-inflicted: two
+words in one vocabulary meaning opposite things.
 
-The fix was to stop fighting over `rm` and move the other verb. Membership became
+The fix is to stop fighting over `rm` and move the other verb. Membership becomes
 `attach`/`detach`, which frees `remove` to be the destroyer it already is
-everywhere else, and makes `rm` a true abbreviation of its own canonical verb.
+everywhere else and makes `rm` a true abbreviation of its own canonical verb.
 Nothing to except, nothing to explain in a footnote.
 
-One detail I had wrong along the way, since it changed the answer: `rm` is not
-universal. `cmd.exe` has no `rm` and destroys with `del`; PowerShell's
-`Remove-Item` carries both as aliases. So `remove` takes `rm` and `del` both —
-not two abbreviations of one word competing, but two shell traditions that
-disagree about the spelling and agree about the meaning.
+`rm` is also not universal, which changes the answer. `cmd.exe` has no `rm` and
+destroys with `del`; PowerShell's `Remove-Item` carries both as aliases. So
+`remove` takes `rm` and `del` both — not two abbreviations of one word
+competing, but two shell traditions that disagree about the spelling and agree
+about the meaning.
 
-I shipped it anyway, and the reasoning is the interesting part: a borrowed
-convention that every user already has beats an internal consistency rule they
-have never read. `rm` is not competing with my vocabulary, it is competing with
-thirty years of muscle memory, and my vocabulary loses that fight regardless of
-what I write down.
+Both ship, and the reasoning is the interesting part: a borrowed convention every
+user already has beats an internal consistency rule they have never read. `rm` is
+not competing with my vocabulary, it is competing with thirty years of muscle
+memory, and my vocabulary loses that fight regardless of what I write down.
 
 So the rule needs the exception stated rather than hidden: abbreviations of the
 canonical name, plus borrowings so universal that violating them costs more than
@@ -358,15 +373,14 @@ promises a mutation and performs none.
 `remote update` in the tool I maintain checked for updates and wrote nothing
 unless you passed `--apply`. The name says it changes something. It does not.
 
-I first wrote that `git remote update` has the same problem, and it does not. In
+`git remote update` is the obvious comparison and it is not the same problem. In
 git the noun is doing real work: a remote is a relationship you hold with another
 repository, and `git remote update` refreshes that relationship. The object named
 is the object acted on.
 
-Mine was worse in a way the effect-class complaint had obscured. `remote update`
-in my tool inspects *locally installed content* and compares it upstream. It does
-not touch the remote. And once I looked, the noun was carrying two different
-objects:
+Mine was worse in a way the effect-class complaint obscures. `remote update` in
+my tool inspects *locally installed content* and compares it upstream. It does
+not touch the remote at all. And the noun is carrying two different objects:
 
 ```
 remote create | delete | list | show | default | discover    a REGISTERED SOURCE
@@ -378,30 +392,30 @@ graph that happens to have arrived from one. `remote pull` does not pull the
 remote; it installs content you already pinned.
 
 That is a noun problem masquerading as a verb problem, and it is the failure mode
-I would most warn against, because the verb audit finds it late. I spent an hour
-deciding whether `update` should be `check` before noticing that whichever verb I
-picked would still be attached to the wrong noun. A verb can only be as clear as
-the noun it modifies, so audit the nouns for overloading first. One noun holding
-two object types will generate confusing verbs indefinitely, and each one will
-look like an isolated naming mistake.
+I would most warn against, because a verb audit finds it late if it finds it at
+all. You can spend an hour deciding whether `update` should be `check` without
+noticing that whichever verb you pick is still attached to the wrong noun. A verb
+can only be as clear as the noun it modifies, so audit the nouns for overloading
+first. One noun holding two object types will generate confusing verbs
+indefinitely, and each one looks like an isolated naming mistake.
 
 The fix was to split the noun. The registration half keeps `remote`; the closure
 half becomes `deps` and takes `hold`/`unhold` with it, which had been sitting
 under `bundle` because a held entry is a lockfile entry and `bundle` was the
 nearest noun that existed.
 
-Naming it turned up a rule I had been applying without knowing it. Every other
-noun in the tool is singular, so `deps` looked like an exception I would have to
-justify. It is not. The singular ones are *instance types*: you have many
-bundles, you name one, and the verb says how many you are touching. There is no
-"a deps". The closure is one object made of many parts, and every verb acts on
-the whole by default: `pull` installs everything pinned, `check` inspects
-everything, `upgrade` re-resolves the entire graph. Scoping to a single entry is
-the exception there, which is the reverse of how the instance nouns behave.
+Naming it exposes a rule worth stating outright. Every other noun in the tool is
+singular, so `deps` looks like an exception needing justification. It is not. The
+singular ones are *instance types*: you have many bundles, you name one, and the
+verb says how many you are touching. There is no "a deps". The closure is one
+object made of many parts, and every verb acts on the whole by default — `pull`
+installs everything pinned, `check` inspects everything, `upgrade` re-resolves
+the entire graph. Scoping to a single entry is the exception there, which is the
+reverse of how the instance nouns behave.
 
-So the real rule is that instance nouns are singular and aggregate nouns are
-plural, and the plural is the signal telling you which kind you are holding. I
-had only ever had instance nouns, so the second half had never come up.
+So instance nouns are singular, aggregate nouns are plural, and the plural is the
+signal telling you which kind you are holding. A tool with only instance nouns
+never has to notice the second half.
 
 apt is the canonical version of this and gets it right by convention rather than
 by naming: `apt update` refreshes the index, `apt upgrade` installs. Millions of
