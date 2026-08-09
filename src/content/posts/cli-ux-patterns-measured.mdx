@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T16:09:31-05:00"
+publishDate: "2026-08-09T16:13:13-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature gives three different answers to what a bare noun should do. I thought two of them were a same-author contradiction. They were answering different questions."
 visibility: published
@@ -300,24 +300,40 @@ different moments.
 `rm` is where that clean rule broke for me, and I think the break is instructive
 rather than embarrassing.
 
-`rm` means destroy in unix shells. So if your CLI distinguishes "detach this
-member, it survives" from "destroy this thing", `rm` has to go on the destroyer,
-or you have inverted what those users already know. Fine. Except my destroyer is
-called `delete`, and `rm` is not an abbreviation of `delete`. It is an
-abbreviation of `remove`, which is the other verb — the gentle one. So the alias
-I shipped is exactly the alternate-name-for-a-concept I just said to delete.
+`rm` means destroy in unix shells, so it has to go on the destroyer or you invert
+what those users already know. I had two verbs to choose between: `delete`, which
+destroyed, and `remove`, which detached a member and left it alive. I put `rm` on
+`delete`, wrote a paragraph about borrowed conventions beating internal rules,
+and shipped it.
 
-The unix framing is also incomplete, and correcting it improved the answer.
-`cmd.exe` has no `rm` at all; it destroys with `del` and `erase`. PowerShell's
-`Remove-Item` carries both, aliased as `rm` and `del`. So there are two shell
-traditions here, and they disagree about the word while agreeing about the
-meaning.
+It was a trap, and the shape of it is worth seeing:
 
-That turned what looked like an indulgence into a rule. I had given `delete` both
-`rm` and `del`, which reads as two abbreviations of one word competing for the
-same slot. They are not. They are borrowings from two different traditions that
-land on the same verb, and shipping both is how you serve users whose muscle
-memory was trained on different machines.
+```
+rm      ->  delete    destroys
+remove  ->            detaches, survives
+```
+
+`rm` is the conventional abbreviation of the word *remove*. So the alias and its
+own expansion pointed at different verbs with opposite destructiveness. Someone
+who learns that `rm` destroys, reasons that `remove` must be the long form, and
+types `remove` gets a detach. The alias teaches a wrong expansion — which is the
+exact "name promises an effect it does not have" defect this whole exercise was
+about, committed by the exercise.
+
+In a unix shell there is no command called `remove`, so `rm` is just the
+destroyer's name and nothing mis-teaches. The collision was mine: I had both
+words meaning opposite things.
+
+The fix was to stop fighting over `rm` and move the other verb. Membership became
+`attach`/`detach`, which frees `remove` to be the destroyer it already is
+everywhere else, and makes `rm` a true abbreviation of its own canonical verb.
+Nothing to except, nothing to explain in a footnote.
+
+One detail I had wrong along the way, since it changed the answer: `rm` is not
+universal. `cmd.exe` has no `rm` and destroys with `del`; PowerShell's
+`Remove-Item` carries both as aliases. So `remove` takes `rm` and `del` both —
+not two abbreviations of one word competing, but two shell traditions that
+disagree about the spelling and agree about the meaning.
 
 I shipped it anyway, and the reasoning is the interesting part: a borrowed
 convention that every user already has beats an internal consistency rule they
