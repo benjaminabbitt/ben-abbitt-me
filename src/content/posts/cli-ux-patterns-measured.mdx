@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:37:15-05:00"
+publishDate: "2026-08-09T15:39:05-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -90,9 +90,22 @@ Against that, `gh repo` and `docker image` print usage and exit 0, and gcloud
 errors with a command listing and exit 2.
 
 Five, four, and three. Whatever you pick, most of the field does something else.
-I went with help, because a namespace has no obvious default action and help is
-the answer to the question a user standing at that level is actually asking. But
-the measurement says this is a preference, not a best practice.
+
+I went with help, and it was close. I started on list, and what moved me was an
+asymmetry in who can recover cheaply. An expert who wants the listing can type
+`ls`, which is two characters and which I was adding anyway. A newcomer who
+wants to know what a noun can do has no equivalent shortcut if the bare form
+prints data at them, because they do not yet know what to ask for. So the bare
+form goes to the person with less information, and the person with more
+information pays two keystrokes.
+
+That generalizes past this decision. When two defaults are genuinely close, give
+the default to whoever cannot recover from the other choice cheaply. It also
+helps that `help` is easy to type and easy to guess, which is not true of most
+things you might put there.
+
+I would not argue hard against list. The measurement says this is a preference,
+not a best practice, and heroku's CLI has shipped the opposite call for years.
 
 ## Implicit verbs: nobody does it
 
