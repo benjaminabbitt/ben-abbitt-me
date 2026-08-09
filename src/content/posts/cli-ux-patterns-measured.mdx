@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T16:13:13-05:00"
+publishDate: "2026-08-09T16:18:25-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature gives three different answers to what a bare noun should do. I thought two of them were a same-author contradiction. They were answering different questions."
 visibility: published
@@ -259,7 +259,7 @@ domains of an app."* There is no disagreement to explain.
 
 The authorship claim was worse, because it was about a named person. Jeff Dickey
 wrote 12-Factor CLI Apps and was lead architect of the Heroku CLI, both
-verifiable. The style guide has no byline — it is institutional documentation.
+verifiable. The style guide has no byline: it is institutional documentation.
 Its own examples contain `/Users/jdickey/` paths, so he very likely had a hand in
 it, but "likely" is not attribution, and I had him arguing against himself on the
 strength of it.
@@ -272,7 +272,7 @@ section, and it is the one that matches the data.
 
 The lesson I would keep: the levels of a command tree are different objects, and
 "what does a bare name do" has a different right answer at each. Two guides only
-look like they disagree if you collapse the levels — which is what I did.
+look like they disagree if you collapse the levels. That is what I did.
 
 GNU and POSIX conventions get invoked in these arguments too, and they [predate
 subcommands entirely](https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html). They govern options and operands. They have nothing to say
@@ -316,7 +316,7 @@ remove  ->            detaches, survives
 `rm` is the conventional abbreviation of the word *remove*. So the alias and its
 own expansion pointed at different verbs with opposite destructiveness. Someone
 who learns that `rm` destroys, reasons that `remove` must be the long form, and
-types `remove` gets a detach. The alias teaches a wrong expansion — which is the
+types `remove` gets a detach. The alias teaches a wrong expansion. That is the
 exact "name promises an effect it does not have" defect this whole exercise was
 about, committed by the exercise.
 
@@ -381,7 +381,7 @@ That is a noun problem masquerading as a verb problem, and it is the failure mod
 I would most warn against, because the verb audit finds it late. I spent an hour
 deciding whether `update` should be `check` before noticing that whichever verb I
 picked would still be attached to the wrong noun. A verb can only be as clear as
-the noun it modifies, so audit the nouns for overloading first — one noun holding
+the noun it modifies, so audit the nouns for overloading first. One noun holding
 two object types will generate confusing verbs indefinitely, and each one will
 look like an isolated naming mistake.
 
@@ -395,7 +395,7 @@ noun in the tool is singular, so `deps` looked like an exception I would have to
 justify. It is not. The singular ones are *instance types*: you have many
 bundles, you name one, and the verb says how many you are touching. There is no
 "a deps". The closure is one object made of many parts, and every verb acts on
-the whole by default — `pull` installs everything pinned, `check` inspects
+the whole by default: `pull` installs everything pinned, `check` inspects
 everything, `upgrade` re-resolves the entire graph. Scoping to a single entry is
 the exception there, which is the reverse of how the instance nouns behave.
 
