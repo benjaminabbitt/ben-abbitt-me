@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09T15:54:33-05:00"
+publishDate: "2026-08-09T16:03:05-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -264,12 +264,24 @@ different moments.
 `rm` is where that clean rule broke for me, and I think the break is instructive
 rather than embarrassing.
 
-`rm` means destroy in every shell. So if your CLI distinguishes "detach this
+`rm` means destroy in unix shells. So if your CLI distinguishes "detach this
 member, it survives" from "destroy this thing", `rm` has to go on the destroyer,
-or you have inverted what every user already knows. Fine. Except my destroyer is
+or you have inverted what those users already know. Fine. Except my destroyer is
 called `delete`, and `rm` is not an abbreviation of `delete`. It is an
 abbreviation of `remove`, which is the other verb — the gentle one. So the alias
 I shipped is exactly the alternate-name-for-a-concept I just said to delete.
+
+The unix framing is also incomplete, and correcting it improved the answer.
+`cmd.exe` has no `rm` at all; it destroys with `del` and `erase`. PowerShell's
+`Remove-Item` carries both, aliased as `rm` and `del`. So there are two shell
+traditions here, and they disagree about the word while agreeing about the
+meaning.
+
+That turned what looked like an indulgence into a rule. I had given `delete` both
+`rm` and `del`, which reads as two abbreviations of one word competing for the
+same slot. They are not. They are borrowings from two different traditions that
+land on the same verb, and shipping both is how you serve users whose muscle
+memory was trained on different machines.
 
 I shipped it anyway, and the reasoning is the interesting part: a borrowed
 convention that every user already has beats an internal consistency rule they
