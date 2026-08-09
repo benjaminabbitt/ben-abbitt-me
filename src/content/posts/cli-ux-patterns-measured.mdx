@@ -1,7 +1,7 @@
 ---
 title: "What CLIs Actually Do: A Measured Reference"
 description: "Fifteen production command-line tools, probed rather than cited. What a bare noun does, whether anyone accepts an implicit verb, who confirms before destroying things, and the three places the style guides disagree with the tools that supposedly follow them."
-publishDate: "2026-08-09"
+publishDate: "2026-08-09T15:34:00-05:00"
 tags: ["cli", "ux", "tools", "design", "reference"]
 marginalia: "The guideline literature does not agree with itself. Two of the most-cited documents on CLI design were written by the same person and say opposite things."
 visibility: published
@@ -57,7 +57,7 @@ owns several distinct things with their own lifecycles, and the tell is that the
 sub-noun takes the same verb vocabulary one level down. `docker container ls` and
 `docker image ls` are the same verb applied to different populations.
 
-What took me longest to accept is that a command can carry **both** direct verbs
+What took me longest to accept is that a command can carry both direct verbs
 and sub-nouns without being inconsistent. `docker` has bare `ps` and also
 `container ls`. A parent verb acts on the parent; a sub-noun is a different
 population that happens to live underneath. Forcing everything down a level
@@ -92,8 +92,8 @@ the measurement says this is a preference, not a best practice.
 ## Implicit verbs: nobody does it
 
 Zero of the fifteen accept `tool noun object` as an implicit show. Zero accept a
-trailing verb. This was the pattern I was actually evaluating, and the landscape
-verdict was unanimous in a way nothing else was.
+trailing verb. This was the pattern I was actually evaluating, and it is the only
+question here where the tools all agreed.
 
 git is the closest, and it is a cautionary tale rather than a precedent. `git
 branch X` and `git tag X` take a positional and *create*, silently, exit 0. That
@@ -110,8 +110,8 @@ view` with no argument means the repo you are standing in. The verb stays
 explicit and the omitted token is the one with an unbounded value space, so
 nothing can collide.
 
-That asymmetry is the actual pattern: **omit the argument whose value space is
-open, never the one drawn from a closed set you also parse.** A verb comes from
+That asymmetry is the actual pattern: omit the argument whose value space is
+open, never the one drawn from a closed set you also parse. A verb comes from
 a closed set the parser knows. An object name does not. Omitting the verb means
 guessing which set a bare token came from, and the guess is wrong exactly when
 someone names a resource after a verb.
@@ -148,7 +148,7 @@ verb class, and the classes want opposite defaults.
 
 | class | examples | dry run |
 |---|---|---|
-| destructive: removes something that existed | delete, purge, prune | **on by default**; a flag turns it off |
+| destructive: removes something that existed | delete, purge, prune | on by default; a flag turns it off |
 | changing or costing: writes, spends money or time | create, edit, push, pull, upgrade | off by default; `--dry-run` turns it on |
 | read | list, show, search, status | not applicable; a dry run of a read is the read |
 
@@ -158,8 +158,8 @@ back. Defaults should fail toward the recoverable state, so the two classes take
 opposite defaults and the flag that crosses the line is explicit in both
 directions.
 
-That gives the rule I would now build into anything destructive: **a destructive
-verb is an inherent dry run, and `--yes` is what applies it.** Run it bare and it
+That gives the rule I would now build into anything destructive: a destructive
+verb is an inherent dry run, and `--yes` is what applies it. Run it bare and it
 tells you exactly what it would destroy. Nothing is a "preview mode" you have to
 know to ask for, because the safe thing is what happens when you do not ask for
 anything.
@@ -171,12 +171,12 @@ else is in scope.
 
 Two details that decide whether a dry run is worth anything:
 
-**Reads are real, writes and costs are mocked.** The answer must be the truth
+Reads are real, writes and costs are mocked. The answer must be the truth
 about the world. But an API call that charges you is an effect, so a dry run
 that still spends money is not one. Mock at the boundary where the world
 changes, including the boundary where the bill does.
 
-**It must be verbose.** A dry run that prints little has wasted the run. The
+It must be verbose. A dry run that prints little has wasted the run. The
 entire product is the account of what would have happened, so terseness there is
 not a virtue.
 
@@ -210,11 +210,11 @@ decoration.
 
 Tools mean at least two things by "alias", and they have opposite costs.
 
-An **alternate name for a concept** is a memory tax. If `add` works on one noun
+An alternate name for a concept is a memory tax. If `add` works on one noun
 and `create` on another, knowing what you want does not tell you what to type,
 so you check the help every time. This is the kind worth deleting.
 
-An **abbreviation of the canonical name** is not. `rm` for `remove`, `ls` for
+An abbreviation of the canonical name is not. `rm` for `remove`, `ls` for
 `list`. Every noun accepts both, so there is nothing to remember, and the long
 form is discoverable while the short form is fast.
 
@@ -263,7 +263,7 @@ So the noun half stayed disciplined for two years and the verb half drifted,
 because there was nothing to check a new command against. When I finally
 enumerated the surface, it had 47 distinct words in verb position across 130
 leaves. Eleven of them were not verbs at all, they were sub-nouns. And there were
-**seven different spellings of "undo"**: uninstall, unhold, unregister, reject,
+seven different spellings of "undo": uninstall, unhold, unregister, reject,
 forget, revoke, delete.
 
 Every one of those was locally reasonable. `unhold` pairs with `hold`. `forget`
@@ -316,24 +316,12 @@ The general version: every convention you intend to keep needs a mechanical
 check, and if you cannot think of one, you have a preference rather than a rule.
 Be honest about which you are writing down.
 
-## What I would actually copy
+## The tool this came from
 
-Write the verb vocabulary before the commands, next to the nouns, with the same
-rigor. Group by the axis that stays closed. Use `noun object verb` when a noun
-owns several populations, and let direct verbs and sub-nouns coexist. Print help
-on a bare namespace, accepting that the field is split. Imply objects, never
-verbs. Make destructive verbs an inherent dry run that `--yes` applies, and scale
-the friction to blast radius rather than to how alarming the verb sounds. Keep
-abbreviations, delete synonyms. And name a verb for what it does when you run it
-with no flags at all, because that is the invocation a reader will assume.
+ctxloom is at [ctxloom.dev](https://ctxloom.dev), and a much larger version is in
+alpha now. This audit was part of clearing the ground for it.
 
 The guides are worth reading. They are not worth citing as settled, because the
-tools they describe do not agree with them and in one case do not agree with each
-other under the same author's name.
-
----
-
-The tool this came from is [ctxloom](https://ctxloom.dev). A much larger version
-is in alpha now, and this audit was part of clearing the ground for it. If you
-want the short version of everything above: write the verbs down next to the
-nouns before you need them, and put a test on it.
+tools they describe do not agree with them, and in one case do not agree with
+each other under the same author's name. Probe the tools you actually admire and
+copy what they do, then write down why before someone has to guess.
